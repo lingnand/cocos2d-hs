@@ -1,0 +1,11 @@
+dist
+dist-*
+*.o
+*.hi
+*.chi
+*.chs.h
+*.dyn_o
+*.dyn_hi
+.cabal-sanbox/
+cabal.sandbox.config
+.stack-work/

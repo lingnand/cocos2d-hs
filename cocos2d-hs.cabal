@@ -1,0 +1,57 @@
+name:                cocos2d-hs
+version:             0.1.0.0
+synopsis:            Initial project template from stack
+description:         Please see README.md
+homepage:            https://github.com/lynnard/cocos2d-hs#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Lingnan Dai
+maintainer:          lingnan.d@gmail.com
+copyright:           MIT
+category:            Web
+build-type:          Simple
+-- extra-source-files:
+cabal-version:       >=1.10
+
+executable generator
+  hs-source-dirs:      generator
+  main-is:             Main.hs
+  build-depends:       base >=4.7 && <4.9
+                     , haskell-src >=1.0 && <1.1
+                     , hoppy-generator
+                     , hoppy-std
+  ghc-options:         -Wall
+  default-language:    Haskell2010
+
+library
+  hs-source-dirs:      src
+  build-depends:       base >= 4.7 && < 4.9
+                     , hoppy-runtime
+                     , colour
+                     , linear
+  exposed-modules:     Graphics.UI.Cocos2d.Common
+                     , Graphics.UI.Cocos2d.Node
+                     , Graphics.UI.Cocos2d.Layer
+  c-sources:           cbits/Common.cpp
+                       cbits/Layer.cpp
+                       cbits/Node.cpp
+                       cbits/std.cpp
+  include-dirs:        cbits
+                       /Applications/Cocos/frameworks/cocos2d-x-3.9/cocos
+  extra-lib-dirs:      /Applications/Cocos/frameworks/cocos2d-x-3.9/prebuilt/mac/
+  extra-libraries:     "cocos2d Mac" stdc++
+  cc-options:          -std=c++11 -stdlib=libc++
+  default-language:    Haskell2010
+
+test-suite cocos2d-hs-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , cocos2d-hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/lynnard/cocos2d-hs
