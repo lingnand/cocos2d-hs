@@ -23,8 +23,12 @@ import Foreign.Hoppy.Generator.Spec
 import Foreign.Hoppy.Generator.Std (mod_std)
 
 import Graphics.UI.Cocos2d.Generator.Interface.Common
+import Graphics.UI.Cocos2d.Generator.Interface.Texture
+import Graphics.UI.Cocos2d.Generator.Interface.Director
 import Graphics.UI.Cocos2d.Generator.Interface.Node
 import Graphics.UI.Cocos2d.Generator.Interface.Layer
+import Graphics.UI.Cocos2d.Generator.Interface.Scene
+import Graphics.UI.Cocos2d.Generator.Interface.Sprite
 import Control.Monad
 
 main :: IO ()
@@ -41,7 +45,11 @@ interfaceResult =
   interface "cocos2d"
     [ mod_std
     , mod_common
+    , mod_texture
+    , mod_director
     , mod_node
     , mod_layer
+    , mod_scene
+    , mod_sprite
     ]
   >>= interfaceAddHaskellModuleBase ["Graphics", "UI", "Cocos2d"]

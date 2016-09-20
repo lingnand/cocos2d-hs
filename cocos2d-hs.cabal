@@ -16,6 +16,13 @@ cabal-version:       >=1.10
 executable generator
   hs-source-dirs:      generator
   main-is:             Main.hs
+  other-modules:       Graphics.UI.Cocos2d.Generator.Interface.Common
+                     , Graphics.UI.Cocos2d.Generator.Interface.Texture
+                     , Graphics.UI.Cocos2d.Generator.Interface.Director
+                     , Graphics.UI.Cocos2d.Generator.Interface.Layer
+                     , Graphics.UI.Cocos2d.Generator.Interface.Node
+                     , Graphics.UI.Cocos2d.Generator.Interface.Scene
+                     , Graphics.UI.Cocos2d.Generator.Interface.Sprite
   build-depends:       base >=4.7 && <4.9
                      , haskell-src >=1.0 && <1.1
                      , hoppy-generator
@@ -30,11 +37,20 @@ library
                      , colour
                      , linear
   exposed-modules:     Graphics.UI.Cocos2d.Common
+                     , Graphics.UI.Cocos2d.Texture
                      , Graphics.UI.Cocos2d.Node
                      , Graphics.UI.Cocos2d.Layer
+                     , Graphics.UI.Cocos2d.Director
+                     , Graphics.UI.Cocos2d.Scene
+                     , Graphics.UI.Cocos2d.Sprite
+  other-modules:       Graphics.UI.Cocos2d.Std
   c-sources:           cbits/Common.cpp
+                       cbits/Texture.cpp
                        cbits/Layer.cpp
                        cbits/Node.cpp
+                       cbits/Director.cpp
+                       cbits/Scene.cpp
+                       cbits/Sprite.cpp
                        cbits/std.cpp
   include-dirs:        cbits
                        /Applications/Cocos/frameworks/cocos2d-x-3.9/cocos

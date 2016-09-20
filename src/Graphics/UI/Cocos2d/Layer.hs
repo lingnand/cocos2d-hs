@@ -109,13 +109,13 @@ import qualified Foreign as HoppyF
 import qualified Foreign.C as HoppyFC
 import qualified Foreign.Hoppy.Runtime as HoppyFHR
 import qualified Graphics.UI.Cocos2d.Common as M2
-import qualified Graphics.UI.Cocos2d.Node as M3
+import qualified Graphics.UI.Cocos2d.Node as M5
 import Prelude (($), (.), (/=), (==))
 import qualified Prelude as HoppyP
 
 foreign import ccall "genpop__Layer_create" layer_create' ::   HoppyP.IO (HoppyF.Ptr Layer)
-foreign import ccall "gencast__Layer__Node" castLayerToNode :: HoppyF.Ptr LayerConst -> HoppyF.Ptr M3.NodeConst
-foreign import ccall "gencast__Node__Layer" castNodeToLayer :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr LayerConst
+foreign import ccall "gencast__Layer__Node" castLayerToNode :: HoppyF.Ptr LayerConst -> HoppyF.Ptr M5.NodeConst
+foreign import ccall "gencast__Node__Layer" castNodeToLayer :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr LayerConst
 foreign import ccall "gencast__Layer__Ref" castLayerToRef :: HoppyF.Ptr LayerConst -> HoppyF.Ptr M2.RefConst
 foreign import ccall "gencast__Ref__Layer" castRefToLayer :: HoppyF.Ptr M2.RefConst -> HoppyF.Ptr LayerConst
 foreign import ccall "gendel__Layer" delete'Layer :: HoppyF.Ptr LayerConst -> HoppyP.IO ()
@@ -128,8 +128,8 @@ foreign import ccall "genpop__LayerColor_changeHeight" layerColor_changeHeight' 
 foreign import ccall "genpop__LayerColor_changeWidthAndHeight" layerColor_changeWidthAndHeight' ::   HoppyF.Ptr LayerColor ->    HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO ()
 foreign import ccall "gencast__LayerColor__Layer" castLayerColorToLayer :: HoppyF.Ptr LayerColorConst -> HoppyF.Ptr LayerConst
 foreign import ccall "gencast__Layer__LayerColor" castLayerToLayerColor :: HoppyF.Ptr LayerConst -> HoppyF.Ptr LayerColorConst
-foreign import ccall "gencast__LayerColor__Node" castLayerColorToNode :: HoppyF.Ptr LayerColorConst -> HoppyF.Ptr M3.NodeConst
-foreign import ccall "gencast__Node__LayerColor" castNodeToLayerColor :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr LayerColorConst
+foreign import ccall "gencast__LayerColor__Node" castLayerColorToNode :: HoppyF.Ptr LayerColorConst -> HoppyF.Ptr M5.NodeConst
+foreign import ccall "gencast__Node__LayerColor" castNodeToLayerColor :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr LayerColorConst
 foreign import ccall "gencast__LayerColor__Ref" castLayerColorToRef :: HoppyF.Ptr LayerColorConst -> HoppyF.Ptr M2.RefConst
 foreign import ccall "gencast__Ref__LayerColor" castRefToLayerColor :: HoppyF.Ptr M2.RefConst -> HoppyF.Ptr LayerColorConst
 foreign import ccall "gendel__LayerColor" delete'LayerColor :: HoppyF.Ptr LayerColorConst -> HoppyP.IO ()
@@ -153,8 +153,8 @@ foreign import ccall "gencast__LayerGradient__LayerColor" castLayerGradientToLay
 foreign import ccall "gencast__LayerColor__LayerGradient" castLayerColorToLayerGradient :: HoppyF.Ptr LayerColorConst -> HoppyF.Ptr LayerGradientConst
 foreign import ccall "gencast__LayerGradient__Layer" castLayerGradientToLayer :: HoppyF.Ptr LayerGradientConst -> HoppyF.Ptr LayerConst
 foreign import ccall "gencast__Layer__LayerGradient" castLayerToLayerGradient :: HoppyF.Ptr LayerConst -> HoppyF.Ptr LayerGradientConst
-foreign import ccall "gencast__LayerGradient__Node" castLayerGradientToNode :: HoppyF.Ptr LayerGradientConst -> HoppyF.Ptr M3.NodeConst
-foreign import ccall "gencast__Node__LayerGradient" castNodeToLayerGradient :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr LayerGradientConst
+foreign import ccall "gencast__LayerGradient__Node" castLayerGradientToNode :: HoppyF.Ptr LayerGradientConst -> HoppyF.Ptr M5.NodeConst
+foreign import ccall "gencast__Node__LayerGradient" castNodeToLayerGradient :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr LayerGradientConst
 foreign import ccall "gencast__LayerGradient__Ref" castLayerGradientToRef :: HoppyF.Ptr LayerGradientConst -> HoppyF.Ptr M2.RefConst
 foreign import ccall "gencast__Ref__LayerGradient" castRefToLayerGradient :: HoppyF.Ptr M2.RefConst -> HoppyF.Ptr LayerGradientConst
 foreign import ccall "gendel__LayerGradient" delete'LayerGradient :: HoppyF.Ptr LayerGradientConst -> HoppyP.IO ()
@@ -175,8 +175,8 @@ foreign import ccall "genpop__LayerMultiplex_switchTo" layerMultiplex_switchTo' 
 foreign import ccall "genpop__LayerMultiplex_switchToAndReleaseMe" layerMultiplex_switchToAndReleaseMe' ::   HoppyF.Ptr LayerMultiplex -> HoppyFC.CInt -> HoppyP.IO ()
 foreign import ccall "gencast__LayerMultiplex__Layer" castLayerMultiplexToLayer :: HoppyF.Ptr LayerMultiplexConst -> HoppyF.Ptr LayerConst
 foreign import ccall "gencast__Layer__LayerMultiplex" castLayerToLayerMultiplex :: HoppyF.Ptr LayerConst -> HoppyF.Ptr LayerMultiplexConst
-foreign import ccall "gencast__LayerMultiplex__Node" castLayerMultiplexToNode :: HoppyF.Ptr LayerMultiplexConst -> HoppyF.Ptr M3.NodeConst
-foreign import ccall "gencast__Node__LayerMultiplex" castNodeToLayerMultiplex :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr LayerMultiplexConst
+foreign import ccall "gencast__LayerMultiplex__Node" castLayerMultiplexToNode :: HoppyF.Ptr LayerMultiplexConst -> HoppyF.Ptr M5.NodeConst
+foreign import ccall "gencast__Node__LayerMultiplex" castNodeToLayerMultiplex :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr LayerMultiplexConst
 foreign import ccall "gencast__LayerMultiplex__Ref" castLayerMultiplexToRef :: HoppyF.Ptr LayerMultiplexConst -> HoppyF.Ptr M2.RefConst
 foreign import ccall "gencast__Ref__LayerMultiplex" castRefToLayerMultiplex :: HoppyF.Ptr M2.RefConst -> HoppyF.Ptr LayerMultiplexConst
 foreign import ccall "gendel__LayerMultiplex" delete'LayerMultiplex :: HoppyF.Ptr LayerMultiplexConst -> HoppyP.IO ()
@@ -192,10 +192,10 @@ instance LayerConstPtr a => LayerValue a where
 #endif
   withLayerPtr = HoppyP.flip ($) . toLayerConst
 
-class (M3.NodeConstPtr this) => LayerConstPtr this where
+class (M5.NodeConstPtr this) => LayerConstPtr this where
   toLayerConst :: this -> LayerConst
 
-class (LayerConstPtr this, M3.NodePtr this) => LayerPtr this where
+class (LayerConstPtr this, M5.NodePtr this) => LayerPtr this where
   toLayer :: this -> Layer
 
 layer_create ::   HoppyP.IO Layer
@@ -240,9 +240,9 @@ instance HoppyFHR.Deletable LayerConst where
 instance LayerConstPtr LayerConst where
   toLayerConst = HoppyP.id
 
-instance M3.NodeConstPtr LayerConst where
-  toNodeConst (LayerConst ptr') = M3.NodeConst $ castLayerToNode ptr'
-  toNodeConst (LayerConstGc fptr' ptr') = M3.NodeConstGc fptr' $ castLayerToNode ptr'
+instance M5.NodeConstPtr LayerConst where
+  toNodeConst (LayerConst ptr') = M5.NodeConst $ castLayerToNode ptr'
+  toNodeConst (LayerConstGc fptr' ptr') = M5.NodeConstGc fptr' $ castLayerToNode ptr'
 
 instance M2.RefConstPtr LayerConst where
   toRefConst (LayerConst ptr') = M2.RefConst $ castLayerToRef ptr'
@@ -289,13 +289,13 @@ instance LayerConstPtr Layer where
 instance LayerPtr Layer where
   toLayer = HoppyP.id
 
-instance M3.NodeConstPtr Layer where
-  toNodeConst (Layer ptr') = M3.NodeConst $ castLayerToNode $ (HoppyF.castPtr :: HoppyF.Ptr Layer -> HoppyF.Ptr LayerConst) ptr'
-  toNodeConst (LayerGc fptr' ptr') = M3.NodeConstGc fptr' $ castLayerToNode $ (HoppyF.castPtr :: HoppyF.Ptr Layer -> HoppyF.Ptr LayerConst) ptr'
+instance M5.NodeConstPtr Layer where
+  toNodeConst (Layer ptr') = M5.NodeConst $ castLayerToNode $ (HoppyF.castPtr :: HoppyF.Ptr Layer -> HoppyF.Ptr LayerConst) ptr'
+  toNodeConst (LayerGc fptr' ptr') = M5.NodeConstGc fptr' $ castLayerToNode $ (HoppyF.castPtr :: HoppyF.Ptr Layer -> HoppyF.Ptr LayerConst) ptr'
 
-instance M3.NodePtr Layer where
-  toNode (Layer ptr') = M3.Node $ (HoppyF.castPtr :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr M3.Node) $ castLayerToNode $ (HoppyF.castPtr :: HoppyF.Ptr Layer -> HoppyF.Ptr LayerConst) ptr'
-  toNode (LayerGc fptr' ptr') = M3.NodeGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr M3.Node) $ castLayerToNode $ (HoppyF.castPtr :: HoppyF.Ptr Layer -> HoppyF.Ptr LayerConst) ptr'
+instance M5.NodePtr Layer where
+  toNode (Layer ptr') = M5.Node $ (HoppyF.castPtr :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr M5.Node) $ castLayerToNode $ (HoppyF.castPtr :: HoppyF.Ptr Layer -> HoppyF.Ptr LayerConst) ptr'
+  toNode (LayerGc fptr' ptr') = M5.NodeGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr M5.Node) $ castLayerToNode $ (HoppyF.castPtr :: HoppyF.Ptr Layer -> HoppyF.Ptr LayerConst) ptr'
 
 instance M2.RefConstPtr Layer where
   toRefConst (Layer ptr') = M2.RefConst $ castLayerToRef $ (HoppyF.castPtr :: HoppyF.Ptr Layer -> HoppyF.Ptr LayerConst) ptr'
@@ -308,11 +308,11 @@ instance M2.RefPtr Layer where
 class LayerSuper a where
   downToLayer :: a -> Layer
 
-instance LayerSuper M3.Node where
-  downToLayer = castLayerToNonconst . cast' . M3.castNodeToConst
+instance LayerSuper M5.Node where
+  downToLayer = castLayerToNonconst . cast' . M5.castNodeToConst
     where
-      cast' (M3.NodeConst ptr') = LayerConst $ castNodeToLayer ptr'
-      cast' (M3.NodeConstGc fptr' ptr') = LayerConstGc fptr' $ castNodeToLayer ptr'
+      cast' (M5.NodeConst ptr') = LayerConst $ castNodeToLayer ptr'
+      cast' (M5.NodeConstGc fptr' ptr') = LayerConstGc fptr' $ castNodeToLayer ptr'
 instance LayerSuper M2.Ref where
   downToLayer = castLayerToNonconst . cast' . M2.castRefToConst
     where
@@ -322,11 +322,11 @@ instance LayerSuper M2.Ref where
 class LayerSuperConst a where
   downToLayerConst :: a -> LayerConst
 
-instance LayerSuperConst M3.NodeConst where
+instance LayerSuperConst M5.NodeConst where
   downToLayerConst = cast'
     where
-      cast' (M3.NodeConst ptr') = LayerConst $ castNodeToLayer ptr'
-      cast' (M3.NodeConstGc fptr' ptr') = LayerConstGc fptr' $ castNodeToLayer ptr'
+      cast' (M5.NodeConst ptr') = LayerConst $ castNodeToLayer ptr'
+      cast' (M5.NodeConstGc fptr' ptr') = LayerConstGc fptr' $ castNodeToLayer ptr'
 instance LayerSuperConst M2.RefConst where
   downToLayerConst = cast'
     where
@@ -434,9 +434,9 @@ instance LayerConstPtr LayerColorConst where
   toLayerConst (LayerColorConst ptr') = LayerConst $ castLayerColorToLayer ptr'
   toLayerConst (LayerColorConstGc fptr' ptr') = LayerConstGc fptr' $ castLayerColorToLayer ptr'
 
-instance M3.NodeConstPtr LayerColorConst where
-  toNodeConst (LayerColorConst ptr') = M3.NodeConst $ castLayerColorToNode ptr'
-  toNodeConst (LayerColorConstGc fptr' ptr') = M3.NodeConstGc fptr' $ castLayerColorToNode ptr'
+instance M5.NodeConstPtr LayerColorConst where
+  toNodeConst (LayerColorConst ptr') = M5.NodeConst $ castLayerColorToNode ptr'
+  toNodeConst (LayerColorConstGc fptr' ptr') = M5.NodeConstGc fptr' $ castLayerColorToNode ptr'
 
 instance M2.RefConstPtr LayerColorConst where
   toRefConst (LayerColorConst ptr') = M2.RefConst $ castLayerColorToRef ptr'
@@ -491,13 +491,13 @@ instance LayerPtr LayerColor where
   toLayer (LayerColor ptr') = Layer $ (HoppyF.castPtr :: HoppyF.Ptr LayerConst -> HoppyF.Ptr Layer) $ castLayerColorToLayer $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
   toLayer (LayerColorGc fptr' ptr') = LayerGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr LayerConst -> HoppyF.Ptr Layer) $ castLayerColorToLayer $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
 
-instance M3.NodeConstPtr LayerColor where
-  toNodeConst (LayerColor ptr') = M3.NodeConst $ castLayerColorToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
-  toNodeConst (LayerColorGc fptr' ptr') = M3.NodeConstGc fptr' $ castLayerColorToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
+instance M5.NodeConstPtr LayerColor where
+  toNodeConst (LayerColor ptr') = M5.NodeConst $ castLayerColorToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
+  toNodeConst (LayerColorGc fptr' ptr') = M5.NodeConstGc fptr' $ castLayerColorToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
 
-instance M3.NodePtr LayerColor where
-  toNode (LayerColor ptr') = M3.Node $ (HoppyF.castPtr :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr M3.Node) $ castLayerColorToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
-  toNode (LayerColorGc fptr' ptr') = M3.NodeGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr M3.Node) $ castLayerColorToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
+instance M5.NodePtr LayerColor where
+  toNode (LayerColor ptr') = M5.Node $ (HoppyF.castPtr :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr M5.Node) $ castLayerColorToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
+  toNode (LayerColorGc fptr' ptr') = M5.NodeGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr M5.Node) $ castLayerColorToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
 
 instance M2.RefConstPtr LayerColor where
   toRefConst (LayerColor ptr') = M2.RefConst $ castLayerColorToRef $ (HoppyF.castPtr :: HoppyF.Ptr LayerColor -> HoppyF.Ptr LayerColorConst) ptr'
@@ -515,11 +515,11 @@ instance LayerColorSuper Layer where
     where
       cast' (LayerConst ptr') = LayerColorConst $ castLayerToLayerColor ptr'
       cast' (LayerConstGc fptr' ptr') = LayerColorConstGc fptr' $ castLayerToLayerColor ptr'
-instance LayerColorSuper M3.Node where
-  downToLayerColor = castLayerColorToNonconst . cast' . M3.castNodeToConst
+instance LayerColorSuper M5.Node where
+  downToLayerColor = castLayerColorToNonconst . cast' . M5.castNodeToConst
     where
-      cast' (M3.NodeConst ptr') = LayerColorConst $ castNodeToLayerColor ptr'
-      cast' (M3.NodeConstGc fptr' ptr') = LayerColorConstGc fptr' $ castNodeToLayerColor ptr'
+      cast' (M5.NodeConst ptr') = LayerColorConst $ castNodeToLayerColor ptr'
+      cast' (M5.NodeConstGc fptr' ptr') = LayerColorConstGc fptr' $ castNodeToLayerColor ptr'
 instance LayerColorSuper M2.Ref where
   downToLayerColor = castLayerColorToNonconst . cast' . M2.castRefToConst
     where
@@ -534,11 +534,11 @@ instance LayerColorSuperConst LayerConst where
     where
       cast' (LayerConst ptr') = LayerColorConst $ castLayerToLayerColor ptr'
       cast' (LayerConstGc fptr' ptr') = LayerColorConstGc fptr' $ castLayerToLayerColor ptr'
-instance LayerColorSuperConst M3.NodeConst where
+instance LayerColorSuperConst M5.NodeConst where
   downToLayerColorConst = cast'
     where
-      cast' (M3.NodeConst ptr') = LayerColorConst $ castNodeToLayerColor ptr'
-      cast' (M3.NodeConstGc fptr' ptr') = LayerColorConstGc fptr' $ castNodeToLayerColor ptr'
+      cast' (M5.NodeConst ptr') = LayerColorConst $ castNodeToLayerColor ptr'
+      cast' (M5.NodeConstGc fptr' ptr') = LayerColorConstGc fptr' $ castNodeToLayerColor ptr'
 instance LayerColorSuperConst M2.RefConst where
   downToLayerColorConst = cast'
     where
@@ -702,9 +702,9 @@ instance LayerConstPtr LayerGradientConst where
   toLayerConst (LayerGradientConst ptr') = LayerConst $ castLayerGradientToLayer ptr'
   toLayerConst (LayerGradientConstGc fptr' ptr') = LayerConstGc fptr' $ castLayerGradientToLayer ptr'
 
-instance M3.NodeConstPtr LayerGradientConst where
-  toNodeConst (LayerGradientConst ptr') = M3.NodeConst $ castLayerGradientToNode ptr'
-  toNodeConst (LayerGradientConstGc fptr' ptr') = M3.NodeConstGc fptr' $ castLayerGradientToNode ptr'
+instance M5.NodeConstPtr LayerGradientConst where
+  toNodeConst (LayerGradientConst ptr') = M5.NodeConst $ castLayerGradientToNode ptr'
+  toNodeConst (LayerGradientConstGc fptr' ptr') = M5.NodeConstGc fptr' $ castLayerGradientToNode ptr'
 
 instance M2.RefConstPtr LayerGradientConst where
   toRefConst (LayerGradientConst ptr') = M2.RefConst $ castLayerGradientToRef ptr'
@@ -767,13 +767,13 @@ instance LayerPtr LayerGradient where
   toLayer (LayerGradient ptr') = Layer $ (HoppyF.castPtr :: HoppyF.Ptr LayerConst -> HoppyF.Ptr Layer) $ castLayerGradientToLayer $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
   toLayer (LayerGradientGc fptr' ptr') = LayerGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr LayerConst -> HoppyF.Ptr Layer) $ castLayerGradientToLayer $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
 
-instance M3.NodeConstPtr LayerGradient where
-  toNodeConst (LayerGradient ptr') = M3.NodeConst $ castLayerGradientToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
-  toNodeConst (LayerGradientGc fptr' ptr') = M3.NodeConstGc fptr' $ castLayerGradientToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
+instance M5.NodeConstPtr LayerGradient where
+  toNodeConst (LayerGradient ptr') = M5.NodeConst $ castLayerGradientToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
+  toNodeConst (LayerGradientGc fptr' ptr') = M5.NodeConstGc fptr' $ castLayerGradientToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
 
-instance M3.NodePtr LayerGradient where
-  toNode (LayerGradient ptr') = M3.Node $ (HoppyF.castPtr :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr M3.Node) $ castLayerGradientToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
-  toNode (LayerGradientGc fptr' ptr') = M3.NodeGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr M3.Node) $ castLayerGradientToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
+instance M5.NodePtr LayerGradient where
+  toNode (LayerGradient ptr') = M5.Node $ (HoppyF.castPtr :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr M5.Node) $ castLayerGradientToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
+  toNode (LayerGradientGc fptr' ptr') = M5.NodeGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr M5.Node) $ castLayerGradientToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
 
 instance M2.RefConstPtr LayerGradient where
   toRefConst (LayerGradient ptr') = M2.RefConst $ castLayerGradientToRef $ (HoppyF.castPtr :: HoppyF.Ptr LayerGradient -> HoppyF.Ptr LayerGradientConst) ptr'
@@ -796,11 +796,11 @@ instance LayerGradientSuper Layer where
     where
       cast' (LayerConst ptr') = LayerGradientConst $ castLayerToLayerGradient ptr'
       cast' (LayerConstGc fptr' ptr') = LayerGradientConstGc fptr' $ castLayerToLayerGradient ptr'
-instance LayerGradientSuper M3.Node where
-  downToLayerGradient = castLayerGradientToNonconst . cast' . M3.castNodeToConst
+instance LayerGradientSuper M5.Node where
+  downToLayerGradient = castLayerGradientToNonconst . cast' . M5.castNodeToConst
     where
-      cast' (M3.NodeConst ptr') = LayerGradientConst $ castNodeToLayerGradient ptr'
-      cast' (M3.NodeConstGc fptr' ptr') = LayerGradientConstGc fptr' $ castNodeToLayerGradient ptr'
+      cast' (M5.NodeConst ptr') = LayerGradientConst $ castNodeToLayerGradient ptr'
+      cast' (M5.NodeConstGc fptr' ptr') = LayerGradientConstGc fptr' $ castNodeToLayerGradient ptr'
 instance LayerGradientSuper M2.Ref where
   downToLayerGradient = castLayerGradientToNonconst . cast' . M2.castRefToConst
     where
@@ -820,11 +820,11 @@ instance LayerGradientSuperConst LayerConst where
     where
       cast' (LayerConst ptr') = LayerGradientConst $ castLayerToLayerGradient ptr'
       cast' (LayerConstGc fptr' ptr') = LayerGradientConstGc fptr' $ castLayerToLayerGradient ptr'
-instance LayerGradientSuperConst M3.NodeConst where
+instance LayerGradientSuperConst M5.NodeConst where
   downToLayerGradientConst = cast'
     where
-      cast' (M3.NodeConst ptr') = LayerGradientConst $ castNodeToLayerGradient ptr'
-      cast' (M3.NodeConstGc fptr' ptr') = LayerGradientConstGc fptr' $ castNodeToLayerGradient ptr'
+      cast' (M5.NodeConst ptr') = LayerGradientConst $ castNodeToLayerGradient ptr'
+      cast' (M5.NodeConstGc fptr' ptr') = LayerGradientConstGc fptr' $ castNodeToLayerGradient ptr'
 instance LayerGradientSuperConst M2.RefConst where
   downToLayerGradientConst = cast'
     where
@@ -1022,9 +1022,9 @@ instance LayerConstPtr LayerMultiplexConst where
   toLayerConst (LayerMultiplexConst ptr') = LayerConst $ castLayerMultiplexToLayer ptr'
   toLayerConst (LayerMultiplexConstGc fptr' ptr') = LayerConstGc fptr' $ castLayerMultiplexToLayer ptr'
 
-instance M3.NodeConstPtr LayerMultiplexConst where
-  toNodeConst (LayerMultiplexConst ptr') = M3.NodeConst $ castLayerMultiplexToNode ptr'
-  toNodeConst (LayerMultiplexConstGc fptr' ptr') = M3.NodeConstGc fptr' $ castLayerMultiplexToNode ptr'
+instance M5.NodeConstPtr LayerMultiplexConst where
+  toNodeConst (LayerMultiplexConst ptr') = M5.NodeConst $ castLayerMultiplexToNode ptr'
+  toNodeConst (LayerMultiplexConstGc fptr' ptr') = M5.NodeConstGc fptr' $ castLayerMultiplexToNode ptr'
 
 instance M2.RefConstPtr LayerMultiplexConst where
   toRefConst (LayerMultiplexConst ptr') = M2.RefConst $ castLayerMultiplexToRef ptr'
@@ -1079,13 +1079,13 @@ instance LayerPtr LayerMultiplex where
   toLayer (LayerMultiplex ptr') = Layer $ (HoppyF.castPtr :: HoppyF.Ptr LayerConst -> HoppyF.Ptr Layer) $ castLayerMultiplexToLayer $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
   toLayer (LayerMultiplexGc fptr' ptr') = LayerGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr LayerConst -> HoppyF.Ptr Layer) $ castLayerMultiplexToLayer $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
 
-instance M3.NodeConstPtr LayerMultiplex where
-  toNodeConst (LayerMultiplex ptr') = M3.NodeConst $ castLayerMultiplexToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
-  toNodeConst (LayerMultiplexGc fptr' ptr') = M3.NodeConstGc fptr' $ castLayerMultiplexToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
+instance M5.NodeConstPtr LayerMultiplex where
+  toNodeConst (LayerMultiplex ptr') = M5.NodeConst $ castLayerMultiplexToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
+  toNodeConst (LayerMultiplexGc fptr' ptr') = M5.NodeConstGc fptr' $ castLayerMultiplexToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
 
-instance M3.NodePtr LayerMultiplex where
-  toNode (LayerMultiplex ptr') = M3.Node $ (HoppyF.castPtr :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr M3.Node) $ castLayerMultiplexToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
-  toNode (LayerMultiplexGc fptr' ptr') = M3.NodeGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr M3.NodeConst -> HoppyF.Ptr M3.Node) $ castLayerMultiplexToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
+instance M5.NodePtr LayerMultiplex where
+  toNode (LayerMultiplex ptr') = M5.Node $ (HoppyF.castPtr :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr M5.Node) $ castLayerMultiplexToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
+  toNode (LayerMultiplexGc fptr' ptr') = M5.NodeGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr M5.Node) $ castLayerMultiplexToNode $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
 
 instance M2.RefConstPtr LayerMultiplex where
   toRefConst (LayerMultiplex ptr') = M2.RefConst $ castLayerMultiplexToRef $ (HoppyF.castPtr :: HoppyF.Ptr LayerMultiplex -> HoppyF.Ptr LayerMultiplexConst) ptr'
@@ -1103,11 +1103,11 @@ instance LayerMultiplexSuper Layer where
     where
       cast' (LayerConst ptr') = LayerMultiplexConst $ castLayerToLayerMultiplex ptr'
       cast' (LayerConstGc fptr' ptr') = LayerMultiplexConstGc fptr' $ castLayerToLayerMultiplex ptr'
-instance LayerMultiplexSuper M3.Node where
-  downToLayerMultiplex = castLayerMultiplexToNonconst . cast' . M3.castNodeToConst
+instance LayerMultiplexSuper M5.Node where
+  downToLayerMultiplex = castLayerMultiplexToNonconst . cast' . M5.castNodeToConst
     where
-      cast' (M3.NodeConst ptr') = LayerMultiplexConst $ castNodeToLayerMultiplex ptr'
-      cast' (M3.NodeConstGc fptr' ptr') = LayerMultiplexConstGc fptr' $ castNodeToLayerMultiplex ptr'
+      cast' (M5.NodeConst ptr') = LayerMultiplexConst $ castNodeToLayerMultiplex ptr'
+      cast' (M5.NodeConstGc fptr' ptr') = LayerMultiplexConstGc fptr' $ castNodeToLayerMultiplex ptr'
 instance LayerMultiplexSuper M2.Ref where
   downToLayerMultiplex = castLayerMultiplexToNonconst . cast' . M2.castRefToConst
     where
@@ -1122,11 +1122,11 @@ instance LayerMultiplexSuperConst LayerConst where
     where
       cast' (LayerConst ptr') = LayerMultiplexConst $ castLayerToLayerMultiplex ptr'
       cast' (LayerConstGc fptr' ptr') = LayerMultiplexConstGc fptr' $ castLayerToLayerMultiplex ptr'
-instance LayerMultiplexSuperConst M3.NodeConst where
+instance LayerMultiplexSuperConst M5.NodeConst where
   downToLayerMultiplexConst = cast'
     where
-      cast' (M3.NodeConst ptr') = LayerMultiplexConst $ castNodeToLayerMultiplex ptr'
-      cast' (M3.NodeConstGc fptr' ptr') = LayerMultiplexConstGc fptr' $ castNodeToLayerMultiplex ptr'
+      cast' (M5.NodeConst ptr') = LayerMultiplexConst $ castNodeToLayerMultiplex ptr'
+      cast' (M5.NodeConstGc fptr' ptr') = LayerMultiplexConstGc fptr' $ castNodeToLayerMultiplex ptr'
 instance LayerMultiplexSuperConst M2.RefConst where
   downToLayerMultiplexConst = cast'
     where
