@@ -1,7 +1,7 @@
 module Graphics.UI.Cocos2d.Generator.Interface.Director
     (
       mod_director
-    , resolutionPolicy
+    , e_ResolutionPolicy
     , c_Director
     , c_GLView
     )
@@ -18,7 +18,7 @@ mod_director :: Module
 mod_director =
   moduleModify' (makeModule "director" "Director.hpp" "Director.cpp") $
     moduleAddExports
-    [ ExportEnum resolutionPolicy
+    [ ExportEnum e_ResolutionPolicy
     , ExportClass c_Director
     , ExportClass c_GLView
     ]
@@ -67,9 +67,9 @@ c_Director =
       -- TODO: getCocos2dThreadId
       ]
 
-resolutionPolicy :: CppEnum
-resolutionPolicy =
-    makeEnum (ident "ResolutionPolicy") Nothing
+e_ResolutionPolicy :: CppEnum
+e_ResolutionPolicy =
+  makeEnum (ident "ResolutionPolicy") Nothing
     [ (0, ["exact", "fit"])
     , (1, ["no", "border"])
     , (2, ["show", "all"])
@@ -96,7 +96,7 @@ c_GLView =
       , mkConstMethod "getVisibleRect" [] $ toGcT (objT c_Rect)
       , mkConstMethod "getDesignResolutionSize" [] $ refT $ constT $ objT c_Size
       -- width, height, resolution policy
-      , mkMethod "setDesignResolutionSize" [floatT, floatT, enumT resolutionPolicy] voidT
+      , mkMethod "setDesignResolutionSize" [floatT, floatT, enumT e_ResolutionPolicy] voidT
       , mkMethod "setViewPortInPoints" [floatT, floatT, floatT, floatT] voidT
       , mkMethod "setScissorInPoints" [floatT, floatT, floatT, floatT] voidT
       , mkMethod "isScissorEnabled" [] boolT
@@ -106,5 +106,5 @@ c_GLView =
       , mkConstMethod "getViewPortRect" [] $ refT $ constT $ objT c_Rect
       , mkConstMethod "getScaleX" [] floatT
       , mkConstMethod "getScaleY" [] floatT
-      , mkConstMethod "getResolutionPolicy" [] $ enumT resolutionPolicy
+      , mkConstMethod "getResolutionPolicy" [] $ enumT e_ResolutionPolicy
       ]
