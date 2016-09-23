@@ -15,7 +15,12 @@ mod_node =
   moduleModify' (makeModule "node" "Node.hpp" "Node.cpp") $
     moduleAddExports
     [ ExportClass c_Node
+    , ExportCallback cb_ScheduleCallback
     ]
+
+cb_ScheduleCallback :: Callback
+cb_ScheduleCallback =
+  makeCallback (toExtName "ScheduleCallback") [floatT] voidT
 
 c_Node :: Class
 c_Node =
@@ -99,6 +104,36 @@ c_Node =
       -- TODO: actionManager ?
       , mkMethod "stopAllActions" [] voidT
       -- TODO: action ?
+
+      -- scheduling
+      , mkMethod "isScheduled" [refT $ constT $ objT c_string] boolT
+      , mkMethod "scheduleOnce"
+          [ callbackT cb_ScheduleCallback
+          , floatT                        -- delay
+          , refT $ constT $ objT c_string -- key
+          ] voidT
+      -- called every frame
+      , mkMethod "schedule"
+          [ callbackT cb_ScheduleCallback
+          , refT $ constT $ objT c_string -- key
+          ] voidT
+      , mkMethod' "schedule" "scheduleWithInterval"
+          [ callbackT cb_ScheduleCallback
+          , floatT                        -- interval in seconds, 0 means every frame
+          , refT $ constT $ objT c_string -- key
+          ] voidT
+      , mkMethod' "schedule" "scheduleWithIntervalAndRepeat"
+          [ callbackT cb_ScheduleCallback
+          , floatT                        -- interval
+          , uintT                         -- will be executed (repeat+1) times
+          , floatT                        -- delay
+          , refT $ constT $ objT c_string -- key
+          ] voidT
+      , mkMethod "unschedule" [refT $ constT $ objT c_string] voidT
+      , mkMethod "unscheduleAllCallbacks" [] voidT
+      , mkMethod "resume" [] voidT
+      , mkMethod "pause" [] voidT
+
       , mkConstMethod "getNodeToParentTransform" [] $ refT $ constT $ objT c_Mat4
       , mkConstMethod "getNodeToParentAffineTransform" [] $ objT c_AffineTransform
       , mkConstMethod' "getNodeToParentTransform" "getNodeToAncestorTransform" [ptrT $ objT c_Node] $ objT c_Mat4

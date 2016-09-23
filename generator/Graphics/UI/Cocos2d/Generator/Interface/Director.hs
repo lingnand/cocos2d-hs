@@ -4,6 +4,7 @@ module Graphics.UI.Cocos2d.Generator.Interface.Director
     , e_ResolutionPolicy
     , c_Director
     , c_GLView
+    , c_Scheduler
     )
   where
 
@@ -21,6 +22,7 @@ mod_director =
     [ ExportEnum e_ResolutionPolicy
     , ExportClass c_Director
     , ExportClass c_GLView
+    , ExportClass c_Scheduler
     ]
 
 c_Director :: Class
@@ -63,7 +65,8 @@ c_Director =
       , mkMethod "setDepthTest" [boolT] voidT
       , mkMethod "setContentScaleFactor" [floatT] voidT
       , mkConstMethod "getContentScaleFactor" [] floatT
-      -- TODO: scheduler, action manager, event dispatcher, renderer, console
+      , mkConstMethod "getScheduler" [] $ ptrT $ objT c_Scheduler
+      -- TODO: action manager, event dispatcher, renderer, console
       -- TODO: getCocos2dThreadId
       ]
 
@@ -107,4 +110,13 @@ c_GLView =
       , mkConstMethod "getScaleX" [] floatT
       , mkConstMethod "getScaleY" [] floatT
       , mkConstMethod "getResolutionPolicy" [] $ enumT e_ResolutionPolicy
+      ]
+
+c_Scheduler :: Class
+c_Scheduler =
+  addReqIncludes [includeStd "base/CCScheduler.h"] $
+    makeClass (ident1 "cocos2d" "Scheduler") Nothing [c_Ref]
+      [ mkMethod "getTimeScale" [] floatT
+      , mkMethod "setTimeScale" [floatT] voidT
+      -- we don't include schedule/unschedule functions here as it's easier to do it from within Node
       ]
