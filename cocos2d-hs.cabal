@@ -25,6 +25,7 @@ executable generator
                      , Graphics.UI.Cocos2d.Generator.Interface.Sprite
                      , Graphics.UI.Cocos2d.Generator.Interface.Widget
                      , Graphics.UI.Cocos2d.Generator.Interface.Event
+                     , Graphics.UI.Cocos2d.Generator.Interface.Label
   build-depends:       base >=4.7 && <4.9
                      , haskell-src >=1.0 && <1.1
                      , hoppy-generator
@@ -47,6 +48,7 @@ library
                      , Graphics.UI.Cocos2d.Sprite
                      , Graphics.UI.Cocos2d.Widget
                      , Graphics.UI.Cocos2d.Event
+                     , Graphics.UI.Cocos2d.Label
   other-modules:       Graphics.UI.Cocos2d.Std
   c-sources:           cbits/Common.cpp
                        cbits/Texture.cpp
@@ -57,6 +59,7 @@ library
                        cbits/Sprite.cpp
                        cbits/Widget.cpp
                        cbits/Event.cpp
+                       cbits/Label.cpp
                        cbits/std.cpp
   include-dirs:        cbits
                        /Applications/Cocos/frameworks/cocos2d-x-3.9/cocos
