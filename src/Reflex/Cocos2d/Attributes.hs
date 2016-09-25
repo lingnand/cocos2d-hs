@@ -38,7 +38,6 @@ module Reflex.Cocos2d.Attributes
 import Data.Functor.Contravariant
 import Diagrams (Point(..), V2(..), P2, (^&), _x, _y, Direction, V2)
 import Control.Lens hiding (set, chosen, transform)
-import Control.Monad
 import Control.Monad.IO.Class
 import Reflex.Host.Class
 import Reflex

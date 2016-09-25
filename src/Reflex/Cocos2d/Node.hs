@@ -31,13 +31,14 @@ module Reflex.Cocos2d.Node
     , scaleX
     , scaleY
     , visible
+    , color
     , opacity
+    , alphaColor
     , cascadeColor
     , cascadeOpacity
     , size
     , width
     , height
-    , color
     -- , action
     , spriteTextureFilename
     , flipped
@@ -55,11 +56,10 @@ module Reflex.Cocos2d.Node
     , SpritePtr
     ) where
 
-import Data.Word
 import Data.Colour
 import Control.Monad
 import Control.Monad.IO.Class
-import Control.Lens hiding (flipped, set)
+import Control.Lens hiding (flipped, set, over)
 import Diagrams (Point(..), V2(..), Angle, (@@), deg, _theta)
 import Diagrams.Direction
 import Diagrams.TwoD.Vector
@@ -175,8 +175,27 @@ scaleY = hoistA liftIO $ Attrib' node_getScaleY node_setScaleY
 visible :: (MonadIO m, NodePtr n) => Attrib n m Bool
 visible = hoistA liftIO $ Attrib' node_isVisible node_setVisible
 
-opacity :: (MonadIO m, NodePtr n) => Attrib n m Word8
-opacity = hoistA liftIO $ Attrib' node_getOpacity node_setOpacity
+-- | Color; mostly only useful for LayerColor & Sprite
+color :: (MonadIO m, NodePtr n) => Attrib n m (Colour Float)
+color = hoistA liftIO $ Attrib' (decode <=< node_getColor) node_setColor
+
+node_getOpacityInFloat :: NodePtr n => n -> IO Float
+node_getOpacityInFloat n = (/255) . fromIntegral <$> node_getOpacity n
+
+node_setOpacityInFloat :: NodePtr n => n -> Float -> IO ()
+node_setOpacityInFloat n a = node_setOpacity n (round $ a * 255)
+
+opacity :: (MonadIO m, NodePtr n) => Attrib n m Float
+opacity = hoistA liftIO $ Attrib' node_getOpacityInFloat node_setOpacityInFloat
+
+alphaColor :: (MonadIO m, NodePtr n) => Attrib n m (AlphaColour Float)
+alphaColor = hoistA liftIO $ Attrib' getter setter
+  where getter n = withOpacity <$> (node_getColor n >>= decode) <*> node_getOpacityInFloat n
+        setter n ac = do
+          let a = alphaChannel ac
+              c | a > 0 = darken (recip a) (ac `over` black)
+                | otherwise = black
+          node_setColor n c >> node_setOpacityInFloat n a
 
 cascadeColor :: (MonadIO m, NodePtr n) => Attrib n m Bool
 cascadeColor = hoistA liftIO $ Attrib' node_isCascadeColorEnabled node_setCascadeColorEnabled
@@ -201,10 +220,6 @@ height = hoistA liftIO $ Attrib' getter setter
         setter n h = do
           w <- size_width_get =<< node_getContentSize n
           node_setContentSize n (V2 w h)
-
--- | Color; mostly only useful for LayerColor & Sprite
-color :: (MonadIO m, NodePtr n) => Attrib n m (Colour Float)
-color = hoistA liftIO $ Attrib' (decode <=< node_getColor) node_setColor
 
 -- | Currently modelled as non-stoppable action that gets run when set
 -- action :: (MonadIO m, NodePtr n) => SetOnlyAttrib n m Action

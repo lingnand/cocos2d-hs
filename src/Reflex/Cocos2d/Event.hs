@@ -89,7 +89,6 @@ module Reflex.Cocos2d.Event
     -- , loadCCS'
     ) where
 
-import Diagrams (Point(..), P2)
 -- import Diagrams.BoundingBox
 import Data.Tuple (swap)
 import Data.Dependent.Sum ((==>))
@@ -114,9 +113,6 @@ import Graphics.UI.Cocos2d.Director
 
 import Reflex.Cocos2d.Class
 import Reflex.Cocos2d.Types
-import Reflex.Cocos2d.Node
-import Reflex.Cocos2d.Attributes
-import Linear.Affine
 
 -- Event Packages
 data MouseEvents t = MouseEvents
