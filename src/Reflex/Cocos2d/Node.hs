@@ -1,0 +1,222 @@
+{-# LANGUAGE PartialTypeSignatures #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE JavaScriptFFI #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TemplateHaskell #-}
+module Reflex.Cocos2d.Node
+    (
+      node
+    , node_
+    , layer
+    , layer_
+    , layerColor
+    , layerColor_
+    , sprite
+    , sprite_
+    -- attrs --
+    , eDir
+    , rot
+    , anchor
+    , anchorX
+    , anchorY
+    , skew
+    , skewX
+    , skewY
+    , zOrder
+    , scale
+    , scaleX
+    , scaleY
+    , visible
+    , opacity
+    , cascadeColor
+    , cascadeOpacity
+    , size
+    , width
+    , height
+    , color
+    -- , action
+    , spriteTextureFilename
+    , flipped
+    , flippedX
+    , flippedY
+    ) where
+
+import Data.Word
+import Data.Colour
+import Control.Monad
+import Control.Monad.IO.Class
+import Control.Lens hiding (flipped, set)
+import Diagrams (Point(..), V2(..), Angle, (@@), deg, _theta)
+import Diagrams.Direction
+import Diagrams.TwoD.Vector
+import Graphics.UI.Cocos2d.Common
+import Graphics.UI.Cocos2d.Node
+import Graphics.UI.Cocos2d.Layer
+-- import Graphics.UI.Cocos2d.Action
+import Graphics.UI.Cocos2d.Sprite
+import Foreign.Hoppy.Runtime (Decodable(..))
+import Reflex.Cocos2d.Class
+import Reflex.Cocos2d.Attributes
+
+-- * Node
+addNewChild :: (NodeGraph t m, NodePtr n) => IO n -> [Prop n m] -> m n
+addNewChild factory props = do
+    n <- liftIO factory
+    set n props
+    askParent >>= liftIO . flip node_addChild n
+    return n
+
+node :: NodeGraph t m => [Prop Node m] -> m Node
+node = addNewChild node_create
+
+node_ :: NodeGraph t m => [Prop Node m] -> m ()
+node_ = void . node
+
+layer :: NodeGraph t m => [Prop Layer m] -> m Layer
+layer = addNewChild layer_create
+
+layer_ :: NodeGraph t m => [Prop Layer m] -> m ()
+layer_ = void . layer
+
+layerColor :: NodeGraph t m => [Prop LayerColor m] -> m LayerColor
+layerColor = addNewChild layerColor_create
+
+layerColor_ :: NodeGraph t m => [Prop LayerColor m] -> m ()
+layerColor_ = void . layerColor
+
+-- * Sprite
+
+sprite :: NodeGraph t m => [Prop Sprite m] -> m Sprite
+sprite = addNewChild sprite_create
+
+sprite_ :: NodeGraph t m => [Prop Sprite m] -> m ()
+sprite_ = void . sprite
+
+
+---- Various Attributes ----
+
+instance (MonadIO m, NodePtr n) => HasPosition n m where
+  position = hoistA liftIO $ Attrib' getPosition setPosition
+    where getPosition = liftIO . fmap P . (decode <=< node_getPosition)
+          setPosition n (P v2) = liftIO $ node_setPosition n v2
+  positionX = hoistA liftIO $ Attrib' node_getPositionX node_setPositionX
+  positionY = hoistA liftIO $ Attrib' node_getPositionY node_setPositionY
+
+-- | Convert rotation angle (CCW) to direction
+eDir :: Floating n => Angle n -> Direction V2 n
+eDir = dir . e
+
+-- | cocos2d uses clockwise degree - we convert it to agnostic Direction (where xDir is *without*
+-- any rotation)
+instance (MonadIO m, NodePtr n) => HasRotation n m where
+  rotation = hoistA liftIO $ Attrib' getter setter
+    where fromCC = eDir . (@@ deg) . negate
+          toCC = negate . (^._theta.deg)
+          getter = liftIO . fmap fromCC . node_getRotation
+          setter n = node_setRotation n . toCC
+
+-- | anchor expressed as percentage: V2 ([0-1], [0-1])
+anchor :: (MonadIO m, NodePtr n) => Attrib n m (V2 Float)
+anchor = hoistA liftIO $ Attrib' (decode <=< node_getAnchorPoint) node_setAnchorPoint
+
+anchorX :: (MonadIO m, NodePtr n) => Attrib n m Float
+anchorX = hoistA liftIO $ Attrib' getter setter
+  where getter = vec2_x_get <=< node_getAnchorPoint
+        setter n x = do
+          y <- vec2_y_get =<< node_getAnchorPoint n
+          node_setAnchorPoint n (V2 x y)
+
+anchorY :: (MonadIO m, NodePtr n) => Attrib n m Float
+anchorY = hoistA liftIO $ Attrib' getter setter
+  where getter = vec2_y_get <=< node_getAnchorPoint
+        setter n y = do
+          x <- vec2_x_get =<< node_getAnchorPoint n
+          node_setAnchorPoint n (V2 x y)
+
+skew :: (MonadIO m, NodePtr n) => Attrib n m (V2 Float)
+skew = hoistA liftIO $ Attrib' getter setter
+  where getter n = V2 <$> node_getSkewX n <*> node_getSkewY n
+        setter n (V2 x y) = node_setSkewX n x >> node_setSkewY n y
+
+skewX :: (MonadIO m, NodePtr n) => Attrib n m Float
+skewX = hoistA liftIO $ Attrib' node_getSkewX node_setSkewX
+
+skewY :: (MonadIO m, NodePtr n) => Attrib n m Float
+skewY = hoistA liftIO $ Attrib' node_getSkewY node_setSkewY
+
+zOrder :: (MonadIO m, NodePtr n) => Attrib n m Int
+zOrder = hoistA liftIO $ Attrib' node_getLocalZOrder node_setLocalZOrder
+
+scale :: (MonadIO m, NodePtr n) => Attrib n m (V2 Float)
+scale = hoistA liftIO $ Attrib' getter setter
+  where getter n = V2 <$> node_getScaleX n <*> node_getScaleY n
+        setter n (V2 x y) = node_setScaleX n x >> node_setScaleY n y
+
+scaleX :: (MonadIO m, NodePtr n) => Attrib n m Float
+scaleX = hoistA liftIO $ Attrib' node_getScaleX node_setScaleX
+
+scaleY :: (MonadIO m, NodePtr n) => Attrib n m Float
+scaleY = hoistA liftIO $ Attrib' node_getScaleY node_setScaleY
+
+visible :: (MonadIO m, NodePtr n) => Attrib n m Bool
+visible = hoistA liftIO $ Attrib' node_isVisible node_setVisible
+
+opacity :: (MonadIO m, NodePtr n) => Attrib n m Word8
+opacity = hoistA liftIO $ Attrib' node_getOpacity node_setOpacity
+
+cascadeColor :: (MonadIO m, NodePtr n) => Attrib n m Bool
+cascadeColor = hoistA liftIO $ Attrib' node_isCascadeColorEnabled node_setCascadeColorEnabled
+
+cascadeOpacity :: (MonadIO m, NodePtr n) => Attrib n m Bool
+cascadeOpacity = hoistA liftIO $ Attrib' node_isCascadeOpacityEnabled node_setCascadeOpacityEnabled
+
+-- | Content size; not useful for Sprite
+size :: (MonadIO m, NodePtr n) => Attrib n m (V2 Float)
+size = hoistA liftIO $ Attrib' (decode <=< node_getContentSize) node_setContentSize
+
+width :: (MonadIO m, NodePtr n) => Attrib n m Float
+width = hoistA liftIO $ Attrib' getter setter
+  where getter = size_width_get <=< node_getContentSize
+        setter n w = do
+          h <- size_height_get =<< node_getContentSize n
+          node_setContentSize n (V2 w h)
+
+height :: (MonadIO m, NodePtr n) => Attrib n m Float
+height = hoistA liftIO $ Attrib' getter setter
+  where getter = size_height_get <=< node_getContentSize
+        setter n h = do
+          w <- size_width_get =<< node_getContentSize n
+          node_setContentSize n (V2 w h)
+
+-- | Color; mostly only useful for LayerColor & Sprite
+color :: (MonadIO m, NodePtr n) => Attrib n m (Colour Float)
+color = hoistA liftIO $ Attrib' (decode <=< node_getColor) node_setColor
+
+-- | Currently modelled as non-stoppable action that gets run when set
+-- action :: (MonadIO m, NodePtr n) => SetOnlyAttrib n m Action
+-- action = SetOnlyAttrib' runAction
+
+-- | Set SpriteFrame by name.
+-- NOTE: the SpriteFrame has to be already inside the SpriteFrameCache
+-- spriteName :: (MonadIO m, SpritePtr n) => SetOnlyAttrib n m String
+-- spriteName = SetOnlyAttrib' $ \sp -> liftIO . sprite_setSpriteFrameWithName sp
+
+-- | Set texture by its filename
+-- NOTE: this automatically adds the texture to the texture cache if it's not already there
+spriteTextureFilename :: (MonadIO m, SpritePtr n) => SetOnlyAttrib n m String
+spriteTextureFilename = SetOnlyAttrib' $ \sp -> liftIO . sprite_setTextureWithFilename sp
+
+flipped :: (MonadIO m, SpritePtr n) => Attrib n m (V2 Bool)
+flipped = hoistA liftIO $ Attrib' getter setter
+  where getter n = V2 <$> sprite_isFlippedX n <*> sprite_isFlippedY n
+        setter n (V2 x y) = sprite_setFlippedX n x >> sprite_setFlippedY n y
+
+flippedX :: (MonadIO m, SpritePtr n) => Attrib n m Bool
+flippedX = hoistA liftIO $ Attrib' sprite_isFlippedX sprite_setFlippedX
+
+flippedY :: (MonadIO m, SpritePtr n) => Attrib n m Bool
+flippedY = hoistA liftIO $ Attrib' sprite_isFlippedY sprite_setFlippedY

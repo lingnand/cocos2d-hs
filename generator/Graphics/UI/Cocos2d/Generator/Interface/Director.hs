@@ -5,6 +5,7 @@ module Graphics.UI.Cocos2d.Generator.Interface.Director
     , c_Director
     , c_GLView
     , c_Scheduler
+    , c_EventDispatcher
     )
   where
 
@@ -12,8 +13,10 @@ import Foreign.Hoppy.Generator.Spec
 import Foreign.Hoppy.Generator.Types
 import Foreign.Hoppy.Generator.Std
 
+import Graphics.UI.Cocos2d.Generator.Interface.Node
 import Graphics.UI.Cocos2d.Generator.Interface.Scene
 import Graphics.UI.Cocos2d.Generator.Interface.Common
+import Graphics.UI.Cocos2d.Generator.Interface.Event
 
 mod_director :: Module
 mod_director =
@@ -23,6 +26,8 @@ mod_director =
     , ExportClass c_Director
     , ExportClass c_GLView
     , ExportClass c_Scheduler
+    , ExportClass c_EventDispatcher
+    , ExportCallback cb_ThreadPerformCallback
     ]
 
 c_Director :: Class
@@ -66,7 +71,8 @@ c_Director =
       , mkMethod "setContentScaleFactor" [floatT] voidT
       , mkConstMethod "getContentScaleFactor" [] floatT
       , mkConstMethod "getScheduler" [] $ ptrT $ objT c_Scheduler
-      -- TODO: action manager, event dispatcher, renderer, console
+      , mkConstMethod "getEventDispatcher" [] $ ptrT $ objT c_EventDispatcher
+      -- TODO: action manager, renderer, console
       -- TODO: getCocos2dThreadId
       ]
 
@@ -112,6 +118,10 @@ c_GLView =
       , mkConstMethod "getResolutionPolicy" [] $ enumT e_ResolutionPolicy
       ]
 
+cb_ThreadPerformCallback :: Callback
+cb_ThreadPerformCallback =
+  makeCallback (toExtName "ThreadPerformCallback") [] voidT
+
 c_Scheduler :: Class
 c_Scheduler =
   addReqIncludes [includeStd "base/CCScheduler.h"] $
@@ -119,4 +129,52 @@ c_Scheduler =
       [ mkMethod "getTimeScale" [] floatT
       , mkMethod "setTimeScale" [floatT] voidT
       -- we don't include schedule/unschedule functions here as it's easier to do it from within Node
+      , mkMethod "performFunctionInCocosThread" [callbackT cb_ThreadPerformCallback] voidT
+      ]
+
+c_EventDispatcher :: Class
+c_EventDispatcher =
+  addReqIncludes [includeStd "base/CCEventDispatcher.h"] $
+    makeClass (ident1 "cocos2d" "EventDispatcher") Nothing [c_Ref]
+      [ mkMethod "addEventListenerWithSceneGraphPriority"
+      --  @note  The priority of scene graph will be fixed value 0. So the order of listener item
+      --          in the vector will be ' <0, scene graph (0 priority), >0'.
+          [ ptrT $ objT c_EventListener
+          , ptrT $ objT c_Node ] voidT
+      --  @note A lower priority will be called before the ones that have a higher value.
+      --        0 priority is forbidden for fixed priority since it's used for scene graph based priority.
+      , mkMethod "addEventListenerWithFixedPriority"
+          [ ptrT $ objT c_EventListener
+          , intT ] voidT
+      -- it will use a fixed priority of 1
+      , mkMethod "addCustomEventListener"
+          [ refT $ constT $ objT c_string
+          , callbackT cb_EventCustomCallback ] $ ptrT $ objT c_EventListenerCustom
+      , mkMethod "removeEventListener" [ptrT $ objT c_EventListener] voidT
+      , mkMethod "removeEventListenersForType" [enumT e_EventListenerType] voidT
+      , mkMethod "removeEventListenersForTarget"
+          [ ptrT $ objT c_Node
+          , boolT -- recursive
+          ] voidT
+      , mkMethod "removeCustomEventListeners" [refT $ constT $ objT c_string] voidT
+      , mkMethod "removeAllEventListeners" [] voidT
+      , mkMethod "pauseEventListenersForTarget"
+          [ ptrT $ objT c_Node
+          , boolT -- recursive
+          ] voidT
+      , mkMethod "resumeEventListenersForTarget"
+          [ ptrT $ objT c_Node
+          , boolT -- recursive
+          ] voidT
+      , mkMethod "setPriority"
+          [ ptrT $ objT c_EventListener
+          , intT -- fixedPriority
+          ] voidT
+      , mkMethod "setEnabled" [boolT] voidT
+      , mkConstMethod "isEnabled" [] boolT
+      , mkMethod "dispatchEvent" [ptrT $ objT c_Event] voidT
+      , mkMethod "dispatchCustomEvent"
+          [ refT $ constT $ objT c_string
+          , ptrT voidT -- optionalUserData
+          ] voidT
       ]

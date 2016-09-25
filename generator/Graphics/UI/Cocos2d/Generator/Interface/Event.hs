@@ -1,7 +1,7 @@
 module Graphics.UI.Cocos2d.Generator.Interface.Event
     (
       mod_event
-    , c_Acceleration
+    , c_EventAcceleration
     , c_Controller
     , c_ControllerKeyStatus
     , c_Event
@@ -16,7 +16,7 @@ module Graphics.UI.Cocos2d.Generator.Interface.Event
     , c_EventListenerTouchAllAtOnce
     , c_EventListenerTouchOneByOne
     , c_EventMouse
-    , c_Touch
+    , c_EventTouch
     , cb_EventAccelerationCallback
     , cb_EventControllerCallback
     , cb_EventControllerWithKeyCodeCallback
@@ -30,14 +30,16 @@ module Graphics.UI.Cocos2d.Generator.Interface.Event
     , e_ControllerEventType
     , e_ControllerKey
     , e_EventType
+    , e_EventListenerType
     , e_KeyCode
     , vectorController
-    , vectorTouch
+    , vectorEventTouch
     )
   where
 
 import Foreign.Hoppy.Generator.Spec
 import Foreign.Hoppy.Generator.Types
+import Foreign.Hoppy.Generator.Std (ValueConversion(..))
 import Foreign.Hoppy.Generator.Std.String
 import qualified Foreign.Hoppy.Generator.Std.Vector as V
 
@@ -50,7 +52,7 @@ mod_event =
   moduleModify' (makeModule "event" "Event.hpp" "Event.cpp") $
     moduleAddExports $
     [ ExportClass c_Event
-    , ExportClass c_Acceleration
+    , ExportClass c_EventAcceleration
     , ExportClass c_Controller
     , ExportClass c_ControllerKeyStatus
     , ExportClass c_Event
@@ -65,7 +67,7 @@ mod_event =
     , ExportClass c_EventListenerTouchAllAtOnce
     , ExportClass c_EventListenerTouchOneByOne
     , ExportClass c_EventMouse
-    , ExportClass c_Touch
+    , ExportClass c_EventTouch
     , ExportCallback cb_EventAccelerationCallback
     , ExportCallback cb_EventControllerCallback
     , ExportCallback cb_EventControllerWithKeyCodeCallback
@@ -79,12 +81,13 @@ mod_event =
     , ExportEnum e_ControllerEventType
     , ExportEnum e_ControllerKey
     , ExportEnum e_EventType
+    , ExportEnum e_EventListenerType
     , ExportEnum e_KeyCode
     ]
     ++
     V.toExports vectorController
     ++
-    V.toExports vectorTouch
+    V.toExports vectorEventTouch
 
 e_EventType :: CppEnum
 e_EventType =
@@ -96,6 +99,20 @@ e_EventType =
     , (4, ["focus"])
     , (5, ["game", "controller"])
     , (6, ["game", "custom"])
+    ]
+
+e_EventListenerType :: CppEnum
+e_EventListenerType =
+  makeEnum (ident2 "cocos2d" "EventListener" "Type") Nothing
+    [ (0, ["unknown"])
+    , (1, ["touch", "one", "by", "one"])
+    , (2, ["touch", "all", "at", "once"])
+    , (3, ["keyboard"])
+    , (4, ["mouse"])
+    , (5, ["acceleration"])
+    , (6, ["focus"])
+    , (7, ["game", "controller"])
+    , (8, ["custom"])
     ]
 
 c_Event :: Class
@@ -459,10 +476,10 @@ c_EventListenerFocus =
       , makeClassVariable "onFocusChanged" Nothing (callbackT cb_EventFocusCallback) Nonstatic False True
       ]
 
-c_Acceleration :: Class
-c_Acceleration =
+c_EventAcceleration :: Class
+c_EventAcceleration =
   addReqIncludes [includeStd "base/ccTypes.h"] $
-    makeClass (ident1 "cocos2d" "Acceleration") Nothing [c_Ref]
+    makeClass (ident1 "cocos2d" "Acceleration") (Just $ toExtName "EventAcceleration") [c_Ref]
       [ mkCtor "new" []
       , mkClassVariable "x" doubleT
       , mkClassVariable "y" doubleT
@@ -472,7 +489,7 @@ c_Acceleration =
 
 cb_EventAccelerationCallback :: Callback
 cb_EventAccelerationCallback =
-  makeCallback (toExtName "EventAccelerationCallback") [ptrT $ objT c_Acceleration, ptrT $ objT c_Event] voidT
+  makeCallback (toExtName "EventAccelerationCallback") [ptrT $ objT c_EventAcceleration, ptrT $ objT c_Event] voidT
 
 c_EventListenerAcceleration :: Class
 c_EventListenerAcceleration =
@@ -496,10 +513,11 @@ c_EventListenerMouse =
       , makeClassVariable "onMouseScroll" Nothing (callbackT cb_EventMouseCallback) Nonstatic False True
       ]
 
-c_Touch :: Class
-c_Touch =
+c_EventTouch :: Class
+c_EventTouch =
   addReqIncludes [includeStd "base/CCTouch.h"] $
-    makeClass (ident1 "cocos2d" "Touch") Nothing [c_Ref]
+    -- rename to EventTouch for consistency (and leaves the name 'Touch' for pure counterparts)
+    makeClass (ident1 "cocos2d" "Touch") (Just $ toExtName "EventTouch") [c_Ref]
       [ mkConstMethod "getLocation" [] $ objT c_Vec2
       , mkConstMethod "getPreviousLocation" [] $ objT c_Vec2
       , mkConstMethod "getStartLocation" [] $ objT c_Vec2
@@ -513,11 +531,11 @@ c_Touch =
 
 cb_EventTouchBeganCallback :: Callback
 cb_EventTouchBeganCallback =
-  makeCallback (toExtName "EventTouchBeganCallback") [ptrT $ objT c_Touch, ptrT $ objT c_Event] boolT
+  makeCallback (toExtName "EventTouchBeganCallback") [ptrT $ objT c_EventTouch, ptrT $ objT c_Event] boolT
 
 cb_EventTouchCallback :: Callback
 cb_EventTouchCallback =
-  makeCallback (toExtName "EventTouchCallback") [ptrT $ objT c_Touch, ptrT $ objT c_Event] voidT
+  makeCallback (toExtName "EventTouchCallback") [ptrT $ objT c_EventTouch, ptrT $ objT c_Event] voidT
 
 c_EventListenerTouchOneByOne :: Class
 c_EventListenerTouchOneByOne =
@@ -532,14 +550,15 @@ c_EventListenerTouchOneByOne =
       , makeClassVariable "onTouchCancelled" Nothing (callbackT cb_EventTouchCallback) Nonstatic False True
       ]
 
-vectorTouch :: V.Contents
-vectorTouch = V.instantiate "TouchVector" (ptrT $ objT c_Touch) reqs
+vectorEventTouch :: V.Contents
+vectorEventTouch = V.instantiate' "EventTouchVector" (ptrT $ objT c_EventTouch) reqs opts
   where
     reqs = reqInclude $ includeStd "base/CCTouch.h"
+    opts = V.Options [] $ Just ConvertValue
 
 cb_EventTouchesCallback :: Callback
 cb_EventTouchesCallback =
-  makeCallback (toExtName "EventTouchesCallback") [refT $ constT $ objT $ V.c_vector vectorTouch, ptrT $ objT c_Event] voidT
+  makeCallback (toExtName "EventTouchesCallback") [refT $ constT $ objT $ V.c_vector vectorEventTouch, ptrT $ objT c_Event] voidT
 
 c_EventListenerTouchAllAtOnce :: Class
 c_EventListenerTouchAllAtOnce =

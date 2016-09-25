@@ -42,6 +42,10 @@ c_Node =
       , mkMethod' "setScale" "setScaleXY" [floatT, floatT] voidT
       , mkConstMethod "getPosition" [] $ refT $ constT $ objT c_Vec2
       , mkMethod "setPosition" [refT $ constT $ objT c_Vec2] voidT
+      , mkConstMethod "getPositionX" [] floatT
+      , mkMethod "setPositionX" [floatT] voidT
+      , mkConstMethod "getPositionY" [] floatT
+      , mkMethod "setPositionY" [floatT] voidT
       , mkConstMethod "getNormalizedPosition" [] $ refT $ constT $ objT c_Vec2
       , mkMethod "setNormalizedPosition" [refT $ constT $ objT c_Vec2] voidT
       , mkConstMethod "getPositionZ" [] floatT

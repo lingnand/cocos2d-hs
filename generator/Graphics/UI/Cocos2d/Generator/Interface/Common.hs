@@ -137,8 +137,8 @@ c_Color3B =
       ClassHaskellConversion
         { classHaskellConversionType = do
             addImports $ hsWholeModuleImport "Data.Colour"
-            addImports $ hsImport1 "Prelude" "Double"
-            return $ HsTyApp (HsTyCon $ UnQual $ HsIdent "Colour") (HsTyCon $ UnQual $ HsIdent "Double")
+            addImports $ hsImport1 "Prelude" "Float"
+            return $ HsTyApp (HsTyCon $ UnQual $ HsIdent "Colour") (HsTyCon $ UnQual $ HsIdent "Float")
         , classHaskellConversionToCppFn = do
             addImports $ hsWholeModuleImport "Data.Colour.SRGB"
             sayLn "\\c -> let RGB r g b = toSRGB24 c in color3B_newFromRGB r g b"
@@ -161,8 +161,8 @@ c_Color4B =
       ClassHaskellConversion
         { classHaskellConversionType = do
             addImports $ hsWholeModuleImport "Data.Colour"
-            addImports $ hsImport1 "Prelude" "Double"
-            return $ HsTyApp (HsTyCon $ UnQual $ HsIdent "AlphaColour") (HsTyCon $ UnQual $ HsIdent "Double")
+            addImports $ hsImport1 "Prelude" "Float"
+            return $ HsTyApp (HsTyCon $ UnQual $ HsIdent "AlphaColour") (HsTyCon $ UnQual $ HsIdent "Float")
         , classHaskellConversionToCppFn = do
             addImports $ hsWholeModuleImport "Data.Colour.SRGB"
             addImports $ hsImports "Prelude" ["(>)", "recip", "otherwise", "round", "(*)"]
