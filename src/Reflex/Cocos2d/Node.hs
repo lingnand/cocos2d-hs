@@ -43,6 +43,16 @@ module Reflex.Cocos2d.Node
     , flipped
     , flippedX
     , flippedY
+    -- re-export --
+    , Node
+    , Layer
+    , LayerColor
+    , Sprite
+    -- TODO: rename?
+    , NodePtr
+    , LayerPtr
+    , LayerColorPtr
+    , SpritePtr
     ) where
 
 import Data.Word

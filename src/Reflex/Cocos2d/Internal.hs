@@ -15,7 +15,7 @@ module Reflex.Cocos2d.Internal
       mainScene
     ) where
 
-import Data.Dependent.Sum (DSum (..))
+import Data.Dependent.Sum (DSum, (==>))
 import Data.IORef
 import Control.Monad
 import Control.Monad.Trans.Class
@@ -93,10 +93,10 @@ instance ( MonadIO (HostFrame t), Functor (HostFrame t)
         onEvent_ newChild $ \(Graph g) -> do
             liftIO $ node_removeAllChildren p'
             (postBuildE, postBuildTr) <- newEventWithTriggerRef
-            let firePostBuild = readRef postBuildTr >>= mapM_ (\t -> runWithActions ([t :=> Identity ()], return ()))
+            let firePostBuild = readRef postBuildTr >>= mapM_ (\t -> runWithActions ([t ==> ()], return ()))
             (r, GraphState vas) <- runStateT (runReaderT g (GraphEnv p' postBuildE runWithActions)) (GraphState [])
             liftIO $ readRef newChildBuiltTriggerRef
-                      >>= mapM_ (\t -> runWithActions ([t :=> Identity (r, mergeWith (flip (>>)) vas)], firePostBuild))
+                      >>= mapM_ (\t -> runWithActions ([t ==> (r, mergeWith (flip (>>)) vas)], firePostBuild))
         return (result0, fst <$> newChildBuilt)
     buildEvent newChild = do
         p <- askParent
@@ -108,10 +108,10 @@ instance ( MonadIO (HostFrame t), Functor (HostFrame t)
         runWithActions <- askRunWithActions
         onEvent_ newChild $ \(Graph g) -> do
             (postBuildE, postBuildTr) <- newEventWithTriggerRef
-            let firePostBuild = readRef postBuildTr >>= mapM_ (\t -> runWithActions ([t :=> Identity ()], return ()))
+            let firePostBuild = readRef postBuildTr >>= mapM_ (\t -> runWithActions ([t ==> ()], return ()))
             (r, GraphState vas) <- runStateT (runReaderT g (GraphEnv p postBuildE runWithActions)) (GraphState [])
             liftIO $ readRef newChildBuiltTriggerRef
-                      >>= mapM_ (\t -> runWithActions ([t :=> Identity (r, vas)], firePostBuild))
+                      >>= mapM_ (\t -> runWithActions ([t ==> (r, vas)], firePostBuild))
         return $ fst <$> newChildBuilt
     buildEvent_ = void . buildEvent
     runEvent_ a = Graph $ graphVoidActions %= (a:)
@@ -120,7 +120,7 @@ instance ( MonadIO (HostFrame t), Functor (HostFrame t)
       (eResult, trigger) <- newEventWithTriggerRef
       onEvent_ e $ \o -> do
           o >>= \case
-            Just x -> liftIO $ readRef trigger >>= mapM_ (\t -> runWithActions ([t :=> Identity x], return ()))
+            Just x -> liftIO $ readRef trigger >>= mapM_ (\t -> runWithActions ([t ==> x], return ()))
             _ -> return ()
       return eResult
     runEvent = runEventMaybe . fmap (Just <$>)
@@ -164,5 +164,5 @@ mainScene (Graph g) = do
         (postBuildE, postBuildTr) <- newEventWithTriggerRef
         GraphState vas <- runHostFrame $ execStateT (runReaderT g (GraphEnv (toNode scene) postBuildE runWithActions)) (GraphState [])
         voidActionHandle <- subscribeEvent $ mergeWith (flip (>>)) vas
-        liftIO $ readRef postBuildTr >>= mapM_ (\t -> runWithActions ([t :=> Identity ()], return ()))
+        liftIO $ readRef postBuildTr >>= mapM_ (\t -> runWithActions ([t ==> ()], return ()))
     director_getInstance >>= flip director_runWithScene scene

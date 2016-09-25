@@ -11,15 +11,27 @@ module Reflex.Cocos2d.Types
     , Acceleration(Acceleration)
     , accelerationVector
     , accelerationTimestamp
+
+    , Outline(Outline)
+    , outlineColor
+    , outlineSize
+    , Shadow(Shadow)
+    , shadowColor
+    , shadowOffset
+    , shadowBlur
+    , Glow(Glow)
+    , glowColor
     )
   where
 
+import Data.Default
 import Diagrams (Point(..), P2, V2(..), V3(..))
-import Data.Time.Clock
 import Control.Lens
+import Data.Colour
+import Data.Colour.Names
 
-import Graphics.UI.Cocos2d.Event
 import Foreign.Hoppy.Runtime (Decodable(..))
+import Graphics.UI.Cocos2d.Event
 
 data Mouse = Mouse
     { _mouseCursorLocation :: P2 Float
@@ -62,3 +74,39 @@ instance Decodable EventAccelerationConst Acceleration where
                                    <*> eventAcceleration_z_get ea)
                            <*> eventAcceleration_timestamp_get ea
 
+-- Label
+data Outline = Outline
+    { _outlineColor :: AlphaColour Float
+    , _outlineSize  :: Int
+    } deriving (Show, Eq)
+makeLenses ''Outline
+
+instance Default Outline where
+  def = Outline
+      { _outlineColor = opaque white
+      , _outlineSize  = 0
+      }
+
+data Shadow = Shadow
+    { _shadowColor  :: AlphaColour Float
+    , _shadowOffset :: V2 Float
+    , _shadowBlur   :: Int
+    } deriving (Show, Eq)
+makeLenses ''Shadow
+
+instance Default Shadow where
+    def = Shadow
+        { _shadowColor  = white `withOpacity` 0.5
+        , _shadowOffset = 0
+        , _shadowBlur   = 0
+        }
+
+data Glow = Glow
+    { _glowColor  :: AlphaColour Float
+    } deriving (Show, Eq)
+makeLenses ''Glow
+
+instance Default Glow where
+    def = Glow
+        { _glowColor = white `withOpacity` 0.5
+        }

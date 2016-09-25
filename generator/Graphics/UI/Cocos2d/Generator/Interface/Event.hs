@@ -2,13 +2,13 @@ module Graphics.UI.Cocos2d.Generator.Interface.Event
     (
       mod_event
     , c_EventAcceleration
-    , c_Controller
-    , c_ControllerKeyStatus
+    -- , c_Controller
+    -- , c_ControllerKeyStatus
     , c_Event
     , c_EventCustom
     , c_EventListener
     , c_EventListenerAcceleration
-    , c_EventListenerController
+    -- , c_EventListenerController
     , c_EventListenerCustom
     , c_EventListenerFocus
     , c_EventListenerKeyboard
@@ -18,8 +18,8 @@ module Graphics.UI.Cocos2d.Generator.Interface.Event
     , c_EventMouse
     , c_EventTouch
     , cb_EventAccelerationCallback
-    , cb_EventControllerCallback
-    , cb_EventControllerWithKeyCodeCallback
+    -- , cb_EventControllerCallback
+    -- , cb_EventControllerWithKeyCodeCallback
     , cb_EventCustomCallback
     , cb_EventFocusCallback
     , cb_EventKeyboardCallback
@@ -27,12 +27,12 @@ module Graphics.UI.Cocos2d.Generator.Interface.Event
     , cb_EventTouchBeganCallback
     , cb_EventTouchCallback
     , cb_EventTouchesCallback
-    , e_ControllerEventType
-    , e_ControllerKey
+    -- , e_ControllerEventType
+    -- , e_ControllerKey
     , e_EventType
     , e_EventListenerType
     , e_KeyCode
-    , vectorController
+    -- , vectorController
     , vectorEventTouch
     )
   where
@@ -53,13 +53,13 @@ mod_event =
     moduleAddExports $
     [ ExportClass c_Event
     , ExportClass c_EventAcceleration
-    , ExportClass c_Controller
-    , ExportClass c_ControllerKeyStatus
+    -- , ExportClass c_Controller
+    -- , ExportClass c_ControllerKeyStatus
     , ExportClass c_Event
     , ExportClass c_EventCustom
     , ExportClass c_EventListener
     , ExportClass c_EventListenerAcceleration
-    , ExportClass c_EventListenerController
+    -- , ExportClass c_EventListenerController
     , ExportClass c_EventListenerCustom
     , ExportClass c_EventListenerFocus
     , ExportClass c_EventListenerKeyboard
@@ -69,8 +69,8 @@ mod_event =
     , ExportClass c_EventMouse
     , ExportClass c_EventTouch
     , ExportCallback cb_EventAccelerationCallback
-    , ExportCallback cb_EventControllerCallback
-    , ExportCallback cb_EventControllerWithKeyCodeCallback
+    -- , ExportCallback cb_EventControllerCallback
+    -- , ExportCallback cb_EventControllerWithKeyCodeCallback
     , ExportCallback cb_EventCustomCallback
     , ExportCallback cb_EventFocusCallback
     , ExportCallback cb_EventKeyboardCallback
@@ -78,14 +78,14 @@ mod_event =
     , ExportCallback cb_EventTouchBeganCallback
     , ExportCallback cb_EventTouchCallback
     , ExportCallback cb_EventTouchesCallback
-    , ExportEnum e_ControllerEventType
-    , ExportEnum e_ControllerKey
+    -- , ExportEnum e_ControllerEventType
+    -- , ExportEnum e_ControllerKey
     , ExportEnum e_EventType
     , ExportEnum e_EventListenerType
     , ExportEnum e_KeyCode
     ]
-    ++
-    V.toExports vectorController
+    -- ++
+    -- V.toExports vectorController
     ++
     V.toExports vectorEventTouch
 

@@ -236,9 +236,9 @@ c_Label =
       , mkMethod "enableShadow"
           [ refT $ constT $ objT c_Color4B -- shadowColor
           ] voidT
-      , mkMethod' "enableShadow" "enableShadowWithSize"
+      , mkMethod' "enableShadow" "enableShadowWithOffset"
           [ refT $ constT $ objT c_Color4B -- shadowColor
-          , refT $ constT $ objT c_Size
+          , refT $ constT $ objT c_Size    -- offset
           , intT                           -- blurRadius
           ] voidT
       , mkMethod "enableOutline"
