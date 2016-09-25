@@ -12,6 +12,8 @@ module Reflex.Cocos2d.Label
     , horizontalAlign
     , verticalAlign
     , textColor
+    , lineBreakWithoutSpace
+    , maxLineWidth
     , boundingSize
     , boundingWidth
     , boundingHeight
@@ -33,7 +35,6 @@ import Diagrams (V2(..))
 import Data.Colour
 import Control.Monad
 import Control.Monad.IO.Class
-import Control.Lens hiding (set)
 
 import Foreign.Hoppy.Runtime (Decodable(..))
 import Graphics.UI.Cocos2d.Node

@@ -101,13 +101,13 @@ import Control.Monad.IO.Class
 import Control.Lens hiding (contains)
 import Control.Monad.Ref
 
-import Foreign.Hoppy.Runtime (Decodable(..), HasContents(..))
+import Foreign.Hoppy.Runtime (Decodable(..), HasContents(..), CppPtr(..))
+import Foreign.Ptr (castPtr)
 
 import Reflex
 import Reflex.Extra
 import Reflex.Host.Class
 
-import Graphics.UI.Cocos2d.Node
 import Graphics.UI.Cocos2d.Event hiding (Event)
 import Graphics.UI.Cocos2d.Director
 
@@ -269,13 +269,19 @@ dilate limit = mapAccumMaybe_ f (0, limit)
                    else (Just (sum, l            ) , Nothing )
 
 -- | Get the tick per frame - the time unit is in seconds
+-- TODO: every time this is called the previous "ticks" is invalidated
+-- we need to have a unique key for every invocation
 tickFrames :: NodeGraph t m => m (Event t Float)
 tickFrames = do
     runWithActions <- askRunWithActions
     newEventWithTrigger $ \tr -> liftIO $ do
-      scene <- director_getInstance >>= director_getRunningScene
-      flip (node_schedule scene) "ticks" $ \ss -> runWithActions ([tr ==> ss], return ())
-      return $ node_unschedule scene "ticks"
+      dtor <- director_getInstance
+      sch <- director_getScheduler dtor
+      let target = castPtr $ toPtr dtor
+      scheduler_scheduleWithInterval sch
+        (\ss -> runWithActions ([tr ==> ss], return ()))
+        target 0 False "ticks"
+      return $ scheduler_unschedule sch "ticks" target
 
 -- ticks' :: NodeGraph t m => NominalDiffTime -> m (Event t NominalDiffTime)
 -- ticks' interval = do
@@ -289,16 +295,21 @@ runRandEvent rands = do
     mapAccum_ (\g comp -> swap $ runRand comp g) g rands
 
 -- | Delay an Event by the given amount of seconds
+-- TODO: every time this is called the previous "delayed" is invalidated
+-- we need to have a unique key for every invocation
 delay :: NodeGraph t m => Float -> Event t a -> m (Event t a)
 delay dt e = do
     runWithActions <- askRunWithActions
-    scene <- liftIO $ director_getInstance >>= director_getRunningScene
     (e', trigger) <- newEventWithTriggerRef
-    onEvent_ e $ \a -> liftIO $ do
-      node_scheduleOnce
-        scene
-        (\_ -> readRef trigger >>= mapM_ (\t -> runWithActions ([t ==> a], return ())))
-        dt "delayed"
+    delayedFire <- liftIO $ do
+      dtor <- director_getInstance
+      sch <- director_getScheduler dtor
+      let target = castPtr $ toPtr dtor
+      return $ \a ->
+        scheduler_scheduleWithIntervalAndRepeat sch
+          (\_ -> readRef trigger >>= mapM_ (\t -> runWithActions ([t ==> a], return ())))
+          target 0 0 dt False "delayed"
+    onEvent_ e $ liftIO . delayedFire
     return e'
 
 -- | Merge a deeply nested Event into a single Event

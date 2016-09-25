@@ -27,7 +27,6 @@ mod_director =
     , ExportClass c_GLView
     , ExportClass c_Scheduler
     , ExportClass c_EventDispatcher
-    , ExportCallback cb_ThreadPerformCallback
     ]
 
 c_Director :: Class
@@ -118,17 +117,41 @@ c_GLView =
       , mkConstMethod "getResolutionPolicy" [] $ enumT e_ResolutionPolicy
       ]
 
-cb_ThreadPerformCallback :: Callback
-cb_ThreadPerformCallback =
-  makeCallback (toExtName "ThreadPerformCallback") [] voidT
-
 c_Scheduler :: Class
 c_Scheduler =
   addReqIncludes [includeStd "base/CCScheduler.h"] $
     makeClass (ident1 "cocos2d" "Scheduler") Nothing [c_Ref]
       [ mkMethod "getTimeScale" [] floatT
       , mkMethod "setTimeScale" [floatT] voidT
-      -- we don't include schedule/unschedule functions here as it's easier to do it from within Node
+      -- called every frame
+      , mkMethod' "schedule" "scheduleWithInterval"
+          [ callbackT cb_ScheduleCallback
+          , ptrT voidT                    -- target
+          , floatT                        -- interval in seconds, 0 means every frame
+          , boolT                         -- paused
+          , refT $ constT $ objT c_string -- key
+          ] voidT
+      , mkMethod' "schedule" "scheduleWithIntervalAndRepeat"
+          [ callbackT cb_ScheduleCallback
+          , ptrT voidT                    -- target
+          , floatT                        -- interval
+          , uintT                         -- will be executed (repeat+1) times
+          , floatT                        -- delay
+          , boolT                         -- paused
+          , refT $ constT $ objT c_string -- key
+          ] voidT
+      , mkMethod "unschedule"
+          [ refT $ constT $ objT c_string -- key
+          , ptrT voidT                    -- target
+          ] voidT
+      , mkMethod "isScheduled"
+          [ refT $ constT $ objT c_string -- key
+          , ptrT voidT                    -- target
+          ] boolT
+      , mkMethod "pauseTarget" [ ptrT voidT ] voidT
+      , mkMethod "resumeTarget" [ ptrT voidT ] voidT
+      , mkMethod "isTargetPaused" [ ptrT voidT ] boolT
+      , mkMethod "unscheduleAllForTarget" [ ptrT voidT ] voidT
       , mkMethod "performFunctionInCocosThread" [callbackT cb_ThreadPerformCallback] voidT
       ]
 

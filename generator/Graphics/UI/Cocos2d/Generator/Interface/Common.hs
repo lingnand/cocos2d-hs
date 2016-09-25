@@ -9,6 +9,8 @@ module Graphics.UI.Cocos2d.Generator.Interface.Common
   , c_AffineTransform
   , c_Color3B
   , c_Color4B
+  , cb_ScheduleCallback
+  , cb_ThreadPerformCallback
   ) where
 
 
@@ -33,6 +35,8 @@ mod_common =
     , ExportClass c_AffineTransform
     , ExportClass c_Color3B
     , ExportClass c_Color4B
+    , ExportCallback cb_ScheduleCallback
+    , ExportCallback cb_ThreadPerformCallback
     ]
 
 c_Ref :: Class
@@ -193,3 +197,11 @@ c_Color4B =
         , mkClassVariable "b" word8T
         , mkClassVariable "a" word8T
         ]
+
+cb_ThreadPerformCallback :: Callback
+cb_ThreadPerformCallback =
+  makeCallback (toExtName "ThreadPerformCallback") [] voidT
+
+cb_ScheduleCallback :: Callback
+cb_ScheduleCallback =
+  makeCallback (toExtName "ScheduleCallback") [floatT] voidT

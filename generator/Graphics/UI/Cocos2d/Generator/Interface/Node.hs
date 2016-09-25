@@ -15,12 +15,7 @@ mod_node =
   moduleModify' (makeModule "node" "Node.hpp" "Node.cpp") $
     moduleAddExports
     [ ExportClass c_Node
-    , ExportCallback cb_ScheduleCallback
     ]
-
-cb_ScheduleCallback :: Callback
-cb_ScheduleCallback =
-  makeCallback (toExtName "ScheduleCallback") [floatT] voidT
 
 c_Node :: Class
 c_Node =
