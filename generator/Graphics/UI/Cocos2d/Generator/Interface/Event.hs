@@ -156,77 +156,77 @@ c_EventMouse =
       , mkConstMethod "getStartLocationInView" [] $ objT c_Vec2
       ]
 
-e_ControllerEventType :: CppEnum
-e_ControllerEventType =
-  makeEnum (ident2 "cocos2d" "EventController" "ControllerEventType") Nothing
-    [ (0, ["connection"])
-    , (1, ["button", "status", "changed"])
-    , (2, ["axis", "status", "changed"])
-    ]
+-- e_ControllerEventType :: CppEnum
+-- e_ControllerEventType =
+--   makeEnum (ident2 "cocos2d" "EventController" "ControllerEventType") Nothing
+--     [ (0, ["connection"])
+--     , (1, ["button", "status", "changed"])
+--     , (2, ["axis", "status", "changed"])
+--     ]
+--
+-- e_ControllerKey :: CppEnum
+-- e_ControllerKey =
+--   makeEnum (ident2 "cocos2d" "Controller" "Key") (Just $ toExtName "ControllerKey")
+--     [ (1000, ["joystick", "left", "x"])
+--     , (1001, ["joystick", "left", "y"])
+--     , (1002, ["joystick", "right", "x"])
+--     , (1003, ["joystick", "right", "y"])
+--     , (1004, ["button", "a"])
+--     , (1005, ["button", "b"])
+--     , (1006, ["button", "c"])
+--     , (1007, ["button", "x"])
+--     , (1008, ["button", "y"])
+--     , (1009, ["button", "z"])
+--     , (1010, ["button", "dpad", "up"])
+--     , (1011, ["button", "dpad", "down"])
+--     , (1012, ["button", "dpad", "left"])
+--     , (1013, ["button", "dpad", "right"])
+--     , (1014, ["button", "dpad", "center"])
+--     , (1015, ["button", "left", "shoulder"])
+--     , (1016, ["button", "right", "shoulder"])
+--     , (1017, ["axis", "left", "trigger"])
+--     , (1018, ["axis", "right", "trigger"])
+--     , (1019, ["button", "left", "thumbstick"])
+--     , (1020, ["button", "right", "thumbstick"])
+--     , (1021, ["button", "start"])
+--     , (1022, ["button", "select"])
+--     , (1023, ["button", "pause"])
+--     , (1024, ["key", "max"])
+--     ]
+--
+-- c_ControllerKeyStatus :: Class
+-- c_ControllerKeyStatus =
+--   addReqIncludes [includeStd "base/CCController.h"] $
+--     makeClass (ident2 "cocos2d" "Controller" "KeyStatus") (Just $ toExtName "ControllerKeyStatus") []
+--       [ mkClassVariable "isPressed" boolT
+--       , mkClassVariable "value" floatT
+--       , mkClassVariable "isAnalog" boolT
+--       ]
 
-e_ControllerKey :: CppEnum
-e_ControllerKey =
-  makeEnum (ident2 "cocos2d" "Controller" "Key") (Just $ toExtName "ControllerKey")
-    [ (1000, ["joystick", "left", "x"])
-    , (1001, ["joystick", "left", "y"])
-    , (1002, ["joystick", "right", "x"])
-    , (1003, ["joystick", "right", "y"])
-    , (1004, ["button", "a"])
-    , (1005, ["button", "b"])
-    , (1006, ["button", "c"])
-    , (1007, ["button", "x"])
-    , (1008, ["button", "y"])
-    , (1009, ["button", "z"])
-    , (1010, ["button", "dpad", "up"])
-    , (1011, ["button", "dpad", "down"])
-    , (1012, ["button", "dpad", "left"])
-    , (1013, ["button", "dpad", "right"])
-    , (1014, ["button", "dpad", "center"])
-    , (1015, ["button", "left", "shoulder"])
-    , (1016, ["button", "right", "shoulder"])
-    , (1017, ["axis", "left", "trigger"])
-    , (1018, ["axis", "right", "trigger"])
-    , (1019, ["button", "left", "thumbstick"])
-    , (1020, ["button", "right", "thumbstick"])
-    , (1021, ["button", "start"])
-    , (1022, ["button", "select"])
-    , (1023, ["button", "pause"])
-    , (1024, ["key", "max"])
-    ]
-
-c_ControllerKeyStatus :: Class
-c_ControllerKeyStatus =
-  addReqIncludes [includeStd "base/CCController.h"] $
-    makeClass (ident2 "cocos2d" "Controller" "KeyStatus") (Just $ toExtName "ControllerKeyStatus") []
-      [ mkClassVariable "isPressed" boolT
-      , mkClassVariable "value" floatT
-      , mkClassVariable "isAnalog" boolT
-      ]
-
-vectorController :: V.Contents
-vectorController = V.instantiate "ControllerVector" (ptrT $ objT c_Controller) reqs
-  where
-    reqs = reqInclude $ includeStd "base/CCController.h"
-
-c_Controller :: Class
-c_Controller =
-  addReqIncludes [includeStd "base/CCController.h"] $
-    classSetDtorPrivate $
-      makeClass (ident1 "cocos2d" "Controller") Nothing []
-        [ mkStaticMethod "getAllController" [] $ refT $ constT $ objT $ V.c_vector vectorController
-        , mkStaticMethod "getControllerByTag" [intT] $ ptrT $ objT c_Controller
-        , mkStaticMethod "startDiscoveryController" [] voidT
-        , mkStaticMethod "stopDiscoveryController" [] voidT
-        , mkConstMethod "getDeviceName" [] $ refT $ constT $ objT c_string
-        , mkConstMethod "getDeviceId" [] intT
-        , mkConstMethod "isConnected" [] boolT
-        -- pass in keyCode
-        , mkMethod "getKeyStatus" [intT] $ refT $ constT $ objT c_ControllerKeyStatus
-        -- (externalKeyCode, receive)
-        , mkMethod "receiveExternalKeyEvent" [intT, boolT] voidT
-        , mkConstMethod "getTag" [] intT
-        , mkMethod "setTag" [intT] voidT
-        ]
+-- vectorController :: V.Contents
+-- vectorController = V.instantiate "ControllerVector" (ptrT $ objT c_Controller) reqs
+--   where
+--     reqs = reqInclude $ includeStd "base/CCController.h"
+--
+-- c_Controller :: Class
+-- c_Controller =
+--   addReqIncludes [includeStd "base/CCController.h"] $
+--     classSetDtorPrivate $
+--       makeClass (ident1 "cocos2d" "Controller") Nothing []
+--         [ mkStaticMethod "getAllController" [] $ refT $ constT $ objT $ V.c_vector vectorController
+--         , mkStaticMethod "getControllerByTag" [intT] $ ptrT $ objT c_Controller
+--         , mkStaticMethod "startDiscoveryController" [] voidT
+--         , mkStaticMethod "stopDiscoveryController" [] voidT
+--         , mkConstMethod "getDeviceName" [] $ refT $ constT $ objT c_string
+--         , mkConstMethod "getDeviceId" [] intT
+--         , mkConstMethod "isConnected" [] boolT
+--         -- pass in keyCode
+--         , mkMethod "getKeyStatus" [intT] $ refT $ constT $ objT c_ControllerKeyStatus
+--         -- (externalKeyCode, receive)
+--         , mkMethod "receiveExternalKeyEvent" [intT, boolT] voidT
+--         , mkConstMethod "getTag" [] intT
+--         , mkMethod "setTag" [intT] voidT
+--         ]
 
 e_KeyCode :: CppEnum
 e_KeyCode =
@@ -443,26 +443,26 @@ c_EventListenerCustom =
           ] $ ptrT $ objT c_EventListenerCustom
       ]
 
-cb_EventControllerCallback :: Callback
-cb_EventControllerCallback =
-  makeCallback (toExtName "EventControllerCallback") [ptrT $ objT c_Controller, ptrT $ objT c_Event] voidT
-
-cb_EventControllerWithKeyCodeCallback :: Callback
-cb_EventControllerWithKeyCodeCallback =
-  makeCallback (toExtName "EventControllerWithKeyCodeCallback") [ptrT $ objT c_Controller, intT, ptrT $ objT c_Event] voidT
-
-c_EventListenerController :: Class
-c_EventListenerController =
-  addReqIncludes [includeStd "base/CCEventListenerController.h"] $
-    makeClass (ident1 "cocos2d" "EventListenerController") Nothing [c_EventListener]
-      [ mkStaticMethod "create" [] $ ptrT $ objT c_EventListenerController
-      , makeClassVariable "onConnected" Nothing (callbackT cb_EventControllerCallback) Nonstatic False True
-      , makeClassVariable "onDisconnected" Nothing (callbackT cb_EventControllerCallback) Nonstatic False True
-      , makeClassVariable "onKeyDown" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
-      , makeClassVariable "onKeyUp" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
-      , makeClassVariable "onKeyRepeat" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
-      , makeClassVariable "onAxisEvent" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
-      ]
+-- cb_EventControllerCallback :: Callback
+-- cb_EventControllerCallback =
+--   makeCallback (toExtName "EventControllerCallback") [ptrT $ objT c_Controller, ptrT $ objT c_Event] voidT
+--
+-- cb_EventControllerWithKeyCodeCallback :: Callback
+-- cb_EventControllerWithKeyCodeCallback =
+--   makeCallback (toExtName "EventControllerWithKeyCodeCallback") [ptrT $ objT c_Controller, intT, ptrT $ objT c_Event] voidT
+--
+-- c_EventListenerController :: Class
+-- c_EventListenerController =
+--   addReqIncludes [includeStd "base/CCEventListenerController.h"] $
+--     makeClass (ident1 "cocos2d" "EventListenerController") Nothing [c_EventListener]
+--       [ mkStaticMethod "create" [] $ ptrT $ objT c_EventListenerController
+--       , makeClassVariable "onConnected" Nothing (callbackT cb_EventControllerCallback) Nonstatic False True
+--       , makeClassVariable "onDisconnected" Nothing (callbackT cb_EventControllerCallback) Nonstatic False True
+--       , makeClassVariable "onKeyDown" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
+--       , makeClassVariable "onKeyUp" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
+--       , makeClassVariable "onKeyRepeat" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
+--       , makeClassVariable "onAxisEvent" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
+--       ]
 
 cb_EventFocusCallback :: Callback
 cb_EventFocusCallback =

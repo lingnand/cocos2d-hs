@@ -9,6 +9,8 @@ module Graphics.UI.Cocos2d.Generator.Interface.Common
   , c_AffineTransform
   , c_Color3B
   , c_Color4B
+  , e_TextVAlignment
+  , e_TextHAlignment
   , cb_ScheduleCallback
   , cb_ThreadPerformCallback
   ) where
@@ -197,6 +199,24 @@ c_Color4B =
         , mkClassVariable "b" word8T
         , mkClassVariable "a" word8T
         ]
+
+e_TextVAlignment :: CppEnum
+e_TextVAlignment =
+  addReqIncludes [includeStd "base/ccTypes.h"] $
+    makeEnum (ident1 "cocos2d" "TextVAlignment") Nothing
+      [ (0, ["top"])
+      , (1, ["center"])
+      , (2, ["bottom"])
+      ]
+
+e_TextHAlignment :: CppEnum
+e_TextHAlignment =
+  addReqIncludes [includeStd "base/ccTypes.h"] $
+    makeEnum (ident1 "cocos2d" "TextHAlignment") Nothing
+      [ (0, ["left"])
+      , (1, ["center"])
+      , (2, ["right"])
+      ]
 
 cb_ThreadPerformCallback :: Callback
 cb_ThreadPerformCallback =

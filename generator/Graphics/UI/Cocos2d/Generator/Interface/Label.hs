@@ -1,7 +1,5 @@
 module Graphics.UI.Cocos2d.Generator.Interface.Label
     ( mod_label
-    , e_TextVAlignment
-    , e_TextHAlignment
     , e_GlyphCollection
     , e_LabelEffect
     , c_TTFConfig
@@ -33,24 +31,6 @@ mod_label =
     , ExportClass c_FontAtlas
     , ExportClass c_Label
     ]
-
-e_TextVAlignment :: CppEnum
-e_TextVAlignment =
-  addReqIncludes [includeStd "base/ccTypes.h"] $
-    makeEnum (ident1 "cocos2d" "TextVAlignment") Nothing
-      [ (0, ["top"])
-      , (1, ["center"])
-      , (2, ["bottom"])
-      ]
-
-e_TextHAlignment :: CppEnum
-e_TextHAlignment =
-  addReqIncludes [includeStd "base/ccTypes.h"] $
-    makeEnum (ident1 "cocos2d" "TextHAlignment") Nothing
-      [ (0, ["left"])
-      , (1, ["center"])
-      , (2, ["right"])
-      ]
 
 e_GlyphCollection :: CppEnum
 e_GlyphCollection =
