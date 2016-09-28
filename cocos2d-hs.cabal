@@ -23,9 +23,10 @@ executable generator
                      , Graphics.UI.Cocos2d.Generator.Interface.Node
                      , Graphics.UI.Cocos2d.Generator.Interface.Scene
                      , Graphics.UI.Cocos2d.Generator.Interface.Sprite
-                     , Graphics.UI.Cocos2d.Generator.Interface.Widget
                      , Graphics.UI.Cocos2d.Generator.Interface.Event
                      , Graphics.UI.Cocos2d.Generator.Interface.Label
+                     , Graphics.UI.Cocos2d.Generator.Interface.Widget
+                     , Graphics.UI.Cocos2d.Generator.Interface.CocoStudio
   build-depends:       base >=4.7 && <4.9
                      , haskell-src >=1.0 && <1.1
                      , hoppy-generator
@@ -58,9 +59,10 @@ library
                      , Graphics.UI.Cocos2d.Director
                      , Graphics.UI.Cocos2d.Scene
                      , Graphics.UI.Cocos2d.Sprite
-                     , Graphics.UI.Cocos2d.Widget
                      , Graphics.UI.Cocos2d.Event
                      , Graphics.UI.Cocos2d.Label
+                     , Graphics.UI.Cocos2d.Widget
+                     , Graphics.UI.Cocos2d.CocoStudio
                      -- reflex wrapper
                      , Reflex.Cocos2d
                      , Reflex.Cocos2d.Class
@@ -81,9 +83,13 @@ library
                        cbits/Widget.cpp
                        cbits/Event.cpp
                        cbits/Label.cpp
+                       cbits/CocoStudio.cpp
                        cbits/std.cpp
   include-dirs:        cbits
                        /Applications/Cocos/frameworks/cocos2d-x-3.9/cocos
+                       /Applications/Cocos/frameworks/cocos2d-x-3.9/cocos/editor-support
+                       /Applications/Cocos/frameworks/cocos2d-x-3.9/external
+                       /Applications/Cocos/frameworks/cocos2d-x-3.9/external/glfw3/include/mac
   extra-lib-dirs:      /Applications/Cocos/frameworks/cocos2d-x-3.9/prebuilt/mac/
   extra-libraries:     "cocos2d Mac" stdc++
   cc-options:          -std=c++11 -stdlib=libc++

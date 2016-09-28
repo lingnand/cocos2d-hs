@@ -5,6 +5,7 @@ module Graphics.UI.Cocos2d.Generator.Interface.Widget
     , c_Button
     , c_Text
     , c_Layout
+    , c_UIHelper
     , e_BrightStyle
     , e_TextureResType
     , e_SizeType
@@ -37,6 +38,7 @@ mod_widget =
     , ExportClass c_Button
     , ExportClass c_Text
     , ExportClass c_Layout
+    , ExportClass c_UIHelper
     , ExportEnum e_BrightStyle
     , ExportEnum e_TextureResType
     , ExportEnum e_SizeType
@@ -364,4 +366,29 @@ c_Layout =
       , mkMethod "setLoopFocus" [boolT] voidT
       , mkMethod "setPassFocusToChild" [boolT] voidT
       , mkConstMethod "isPassFocusToChild" [] boolT
+      ]
+
+c_UIHelper :: Class
+c_UIHelper =
+  addReqIncludes [includeStd "ui/UIHelper.h"] $
+    makeClass (ident2 "cocos2d" "ui" "Helper") (Just $ toExtName "UIHelper") []
+      [ mkStaticMethod "seekWidgetByTag"
+          [ ptrT $ objT c_Widget
+          , intT                  -- tag
+          ] $ ptrT $ objT c_Widget
+      , mkStaticMethod "seekWidgetByName"
+          [ ptrT $ objT c_Widget
+          , refT $ constT $ objT c_string -- name
+          ] $ ptrT $ objT c_Widget
+      , mkStaticMethod "seekActionWidgetByActionTag"
+          [ ptrT $ objT c_Widget
+          , intT                  -- tag
+          ] $ ptrT $ objT c_Widget
+      , mkStaticMethod "doLayout" [ptrT $ objT c_Node] voidT
+      , mkStaticMethod "changeLayoutSystemActiveState" [boolT] voidT
+      , mkStaticMethod "restrictCapInsetRect"
+          [ refT $ constT $ objT c_Rect -- capInsets
+          , refT $ constT $ objT c_Size -- textureSize
+          ] $ objT c_Rect
+      , mkStaticMethod "convertBoundingBoxToScreen" [ptrT $ objT c_Node] $ objT c_Rect
       ]
