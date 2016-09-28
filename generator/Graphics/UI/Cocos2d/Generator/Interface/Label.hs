@@ -1,7 +1,6 @@
 module Graphics.UI.Cocos2d.Generator.Interface.Label
     ( mod_label
     , e_GlyphCollection
-    , e_LabelEffect
     , c_TTFConfig
     , c_Font
     , c_FontAtlas
@@ -22,10 +21,7 @@ mod_label :: Module
 mod_label =
   moduleModify' (makeModule "label" "Label.hpp" "Label.cpp") $
     moduleAddExports
-    [ ExportEnum e_TextVAlignment
-    , ExportEnum e_TextHAlignment
-    , ExportEnum e_GlyphCollection
-    , ExportEnum e_LabelEffect
+    [ ExportEnum e_GlyphCollection
     , ExportClass c_TTFConfig
     , ExportClass c_Font
     , ExportClass c_FontAtlas
@@ -40,17 +36,6 @@ e_GlyphCollection =
       , (1, ["nehe"])
       , (2, ["ascii"])
       , (3, ["custom"])
-      ]
-
-e_LabelEffect :: CppEnum
-e_LabelEffect =
-  addReqIncludes [includeStd "base/ccTypes.h"] $
-    makeEnum (ident1 "cocos2d" "LabelEffect") Nothing
-      [ (0, ["normal"])
-      , (1, ["outline"])
-      , (2, ["shadow"])
-      , (3, ["glow"])
-      , (3, ["all"])
       ]
 
 c_TTFConfig :: Class

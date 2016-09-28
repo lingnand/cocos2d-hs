@@ -3,12 +3,18 @@ module Graphics.UI.Cocos2d.Generator.Interface.Widget
       mod_widget
     , c_Widget
     , c_Button
+    , c_Text
+    , c_Layout
     , e_BrightStyle
     , e_TextureResType
     , e_SizeType
     , e_PositionType
     , e_FocusDirection
     , e_TouchEventType
+    , e_TextType
+    , e_LayoutType
+    , e_ClippingType
+    , e_BackGroundColorType
     , cb_WidgetTouchCallback
     , cb_WidgetClickCallback
     , cb_WidgetEventCallback
@@ -29,12 +35,18 @@ mod_widget =
     [ ExportClass c_ProtectedNode
     , ExportClass c_Widget
     , ExportClass c_Button
+    , ExportClass c_Text
+    , ExportClass c_Layout
     , ExportEnum e_BrightStyle
     , ExportEnum e_TextureResType
     , ExportEnum e_SizeType
     , ExportEnum e_PositionType
     , ExportEnum e_FocusDirection
     , ExportEnum e_TouchEventType
+    , ExportEnum e_TextType
+    , ExportEnum e_LayoutType
+    , ExportEnum e_ClippingType
+    , ExportEnum e_BackGroundColorType
     , ExportCallback cb_WidgetTouchCallback
     , ExportCallback cb_WidgetClickCallback
     , ExportCallback cb_WidgetEventCallback
@@ -61,50 +73,56 @@ c_ProtectedNode =
 
 e_BrightStyle :: CppEnum
 e_BrightStyle =
-  makeEnum (ident3 "cocos2d" "ui" "Widget" "BrightStyle") Nothing
-    [ (-1, ["none"])
-    , ( 0, ["normal"])
-    , ( 1, ["highlight"])
-    ]
+  addReqIncludes [includeStd "ui/UIWidget.h"] $
+    makeEnum (ident3 "cocos2d" "ui" "Widget" "BrightStyle") Nothing
+      [ (-1, ["none"])
+      , ( 0, ["normal"])
+      , ( 1, ["highlight"])
+      ]
 
 e_TextureResType :: CppEnum
 e_TextureResType =
-  makeEnum (ident3 "cocos2d" "ui" "Widget" "TextureResType") Nothing
-    [ (0, ["local"])
-    , (1, ["plist"])
-    ]
+  addReqIncludes [includeStd "ui/UIWidget.h"] $
+    makeEnum (ident3 "cocos2d" "ui" "Widget" "TextureResType") Nothing
+      [ (0, ["local"])
+      , (1, ["plist"])
+      ]
 
 e_SizeType :: CppEnum
 e_SizeType =
-  makeEnum (ident3 "cocos2d" "ui" "Widget" "SizeType") Nothing
-    [ (0, ["absolute"])
-    , (1, ["percent"])
-    ]
+  addReqIncludes [includeStd "ui/UIWidget.h"] $
+    makeEnum (ident3 "cocos2d" "ui" "Widget" "SizeType") Nothing
+      [ (0, ["absolute"])
+      , (1, ["percent"])
+      ]
 
 e_PositionType :: CppEnum
 e_PositionType =
-  makeEnum (ident3 "cocos2d" "ui" "Widget" "PositionType") Nothing
-    [ (0, ["absolute"])
-    , (1, ["percent"])
-    ]
+  addReqIncludes [includeStd "ui/UIWidget.h"] $
+    makeEnum (ident3 "cocos2d" "ui" "Widget" "PositionType") Nothing
+      [ (0, ["absolute"])
+      , (1, ["percent"])
+      ]
 
 e_FocusDirection :: CppEnum
 e_FocusDirection =
-  makeEnum (ident3 "cocos2d" "ui" "Widget" "FocusDirection") Nothing
-    [ (0, ["left"])
-    , (1, ["right"])
-    , (2, ["up"])
-    , (3, ["down"])
-    ]
+  addReqIncludes [includeStd "ui/UIWidget.h"] $
+    makeEnum (ident3 "cocos2d" "ui" "Widget" "FocusDirection") Nothing
+      [ (0, ["left"])
+      , (1, ["right"])
+      , (2, ["up"])
+      , (3, ["down"])
+      ]
 
 e_TouchEventType :: CppEnum
 e_TouchEventType =
-  makeEnum (ident3 "cocos2d" "ui" "Widget" "TouchEventType") (Just $ toExtName "WidgetTouchEventType")
-    [ (0, ["began"])
-    , (1, ["moved"])
-    , (2, ["ended"])
-    , (3, ["canceled"])
-    ]
+  addReqIncludes [includeStd "ui/UIWidget.h"] $
+    makeEnum (ident3 "cocos2d" "ui" "Widget" "TouchEventType") Nothing
+      [ (0, ["began"])
+      , (1, ["moved"])
+      , (2, ["ended"])
+      , (3, ["canceled"])
+      ]
 
 cb_WidgetTouchCallback :: Callback
 cb_WidgetTouchCallback =
@@ -147,7 +165,7 @@ c_Widget =
       , mkMethod "setFlippedX" [boolT] voidT
       , mkConstMethod "isFlippedY" [] boolT
       , mkMethod "setFlippedY" [boolT] voidT
-      , mkMethod "isClippingParentContainsPoint" [] boolT
+      , mkMethod "isClippingParentContainsPoint" [refT $ constT $ objT c_Vec2] boolT
       , mkConstMethod "getTouchBeganPosition" [] $ refT $ constT $ objT c_Vec2
       , mkConstMethod "getTouchMovePosition" [] $ refT $ constT $ objT c_Vec2
       , mkConstMethod "getTouchEndPosition" [] $ refT $ constT $ objT c_Vec2
@@ -207,7 +225,7 @@ c_Button =
       , mkMethod "setScale9Enabled" [boolT] voidT
       , mkMethod "setPressedActionEnabled" [boolT] voidT
       , mkMethod "setTitleText" [refT $ constT $ objT c_string] voidT
-      , mkConstMethod "getTitleText" [] $ refT $ constT $ objT c_string
+      , mkConstMethod "getTitleText" [] $ objT c_string
       , mkMethod "setTitleColor" [refT $ constT $ objT c_Color3B] voidT
       , mkConstMethod "getTitleColor" [] $ objT c_Color3B
       , mkMethod "setTitleFontSize" [floatT] voidT
@@ -220,6 +238,130 @@ c_Button =
       , mkConstMethod "getZoomScale" [] floatT
       ]
 
+e_TextType :: CppEnum
+e_TextType =
+  addReqIncludes [includeStd "ui/UIText.h"] $
+    makeEnum (ident3 "cocos2d" "ui" "Text" "Type") (Just $ toExtName "TextType")
+      [ (0, ["system"])
+      , (1, ["ttf"])
+      ]
 
--- TODO: UIText
--- TODO: UILayout
+c_Text :: Class
+c_Text =
+  addReqIncludes [includeStd "ui/UIText.h"] $
+    makeClass (ident2 "cocos2d" "ui" "Text") Nothing [c_Widget]
+      [ mkStaticMethod "create" [] $ ptrT $ objT c_Text
+      , mkStaticMethod' "create" "createWithText"
+          [ refT $ constT $ objT c_string -- text content
+          , refT $ constT $ objT c_string -- font name
+          , floatT                        -- font size
+          ] $ ptrT $ objT c_Text
+      , mkConstMethod "getString" [] $ refT $ constT $ objT c_string
+      , mkConstMethod "getStringLength" [] ssizeT
+      , mkMethod "setFontSize" [floatT] voidT
+      , mkConstMethod "getFontSize" [] floatT
+      , mkMethod "setFontName" [refT $ constT $ objT c_string] voidT
+      , mkConstMethod "getFontName" [] $ refT $ constT $ objT c_string
+      , mkConstMethod "getType" [] $ enumT e_TextType
+      , mkMethod "setTouchScaleChangeEnabled" [boolT] voidT
+      , mkConstMethod "isTouchScaleChangeEnabled" [] boolT
+      , mkMethod "setTextAreaSize" [refT $ constT $ objT c_Size] voidT
+      , mkConstMethod "getTextAreaSize" [] $ refT $ constT $ objT c_Size
+      , mkMethod "setTextHorizontalAlignment" [enumT e_TextHAlignment] voidT
+      , mkConstMethod "getTextHorizontalAlignment" [] $ enumT e_TextHAlignment
+      , mkMethod "setTextVerticalAlignment" [enumT e_TextVAlignment] voidT
+      , mkConstMethod "getTextVerticalAlignment" [] $ enumT e_TextVAlignment
+      , mkMethod "setTextColor" [objT c_Color4B] voidT
+      , mkConstMethod "getTextColor" [] $ refT $ constT $ objT c_Color4B
+      , mkMethod "enableShadow"
+          [ refT $ constT $ objT c_Color4B -- shadowColor
+          ] voidT
+      , mkMethod' "enableShadow" "enableShadowWithOffset"
+          [ refT $ constT $ objT c_Color4B -- shadowColor
+          , refT $ constT $ objT c_Size    -- offset
+          , intT                           -- blurRadius
+          ] voidT
+      , mkMethod "enableOutline"
+          [ refT $ constT $ objT c_Color4B -- shadowColor
+          ] voidT
+      , mkMethod' "enableOutline" "enableOutlineWithSize"
+          [ refT $ constT $ objT c_Color4B -- shadowColor
+          , intT                           -- outlineSize
+          ] voidT
+      , mkMethod "enableGlow" [refT $ constT $ objT c_Color4B] voidT
+      , mkMethod "disableEffect" [] voidT
+      , mkMethod' "disableEffect" "disableLabelEffect" [enumT e_LabelEffect] voidT
+      ]
+
+e_LayoutType :: CppEnum
+e_LayoutType =
+  addReqIncludes [includeStd "ui/UILayout.h"] $
+    makeEnum (ident3 "cocos2d" "ui" "Layout" "Type") (Just $ toExtName "LayoutType")
+      [ (0, ["absolute"])
+      , (1, ["vertical"])
+      , (2, ["horizontal"])
+      , (3, ["relative"])
+      ]
+
+e_ClippingType :: CppEnum
+e_ClippingType =
+  addReqIncludes [includeStd "ui/UILayout.h"] $
+    makeEnum (ident3 "cocos2d" "ui" "Layout" "ClippingType") Nothing
+      [ (0, ["stencil"])
+      , (1, ["scissor"])
+      ]
+
+e_BackGroundColorType :: CppEnum
+e_BackGroundColorType =
+  addReqIncludes [includeStd "ui/UILayout.h"] $
+    makeEnum (ident3 "cocos2d" "ui" "Layout" "BackGroundColorType") Nothing
+      [ (0, ["none"])
+      , (1, ["solid"])
+      , (2, ["gradient"])
+      ]
+
+c_Layout :: Class
+c_Layout =
+  addReqIncludes [includeStd "ui/UILayout.h"] $
+    makeClass (ident2 "cocos2d" "ui" "Layout") Nothing [c_Widget]
+      [ mkStaticMethod "create" [] $ ptrT $ objT c_Layout
+      , mkMethod "setBackGroundImage"
+          [ refT $ constT $ objT c_string -- filename
+          , enumT e_TextureResType
+          ] voidT
+      , mkMethod "setBackGroundImageCapInsets" [refT $ constT $ objT c_Rect] voidT
+      , mkConstMethod "getBackGroundImageCapInsets" [] $ refT $ constT $ objT c_Rect
+      , mkMethod "setBackGroundColorType" [enumT e_BackGroundColorType] voidT
+      , mkConstMethod "getBackGroundColorType" [] $ enumT e_BackGroundColorType
+      , mkMethod "setBackGroundImageScale9Enabled" [boolT] voidT
+      , mkConstMethod "isBackGroundImageScale9Enabled" [] boolT
+      , mkMethod "setBackGroundColor" [refT $ constT $ objT c_Color3B] voidT
+      , mkConstMethod "getBackGroundColor" [] $ refT $ constT $ objT c_Color3B
+      , mkMethod' "setBackGroundColor" "setBackGroundGradientColor"
+          [ refT $ constT $ objT c_Color3B
+          , refT $ constT $ objT c_Color3B ] voidT
+      , mkConstMethod "getBackGroundStartColor" [] $ refT $ constT $ objT c_Color3B
+      , mkConstMethod "getBackGroundEndColor" [] $ refT $ constT $ objT c_Color3B
+      , mkMethod "setBackGroundColorOpacity" [word8T]  voidT
+      , mkConstMethod "getBackGroundColorOpacity" [] word8T
+      , mkMethod "setBackGroundColorVector" [refT $ constT $ objT c_Vec2] voidT
+      , mkConstMethod "getBackGroundColorVector" [] $ refT $ constT $ objT c_Vec2
+      , mkMethod "setBackGroundImageColor" [refT $ constT $ objT c_Color3B] voidT
+      , mkMethod "setBackGroundImageOpacity" [word8T] voidT
+      , mkConstMethod "getBackGroundImageColor" [] $ refT $ constT $ objT c_Color3B
+      , mkConstMethod "getBackGroundImageOpacity" [] word8T
+      , mkMethod "removeBackGroundImage" [] voidT
+      , mkConstMethod "getBackGroundImageTextureSize" [] $ refT $ constT $ objT c_Size
+      , mkMethod "setClippingEnabled" [boolT] voidT
+      , mkMethod "setClippingType" [enumT e_ClippingType] voidT
+      , mkConstMethod "getClippingType" [] $ enumT e_ClippingType
+      , mkConstMethod "isClippingEnabled" [] boolT
+      , mkMethod "setLayoutType" [enumT e_LayoutType] voidT
+      , mkConstMethod "getLayoutType" [] $ enumT e_LayoutType
+      , mkMethod "forceDoLayout" [] voidT
+      , mkMethod "requestDoLayout" [] voidT
+      , mkConstMethod "isLoopFocus" [] boolT
+      , mkMethod "setLoopFocus" [boolT] voidT
+      , mkMethod "setPassFocusToChild" [boolT] voidT
+      , mkConstMethod "isPassFocusToChild" [] boolT
+      ]

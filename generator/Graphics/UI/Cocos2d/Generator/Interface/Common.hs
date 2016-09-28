@@ -11,6 +11,7 @@ module Graphics.UI.Cocos2d.Generator.Interface.Common
   , c_Color4B
   , e_TextVAlignment
   , e_TextHAlignment
+  , e_LabelEffect
   , cb_ScheduleCallback
   , cb_ThreadPerformCallback
   ) where
@@ -37,6 +38,9 @@ mod_common =
     , ExportClass c_AffineTransform
     , ExportClass c_Color3B
     , ExportClass c_Color4B
+    , ExportEnum e_TextVAlignment
+    , ExportEnum e_TextHAlignment
+    , ExportEnum e_LabelEffect
     , ExportCallback cb_ScheduleCallback
     , ExportCallback cb_ThreadPerformCallback
     ]
@@ -216,6 +220,17 @@ e_TextHAlignment =
       [ (0, ["left"])
       , (1, ["center"])
       , (2, ["right"])
+      ]
+
+e_LabelEffect :: CppEnum
+e_LabelEffect =
+  addReqIncludes [includeStd "base/ccTypes.h"] $
+    makeEnum (ident1 "cocos2d" "LabelEffect") Nothing
+      [ (0, ["normal"])
+      , (1, ["outline"])
+      , (2, ["shadow"])
+      , (3, ["glow"])
+      , (4, ["all"])
       ]
 
 cb_ThreadPerformCallback :: Callback

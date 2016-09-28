@@ -37,6 +37,7 @@ import Control.Monad
 import Control.Monad.IO.Class
 
 import Foreign.Hoppy.Runtime (Decodable(..))
+import Graphics.UI.Cocos2d.Common
 import Graphics.UI.Cocos2d.Node
 import Graphics.UI.Cocos2d.Label
 
