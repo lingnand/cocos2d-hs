@@ -11,6 +11,9 @@ module Reflex.Cocos2d.Widget
     , widgetTouchCancelled
     , getWidgetTouchEvents
     , getWidgetClicks
+    , findButtonByName
+    , findTextByName
+    , findLayoutByName
     )
   where
 
@@ -81,3 +84,16 @@ instance (MonadIO m, TextPtr t) => HasText t m where
     where set l (Just (Glow glColor)) = liftIO $ text_enableGlow l glColor
           set l _ = liftIO $ text_disableLabelEffect l LabelEffect_Glow
 
+-- helpers for finding widget
+findWidgetByName' :: MonadIO m => (Widget -> a) -> Widget -> String -> m a
+findWidgetByName' downcast w name = liftIO $ downcast <$> uiHelper_seekWidgetByName w name
+{-# INLINE findWidgetByName' #-}
+
+findButtonByName :: MonadIO m => Widget -> String -> m Button
+findButtonByName = findWidgetByName' downToButton
+
+findTextByName :: MonadIO m => Widget -> String -> m Text
+findTextByName = findWidgetByName' downToText
+
+findLayoutByName :: MonadIO m => Widget -> String -> m Layout
+findLayoutByName = findWidgetByName' downToLayout

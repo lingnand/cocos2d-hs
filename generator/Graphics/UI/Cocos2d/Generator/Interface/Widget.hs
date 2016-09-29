@@ -372,7 +372,7 @@ c_Layout =
 c_UIHelper :: Class
 c_UIHelper =
   addReqIncludes [includeStd "ui/UIHelper.h"] $
-    makeClass (ident2 "cocos2d" "ui" "Helper") (Just $ toExtName "UIHelper") []
+    makeClass (ident2 "cocos2d" "ui" "Helper") (Just $ toExtName "UiHelper") []
       [ mkStaticMethod "seekWidgetByTag"
           [ ptrT $ objT c_Widget
           , intT                  -- tag
