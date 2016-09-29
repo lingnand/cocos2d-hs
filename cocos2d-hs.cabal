@@ -70,6 +70,7 @@ library
                      , Reflex.Cocos2d.Attributes
                      , Reflex.Cocos2d.Node
                      , Reflex.Cocos2d.Event
+                     , Reflex.Cocos2d.Widget
                      , Reflex.Cocos2d.Internal
                      , Reflex.Extra
   other-modules:       Graphics.UI.Cocos2d.Std

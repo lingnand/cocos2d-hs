@@ -259,6 +259,7 @@ c_Text =
           , floatT                        -- font size
           ] $ ptrT $ objT c_Text
       , mkConstMethod "getString" [] $ refT $ constT $ objT c_string
+      , mkMethod "setString" [refT $ constT $ objT c_string] voidT
       , mkConstMethod "getStringLength" [] ssizeT
       , mkMethod "setFontSize" [floatT] voidT
       , mkConstMethod "getFontSize" [] floatT

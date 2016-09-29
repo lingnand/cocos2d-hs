@@ -223,17 +223,17 @@ height = hoistA liftIO $ Attrib' getter setter
 
 -- | Currently modelled as non-stoppable action that gets run when set
 -- action :: (MonadIO m, NodePtr n) => SetOnlyAttrib n m Action
--- action = SetOnlyAttrib' runAction
+-- action = SetOnlyAttrib runAction
 
 -- | Set SpriteFrame by name.
 -- NOTE: the SpriteFrame has to be already inside the SpriteFrameCache
 -- spriteName :: (MonadIO m, SpritePtr n) => SetOnlyAttrib n m String
--- spriteName = SetOnlyAttrib' $ \sp -> liftIO . sprite_setSpriteFrameWithName sp
+-- spriteName = SetOnlyAttrib $ \sp -> liftIO . sprite_setSpriteFrameWithName sp
 
 -- | Set texture by its filename
 -- NOTE: this automatically adds the texture to the texture cache if it's not already there
 spriteTextureFilename :: (MonadIO m, SpritePtr n) => SetOnlyAttrib n m String
-spriteTextureFilename = SetOnlyAttrib' $ \sp -> liftIO . sprite_setTextureWithFilename sp
+spriteTextureFilename = SetOnlyAttrib $ \sp -> liftIO . sprite_setTextureWithFilename sp
 
 flipped :: (MonadIO m, SpritePtr n) => Attrib n m (V2 Bool)
 flipped = hoistA liftIO $ Attrib' getter setter

@@ -8,18 +8,11 @@ module Reflex.Cocos2d.Label
       label
     , label_
     -- attrs --
-    , text
-    , horizontalAlign
-    , verticalAlign
-    , textColor
     , lineBreakWithoutSpace
     , maxLineWidth
     , boundingSize
     , boundingWidth
     , boundingHeight
-    , outline
-    , shadow
-    , glow
     , clipMargin
 
     , systemFontName
@@ -32,7 +25,6 @@ module Reflex.Cocos2d.Label
     ) where
 
 import Diagrams (V2(..))
-import Data.Colour
 import Control.Monad
 import Control.Monad.IO.Class
 
@@ -57,20 +49,23 @@ label_ = void . label
 
 ---- Attrs ----
 -- General Attributes
-text :: (MonadIO m, LabelPtr l) => Attrib l m String
-text = hoistA liftIO $ Attrib' (decode <=< label_getString) label_setString
-
-horizontalAlign :: (MonadIO m, LabelPtr l) => Attrib l m TextHAlignment
-horizontalAlign = hoistA liftIO $ Attrib' label_getHorizontalAlignment label_setHorizontalAlignment
-
-verticalAlign :: (MonadIO m, LabelPtr l) => Attrib l m TextVAlignment
-verticalAlign = hoistA liftIO $ Attrib' label_getVerticalAlignment label_setVerticalAlignment
-
-textColor :: (MonadIO m, LabelPtr l) => Attrib l m (AlphaColour Float)
-textColor = hoistA liftIO $ Attrib' (decode <=< label_getTextColor) label_setTextColor
+instance (MonadIO m, LabelPtr l) => HasText l m where
+  text = hoistA liftIO $ Attrib' (decode <=< label_getString) label_setString
+  horizontalAlign = hoistA liftIO $ Attrib' label_getHorizontalAlignment label_setHorizontalAlignment
+  verticalAlign = hoistA liftIO $ Attrib' label_getVerticalAlignment label_setVerticalAlignment
+  textColor = hoistA liftIO $ Attrib' (decode <=< label_getTextColor) label_setTextColor
+  outline = SetOnlyAttrib set
+    where set l (Just (Outline sColor sSize)) = liftIO $ label_enableOutlineWithSize l sColor sSize
+          set l _ = liftIO $ label_disableLabelEffect l LabelEffect_Outline
+  shadow = SetOnlyAttrib set
+    where set l (Just (Shadow shColor shOffset shBlur)) = liftIO $ label_enableShadowWithOffset l shColor shOffset shBlur
+          set l _ = liftIO $ label_disableLabelEffect l LabelEffect_Shadow
+  glow = SetOnlyAttrib set
+    where set l (Just (Glow glColor)) = liftIO $ label_enableGlow l glColor
+          set l _ = liftIO $ label_disableLabelEffect l LabelEffect_Glow
 
 lineBreakWithoutSpace :: (MonadIO m, LabelPtr l) => SetOnlyAttrib l m Bool
-lineBreakWithoutSpace = SetOnlyAttrib' $ \l -> liftIO . label_setLineBreakWithoutSpace l
+lineBreakWithoutSpace = SetOnlyAttrib $ \l -> liftIO . label_setLineBreakWithoutSpace l
 
 maxLineWidth :: (MonadIO m, LabelPtr l) => Attrib l m Float
 maxLineWidth = hoistA liftIO $ Attrib' label_getMaxLineWidth label_setMaxLineWidth
@@ -86,22 +81,6 @@ boundingWidth = hoistA liftIO $ Attrib' label_getWidth label_setWidth
 -- | corresponding to setHeight
 boundingHeight :: (MonadIO m, LabelPtr l) => Attrib l m Float
 boundingHeight = hoistA liftIO $ Attrib' label_getHeight label_setHeight
-
--- | Just Outline to turn on outline, Nothing to turn it off
-outline :: (MonadIO m, LabelPtr l) => SetOnlyAttrib l m (Maybe Outline)
-outline = SetOnlyAttrib' set
-  where set l (Just (Outline sColor sSize)) = liftIO $ label_enableOutlineWithSize l sColor sSize
-        set l _ = liftIO $ label_disableLabelEffect l LabelEffect_Outline
-
-shadow :: (MonadIO m, LabelPtr l) => SetOnlyAttrib l m (Maybe Shadow)
-shadow = SetOnlyAttrib' set
-  where set l (Just (Shadow shColor shOffset shBlur)) = liftIO $ label_enableShadowWithOffset l shColor shOffset shBlur
-        set l _ = liftIO $ label_disableLabelEffect l LabelEffect_Shadow
-
-glow :: (MonadIO m, LabelPtr l) => SetOnlyAttrib l m (Maybe Glow)
-glow = SetOnlyAttrib' set
-  where set l (Just (Glow glColor)) = liftIO $ label_enableGlow l glColor
-        set l _ = liftIO $ label_disableLabelEffect l LabelEffect_Glow
 
 clipMargin :: (MonadIO m, LabelPtr l) => Attrib l m Bool
 clipMargin = hoistA liftIO $ Attrib' label_isClipMarginEnabled label_setClipMarginEnabled

@@ -11,8 +11,7 @@ module Reflex.Cocos2d.Attributes
   (
     Attrib'(..)
   , Attrib
-  , SetOnlyAttrib'(..)
-  , SetOnlyAttrib
+  , SetOnlyAttrib(..)
   , Prop(..)
   , get
   , set
@@ -29,12 +28,14 @@ module Reflex.Cocos2d.Attributes
   -- attrs --
   , HasPosition(..)
   , HasRotation(..)
+  , HasText(..)
   , Transform(Transform)
   , HasPos(..)
   , HasRot(..)
   , transform
   ) where
 
+import Data.Colour
 import Data.Functor.Contravariant
 import Diagrams (Point(..), V2(..), P2, (^&), _x, _y, Direction, V2)
 import Control.Lens hiding (set, chosen, transform)
@@ -42,6 +43,9 @@ import Control.Monad.IO.Class
 import Reflex.Host.Class
 import Reflex
 import Reflex.Cocos2d.Class
+import Reflex.Cocos2d.Types
+
+import Graphics.UI.Cocos2d.Common
 
 infixr 0 :=
 
@@ -69,15 +73,13 @@ instance Contravariant (Attrib' w m b) where
     contramap f (Attrib' g s) = Attrib' g s'
       where s' w = s w . f
 
-data SetOnlyAttrib' w m b a = SetOnlyAttrib' (w -> a -> m ())
+data SetOnlyAttrib w m a = SetOnlyAttrib (w -> a -> m ())
 
-type SetOnlyAttrib w m a = forall b. SetOnlyAttrib' w m b a
+instance IsSettable w m a (SetOnlyAttrib w m a) where
+    setter (SetOnlyAttrib s) = s
 
-instance IsSettable w m a (SetOnlyAttrib' w m b a) where
-    setter (SetOnlyAttrib' s) = s
-
-instance Contravariant (SetOnlyAttrib' w m b) where
-    contramap f s = SetOnlyAttrib' $ \w -> setter s w . f
+instance Contravariant (SetOnlyAttrib w m) where
+    contramap f s = SetOnlyAttrib $ \w -> setter s w . f
 
 get :: IsGettable n m a attr => n -> attr -> m a
 get = flip getter
@@ -94,10 +96,11 @@ hoistA trans (Attrib' getter setter) = Attrib' (trans . getter) (\w -> trans . s
 -- | Transforms a IsSettable attribute to a SetOnlyAttribute. This uses lazy read on the incoming Dynamic
 dyn :: (NodeGraph t m, IsSettable w (HostFrame t) a (attr w (HostFrame t) b a))
     => attr w (HostFrame t) b a -> SetOnlyAttrib w m (Dynamic t a)
-dyn attr = SetOnlyAttrib' $ \w d -> do evt <- askPostBuildEvent
-                                       runEvent_ $ (setter attr w =<< sample (current d)) <$ evt
-                                       es w (updated d)
-  where SetOnlyAttrib' es = evt attr
+dyn attr = SetOnlyAttrib $ \w d -> do
+            e <- askPostBuildEvent
+            runEvent_ $ (setter attr w =<< sample (current d)) <$ e
+            let SetOnlyAttrib es = evt attr
+            es w (updated d)
 
 -- | Similar to `dyn`, but applies strict read
 -- XXX: nasty constraints to allow 'c' to be instantiated as different types within the function
@@ -106,9 +109,10 @@ dyn' :: ( NodeGraph t m
         , IsSettable w m a (attr w m b a) )
      => (forall m'. (MonadIO m', IsSettable w m' a (attr w m' b a)) => attr w m' b a)
      -> SetOnlyAttrib w m (Dynamic t a)
-dyn' attr = SetOnlyAttrib' $ \w d -> do setter attr w =<< sample (current d)
-                                        es w (updated d)
-  where SetOnlyAttrib' es = evt attr
+dyn' attr = SetOnlyAttrib $ \w d -> do
+              setter attr w =<< sample (current d)
+              let SetOnlyAttrib es = evt attr
+              es w (updated d)
 
 uDyn :: (NodeGraph t m, IsSettable w (HostFrame t) a (attr w (HostFrame t) b a), Eq a)
      => attr w (HostFrame t) b a -> SetOnlyAttrib w m (UniqDynamic t a)
@@ -124,13 +128,12 @@ uDyn' attr = fromUniqDynamic >$< dyn' attr
 
 evt :: (NodeGraph t m, IsSettable w (HostFrame t) a (attr w (HostFrame t) b a))
     => attr w (HostFrame t) b a -> SetOnlyAttrib w m (Event t a)
-evt attr = SetOnlyAttrib' $ \w e -> onEvent_ e $ setter attr w
+evt attr = SetOnlyAttrib $ \w e -> onEvent_ e $ setter attr w
 
 -- degenerative combinators following Contravariant.Divisible
 divide :: (Monad m, IsSettable w m b attrb, IsSettable w m c attrc)
        => (a -> (b, c)) -> attrb -> attrc -> SetOnlyAttrib w m a
-divide f attrb attrc = SetOnlyAttrib' $ \w a -> let (b, c) = f a in do setter attrb w b
-                                                                       setter attrc w c
+divide f attrb attrc = SetOnlyAttrib $ \w a -> let (b, c) = f a in setter attrb w b >> setter attrc w c
 
 divided :: (Monad m, IsSettable w m b attrb, IsSettable w m c attrc)
         => attrb -> attrc -> SetOnlyAttrib w m (b, c)
@@ -138,7 +141,7 @@ divided = divide id
 
 choose :: (IsSettable w m b attrb, IsSettable w m c attrc)
        => (a -> Either b c) -> attrb -> attrc -> SetOnlyAttrib w m a
-choose f attrb attrc = SetOnlyAttrib' $ \w a -> case f a of
+choose f attrb attrc = SetOnlyAttrib $ \w a -> case f a of
                                                   Left b -> setter attrb w b
                                                   Right c -> setter attrc w c
 
@@ -167,6 +170,16 @@ class Monad m => HasPosition n m where
 
 class HasRotation n m where
   rotation :: Attrib n m (Direction V2 Float)
+
+-- text related general attributes
+class HasText n m where
+  text :: Attrib n m String
+  horizontalAlign :: Attrib n m TextHAlignment
+  verticalAlign :: Attrib n m TextVAlignment
+  textColor :: Attrib n m (AlphaColour Float)
+  outline :: SetOnlyAttrib n m (Maybe Outline)
+  shadow :: SetOnlyAttrib n m (Maybe Shadow)
+  glow :: SetOnlyAttrib n m (Maybe Glow)
 
 -- Transform is the combination of position and rotation
 data Transform = Transform

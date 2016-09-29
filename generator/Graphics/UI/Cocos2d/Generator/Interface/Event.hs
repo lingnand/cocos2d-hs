@@ -425,8 +425,8 @@ c_EventListenerKeyboard =
   addReqIncludes [includeStd "base/CCEventListenerKeyboard.h"] $
     makeClass (ident1 "cocos2d" "EventListenerKeyboard") Nothing [c_EventListener]
       [ mkStaticMethod "create" [] $ ptrT $ objT c_EventListenerKeyboard
-      , makeClassVariable "onKeyPressed" Nothing (callbackT cb_EventKeyboardCallback) Nonstatic False True
-      , makeClassVariable "onKeyReleased" Nothing (callbackT cb_EventKeyboardCallback) Nonstatic False True
+      , makeClassVariable "onKeyPressed" Nothing (callbackT cb_EventKeyboardCallback) Nonstatic False
+      , makeClassVariable "onKeyReleased" Nothing (callbackT cb_EventKeyboardCallback) Nonstatic False
       ]
 
 cb_EventCustomCallback :: Callback
@@ -456,12 +456,12 @@ c_EventListenerCustom =
 --   addReqIncludes [includeStd "base/CCEventListenerController.h"] $
 --     makeClass (ident1 "cocos2d" "EventListenerController") Nothing [c_EventListener]
 --       [ mkStaticMethod "create" [] $ ptrT $ objT c_EventListenerController
---       , makeClassVariable "onConnected" Nothing (callbackT cb_EventControllerCallback) Nonstatic False True
---       , makeClassVariable "onDisconnected" Nothing (callbackT cb_EventControllerCallback) Nonstatic False True
---       , makeClassVariable "onKeyDown" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
---       , makeClassVariable "onKeyUp" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
---       , makeClassVariable "onKeyRepeat" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
---       , makeClassVariable "onAxisEvent" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False True
+--       , makeClassVariable "onConnected" Nothing (callbackT cb_EventControllerCallback) Nonstatic False
+--       , makeClassVariable "onDisconnected" Nothing (callbackT cb_EventControllerCallback) Nonstatic False
+--       , makeClassVariable "onKeyDown" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False
+--       , makeClassVariable "onKeyUp" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False
+--       , makeClassVariable "onKeyRepeat" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False
+--       , makeClassVariable "onAxisEvent" Nothing (callbackT cb_EventControllerWithKeyCodeCallback) Nonstatic False
 --       ]
 
 cb_EventFocusCallback :: Callback
@@ -473,7 +473,7 @@ c_EventListenerFocus =
   addReqIncludes [includeStd "base/CCEventListenerFocus.h"] $
     makeClass (ident1 "cocos2d" "EventListenerFocus") Nothing [c_EventListener]
       [ mkStaticMethod "create" [] $ ptrT $ objT c_EventListenerFocus
-      , makeClassVariable "onFocusChanged" Nothing (callbackT cb_EventFocusCallback) Nonstatic False True
+      , makeClassVariable "onFocusChanged" Nothing (callbackT cb_EventFocusCallback) Nonstatic False
       ]
 
 c_EventAcceleration :: Class
@@ -507,10 +507,10 @@ c_EventListenerMouse =
   addReqIncludes [includeStd "base/CCEventListenerMouse.h"] $
     makeClass (ident1 "cocos2d" "EventListenerMouse") Nothing [c_EventListener]
       [ mkStaticMethod "create" [] $ ptrT $ objT c_EventListenerMouse
-      , makeClassVariable "onMouseDown" Nothing (callbackT cb_EventMouseCallback) Nonstatic False True
-      , makeClassVariable "onMouseUp" Nothing (callbackT cb_EventMouseCallback) Nonstatic False True
-      , makeClassVariable "onMouseMove" Nothing (callbackT cb_EventMouseCallback) Nonstatic False True
-      , makeClassVariable "onMouseScroll" Nothing (callbackT cb_EventMouseCallback) Nonstatic False True
+      , makeClassVariable "onMouseDown" Nothing (callbackT cb_EventMouseCallback) Nonstatic False
+      , makeClassVariable "onMouseUp" Nothing (callbackT cb_EventMouseCallback) Nonstatic False
+      , makeClassVariable "onMouseMove" Nothing (callbackT cb_EventMouseCallback) Nonstatic False
+      , makeClassVariable "onMouseScroll" Nothing (callbackT cb_EventMouseCallback) Nonstatic False
       ]
 
 c_EventTouch :: Class
@@ -544,10 +544,10 @@ c_EventListenerTouchOneByOne =
       [ mkStaticMethod "create" [] $ ptrT $ objT c_EventListenerTouchOneByOne
       , mkConstMethod "isSwallowTouches" [] boolT
       , mkMethod "setSwallowTouches" [boolT] voidT
-      , makeClassVariable "onTouchBegan" Nothing (callbackT cb_EventTouchBeganCallback) Nonstatic False True
-      , makeClassVariable "onTouchMoved" Nothing (callbackT cb_EventTouchCallback) Nonstatic False True
-      , makeClassVariable "onTouchEnded" Nothing (callbackT cb_EventTouchCallback) Nonstatic False True
-      , makeClassVariable "onTouchCancelled" Nothing (callbackT cb_EventTouchCallback) Nonstatic False True
+      , makeClassVariable "onTouchBegan" Nothing (callbackT cb_EventTouchBeganCallback) Nonstatic False
+      , makeClassVariable "onTouchMoved" Nothing (callbackT cb_EventTouchCallback) Nonstatic False
+      , makeClassVariable "onTouchEnded" Nothing (callbackT cb_EventTouchCallback) Nonstatic False
+      , makeClassVariable "onTouchCancelled" Nothing (callbackT cb_EventTouchCallback) Nonstatic False
       ]
 
 vectorEventTouch :: V.Contents
@@ -565,8 +565,8 @@ c_EventListenerTouchAllAtOnce =
   addReqIncludes [includeStd "base/CCEventListenerTouch.h"] $
     makeClass (ident1 "cocos2d" "EventListenerTouchAllAtOnce") Nothing [c_EventListener]
       [ mkStaticMethod "create" [] $ ptrT $ objT c_EventListenerTouchAllAtOnce
-      , makeClassVariable "onTouchesBegan" Nothing (callbackT cb_EventTouchesCallback) Nonstatic False True
-      , makeClassVariable "onTouchesMoved" Nothing (callbackT cb_EventTouchesCallback) Nonstatic False True
-      , makeClassVariable "onTouchesEnded" Nothing (callbackT cb_EventTouchesCallback) Nonstatic False True
-      , makeClassVariable "onTouchesCancelled" Nothing (callbackT cb_EventTouchesCallback) Nonstatic False True
+      , makeClassVariable "onTouchesBegan" Nothing (callbackT cb_EventTouchesCallback) Nonstatic False
+      , makeClassVariable "onTouchesMoved" Nothing (callbackT cb_EventTouchesCallback) Nonstatic False
+      , makeClassVariable "onTouchesEnded" Nothing (callbackT cb_EventTouchesCallback) Nonstatic False
+      , makeClassVariable "onTouchesCancelled" Nothing (callbackT cb_EventTouchesCallback) Nonstatic False
       ]
