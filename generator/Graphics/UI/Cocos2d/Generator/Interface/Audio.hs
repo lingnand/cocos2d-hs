@@ -4,7 +4,7 @@ module Graphics.UI.Cocos2d.Generator.Interface.Audio
     , c_AudioProfile
     , cb_AudioFinishCallback
     , cb_AudioLoadedCallback
-    , e_AudioState
+    , e_AudioInstanceState
     )
   where
 
@@ -20,7 +20,7 @@ mod_audio =
     , ExportClass c_AudioProfile
     , ExportCallback cb_AudioFinishCallback
     , ExportCallback cb_AudioLoadedCallback
-    , ExportEnum e_AudioState
+    , ExportEnum e_AudioInstanceState
     ]
 
 c_AudioProfile :: Class
@@ -33,9 +33,9 @@ c_AudioProfile =
       , mkClassVariable "minDelay" doubleT                     -- minimum delay in between sounds
       ]
 
-e_AudioState :: CppEnum
-e_AudioState =
-  makeEnum (ident3 "cocos2d" "experimental" "AudioEngine" "AudioState") Nothing
+e_AudioInstanceState :: CppEnum
+e_AudioInstanceState =
+  makeEnum (ident3 "cocos2d" "experimental" "AudioEngine" "AudioState") (Just $ toExtName "AudioInstanceState")
     [ (-1, ["error"])
     , ( 0, ["initializing"])
     , ( 2, ["playing"])
@@ -86,7 +86,7 @@ c_AudioEngine =
           ] voidT
       , mkStaticMethod "getCurrentTime" [intT] floatT
       , mkStaticMethod "getDuration" [intT] floatT
-      , mkStaticMethod "getState" [intT] $ enumT e_AudioState
+      , mkStaticMethod "getState" [intT] $ enumT e_AudioInstanceState
       , mkStaticMethod "setFinishCallback"
           [ intT -- audioId
           , callbackT cb_AudioFinishCallback
