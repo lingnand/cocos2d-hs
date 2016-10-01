@@ -32,6 +32,7 @@ import Graphics.UI.Cocos2d.Generator.Interface.Sprite
 import Graphics.UI.Cocos2d.Generator.Interface.Event
 import Graphics.UI.Cocos2d.Generator.Interface.Label
 import Graphics.UI.Cocos2d.Generator.Interface.Widget
+import Graphics.UI.Cocos2d.Generator.Interface.Audio
 import Graphics.UI.Cocos2d.Generator.Interface.CocoStudio
 import Control.Monad
 
@@ -58,6 +59,7 @@ interfaceResult =
     , mod_event
     , mod_label
     , mod_widget
+    , mod_audio
     , mod_cocostudio
     ]
   >>= interfaceAddHaskellModuleBase ["Graphics", "UI", "Cocos2d"]

@@ -28,7 +28,7 @@ cb_NodeLoadCallback =
 c_CSLoader :: Class
 c_CSLoader =
   addReqIncludes [includeStd "cocostudio/CocoStudio.h"] $
-    makeClass (ident1 "cocos2d" "CSLoader") Nothing []
+    makeClass (ident1 "cocos2d" "CSLoader") (Just $ toExtName "CsLoader") []
       [ mkStaticMethod "createNode"
           [ refT $ constT $ objT c_string -- filename
           ] $ ptrT $ objT c_Node

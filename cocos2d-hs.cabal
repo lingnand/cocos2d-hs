@@ -26,6 +26,7 @@ executable generator
                      , Graphics.UI.Cocos2d.Generator.Interface.Event
                      , Graphics.UI.Cocos2d.Generator.Interface.Label
                      , Graphics.UI.Cocos2d.Generator.Interface.Widget
+                     , Graphics.UI.Cocos2d.Generator.Interface.Audio
                      , Graphics.UI.Cocos2d.Generator.Interface.CocoStudio
   build-depends:       base >=4.7 && <4.9
                      , haskell-src >=1.0 && <1.1
@@ -62,6 +63,7 @@ library
                      , Graphics.UI.Cocos2d.Event
                      , Graphics.UI.Cocos2d.Label
                      , Graphics.UI.Cocos2d.Widget
+                     , Graphics.UI.Cocos2d.Audio
                      , Graphics.UI.Cocos2d.CocoStudio
                      -- reflex wrapper
                      , Reflex.Cocos2d
@@ -71,6 +73,7 @@ library
                      , Reflex.Cocos2d.Node
                      , Reflex.Cocos2d.Event
                      , Reflex.Cocos2d.Widget
+                     , Reflex.Cocos2d.CocoStudio
                      , Reflex.Cocos2d.Internal
                      , Reflex.Extra
   other-modules:       Graphics.UI.Cocos2d.Std
@@ -84,6 +87,7 @@ library
                        cbits/Widget.cpp
                        cbits/Event.cpp
                        cbits/Label.cpp
+                       cbits/Audio.cpp
                        cbits/CocoStudio.cpp
                        cbits/std.cpp
   include-dirs:        cbits

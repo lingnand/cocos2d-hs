@@ -9,6 +9,7 @@ module Reflex.Cocos2d
     -- , module Reflex.Cocos2d.Chipmunk
     -- , module Reflex.Cocos2d.Armature
     , module Reflex.Cocos2d.Attributes
+    , module Reflex.Cocos2d.CocoStudio
     , module Reflex.Cocos2d.Types
     ) where
 
@@ -21,4 +22,5 @@ import Reflex.Cocos2d.Widget
 -- import Reflex.Cocos2d.Chipmunk
 -- import Reflex.Cocos2d.Armature
 import Reflex.Cocos2d.Attributes
+import Reflex.Cocos2d.CocoStudio
 import Reflex.Cocos2d.Types

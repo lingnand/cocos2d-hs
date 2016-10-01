@@ -22,7 +22,7 @@ import Control.Monad
 import Control.Monad.IO.Class
 import Control.Lens hiding (contains)
 
-import Foreign.Hoppy.Runtime (Decodable(..))
+import Foreign.Hoppy.Runtime (Decodable(..), CppPtr(..))
 
 import Graphics.UI.Cocos2d.Widget
 import Graphics.UI.Cocos2d.Common
@@ -85,15 +85,20 @@ instance (MonadIO m, TextPtr t) => HasText t m where
           set l _ = liftIO $ text_disableLabelEffect l LabelEffect_Glow
 
 -- helpers for finding widget
-findWidgetByName' :: MonadIO m => (Widget -> a) -> Widget -> String -> m a
-findWidgetByName' downcast w name = liftIO $ downcast <$> uiHelper_seekWidgetByName w name
+findWidgetByName' :: MonadIO m => (Widget -> a) -> Widget -> String -> m (Maybe a)
+findWidgetByName' downcast w name = liftIO $ do
+    w' <- uiHelper_seekWidgetByName w name
+    if w' == nullptr
+      then return Nothing
+      else return $ Just $ downcast w'
+
 {-# INLINE findWidgetByName' #-}
 
-findButtonByName :: MonadIO m => Widget -> String -> m Button
+findButtonByName :: MonadIO m => Widget -> String -> m (Maybe Button)
 findButtonByName = findWidgetByName' downToButton
 
-findTextByName :: MonadIO m => Widget -> String -> m Text
+findTextByName :: MonadIO m => Widget -> String -> m (Maybe Text)
 findTextByName = findWidgetByName' downToText
 
-findLayoutByName :: MonadIO m => Widget -> String -> m Layout
+findLayoutByName :: MonadIO m => Widget -> String -> m (Maybe Layout)
 findLayoutByName = findWidgetByName' downToLayout

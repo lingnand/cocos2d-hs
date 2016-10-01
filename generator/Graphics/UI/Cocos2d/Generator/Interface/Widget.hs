@@ -6,6 +6,7 @@ module Graphics.UI.Cocos2d.Generator.Interface.Widget
     , c_Text
     , c_Layout
     , c_UIHelper
+    -- , c_VideoPlayer
     , e_BrightStyle
     , e_TextureResType
     , e_SizeType
@@ -16,9 +17,11 @@ module Graphics.UI.Cocos2d.Generator.Interface.Widget
     , e_LayoutType
     , e_ClippingType
     , e_BackGroundColorType
+    -- , e_VideoPlayerEventType
     , cb_WidgetTouchCallback
     , cb_WidgetClickCallback
     , cb_WidgetEventCallback
+    -- , cb_VideoPlayerCallback
     )
   where
 
@@ -39,6 +42,7 @@ mod_widget =
     , ExportClass c_Text
     , ExportClass c_Layout
     , ExportClass c_UIHelper
+    -- , ExportClass c_VideoPlayer
     , ExportEnum e_BrightStyle
     , ExportEnum e_TextureResType
     , ExportEnum e_SizeType
@@ -49,9 +53,11 @@ mod_widget =
     , ExportEnum e_LayoutType
     , ExportEnum e_ClippingType
     , ExportEnum e_BackGroundColorType
+    -- , ExportEnum e_VideoPlayerEventType
     , ExportCallback cb_WidgetTouchCallback
     , ExportCallback cb_WidgetClickCallback
     , ExportCallback cb_WidgetEventCallback
+    -- , ExportCallback cb_VideoPlayerCallback
     ]
 
 c_ProtectedNode :: Class
@@ -368,6 +374,44 @@ c_Layout =
       , mkMethod "setPassFocusToChild" [boolT] voidT
       , mkConstMethod "isPassFocusToChild" [] boolT
       ]
+
+-- e_VideoPlayerEventType :: CppEnum
+-- e_VideoPlayerEventType =
+--   addReqIncludes [includeStd "ui/UIVideoPlayer.h"] $
+--     makeEnum (ident4 "cocos2d" "experimental" "ui" "VideoPlayer" "EventType") (Just $ toExtName "VideoPlayerEventType")
+--       [ (0, ["playing"])
+--       , (1, ["paused"])
+--       , (2, ["stopped"])
+--       , (3, ["completed"])
+--       ]
+
+-- cb_VideoPlayerCallback :: Callback
+-- cb_VideoPlayerCallback =
+--   makeCallback (toExtName "VideoPlayerCallback") [ptrT $ objT c_Ref, enumT e_VideoPlayerEventType] voidT
+
+-- this is only available for Android/iOS
+-- c_VideoPlayer :: Class
+-- c_VideoPlayer =
+--   addReqIncludes [includeStd "ui/UIVideoPlayer.h"] $
+--     makeClass (ident3 "cocos2d" "experimental" "ui" "VideoPlayer") Nothing [c_Widget]
+--       [ mkStaticMethod "create" [] $ ptrT $ objT c_VideoPlayer
+--       , mkMethod "setFileName" [refT $ constT $ objT c_string] voidT
+--       , mkConstMethod "getFileName" [] $ refT $ constT $ objT c_string
+--       , mkMethod "setURL" [refT $ constT $ objT c_string] voidT
+--       , mkConstMethod "getURL" [] $ refT $ constT $ objT c_string
+--       , mkMethod "play" [] voidT
+--       , mkMethod "pause" [] voidT
+--       , mkMethod "resume" [] voidT
+--       , mkMethod "stop" [] voidT
+--       -- seconds
+--       , mkMethod "seekTo" [floatT] voidT
+--       , mkConstMethod "isPlaying" [] boolT
+--       , mkMethod "setKeepAspectRatioEnabled" [boolT] voidT
+--       , mkConstMethod "isKeepAspectRatioEnabled" [] boolT
+--       , mkMethod "setFullScreenEnabled" [boolT] voidT
+--       , mkConstMethod "isFullScreenEnabled" [] boolT
+--       , mkMethod "addEventListener" [callbackT cb_VideoPlayerCallback] voidT
+--       ]
 
 c_UIHelper :: Class
 c_UIHelper =
