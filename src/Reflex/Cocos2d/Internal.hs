@@ -24,6 +24,7 @@ import Control.Monad.Trans.State.Strict
 import Control.Monad.IO.Class
 import Control.Monad.Fix
 import Control.Monad.Ref
+import Control.Monad.Exception
 import Control.Lens
 import Reflex
 import Reflex.Host.Class
@@ -53,6 +54,8 @@ deriving instance Monad (HostFrame t) => Applicative (Graph t)
 deriving instance Monad (HostFrame t) => Monad (Graph t)
 deriving instance MonadFix (HostFrame t) => MonadFix (Graph t)
 deriving instance MonadIO (HostFrame t) => MonadIO (Graph t)
+deriving instance MonadException (HostFrame t) => MonadException (Graph t)
+deriving instance MonadAsyncException (HostFrame t) => MonadAsyncException (Graph t)
 
 instance (Reflex t, MonadSample t (HostFrame t)) => MonadSample t (Graph t) where
     sample = Graph . lift . lift . sample
@@ -77,6 +80,7 @@ instance MonadRef (HostFrame t) => MonadRef (Graph t) where
 
 instance ( MonadIO (HostFrame t), Functor (HostFrame t)
          , MonadRef (HostFrame t), Ref (HostFrame t) ~ Ref IO
+         , MonadException (HostFrame t), MonadAsyncException (HostFrame t)
          , ReflexHost t ) => NodeGraph t (Graph t) where
     askParent = Graph $ view graphParent
     askPostBuildEvent = Graph $ view graphPostBuildEvent

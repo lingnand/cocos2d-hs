@@ -30,13 +30,16 @@ import Control.Monad.IO.Class
 import Control.Monad.Fix
 import Control.Monad.Ref
 import Control.Monad.Trans.Free
+import Control.Monad.Exception
 import Reflex
 import Reflex.Host.Class
 import Graphics.UI.Cocos2d.Node
 
 class ( ReflexHost t, MonadIO m, MonadIO (HostFrame t), MonadFix m, MonadHold t m
       , MonadRef m, Ref m ~ Ref IO, MonadRef (HostFrame t), Ref (HostFrame t) ~ Ref IO
-      , MonadReflexCreateTrigger t m, MonadSubscribeEvent t m )
+      , MonadReflexCreateTrigger t m, MonadSubscribeEvent t m
+      , MonadException m, MonadAsyncException m
+      , MonadException (HostFrame t), MonadAsyncException (HostFrame t) )
       => NodeGraph t m where
     askParent :: m Node
     -- | Schedule an action to occur after the current cohort has been

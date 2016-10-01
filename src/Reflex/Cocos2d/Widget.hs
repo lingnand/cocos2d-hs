@@ -1,19 +1,24 @@
+{-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TemplateHaskell #-}
 module Reflex.Cocos2d.Widget
     (
-      WidgetTouchEvents(WidgetTouchEvents)
-    , widgetTouchBegan
-    , widgetTouchMoved
-    , widgetTouchEnded
-    , widgetTouchCancelled
-    , getWidgetTouchEvents
+      getWidgetTouchEvents
     , getWidgetClicks
+    , getWidgetEvents
     , findButtonByName
     , findTextByName
     , findLayoutByName
+    -- data types
+    , WidgetTouchEvents(WidgetTouchEvents)
+    , HasWidgetTouchEvents(..)
+    , WidgetEvents(WidgetEvents)
+    , widgetClicked
+    -- re-export --
+    , Widget
+    , WidgetPtr
     )
   where
 
@@ -40,7 +45,16 @@ data WidgetTouchEvents t = WidgetTouchEvents
     , _widgetTouchEnded     :: Event t ()
     , _widgetTouchCancelled :: Event t ()
     }
-makeLenses ''WidgetTouchEvents
+makeClassy ''WidgetTouchEvents
+
+data WidgetEvents t = WidgetEvents
+    { _weToWTouchEvents :: WidgetTouchEvents t
+    , _widgetClicked    :: Event t ()
+    }
+makeLenses ''WidgetEvents
+
+instance HasWidgetTouchEvents (WidgetEvents t) t where
+    widgetTouchEvents = weToWTouchEvents
 
 getWidgetTouchEvents :: (NodeGraph t m, WidgetPtr w) => w -> m (WidgetTouchEvents t)
 getWidgetTouchEvents w = do
@@ -68,6 +82,9 @@ getWidgetClicks w = do
     newEventWithTrigger $ \et -> do
       widget_addClickEventListener w $ \_ -> runWithActions ([et ==> ()], return ())
       return $ pure ()
+
+getWidgetEvents :: (NodeGraph t m, WidgetPtr w) => w -> m (WidgetEvents t)
+getWidgetEvents w = WidgetEvents <$> getWidgetTouchEvents w <*> getWidgetClicks w
 
 instance (MonadIO m, TextPtr t) => HasText t m where
   text = hoistA liftIO $ Attrib' (decode <=< text_getString) text_setString

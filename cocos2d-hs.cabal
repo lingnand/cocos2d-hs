@@ -1,6 +1,6 @@
 name:                cocos2d-hs
 version:             0.1.0.0
-synopsis:            Initial project template from stack
+synopsis:            Cocos2d native binding library with reflex frp wrapper
 description:         Please see README.md
 homepage:            https://github.com/lynnard/cocos2d-hs#readme
 license:             BSD3
@@ -52,6 +52,7 @@ library
                      , data-default
                      , MonadRandom
                      , contravariant
+                     , exception-transformers
                      , free
   exposed-modules:     Graphics.UI.Cocos2d.Common
                      , Graphics.UI.Cocos2d.Texture
