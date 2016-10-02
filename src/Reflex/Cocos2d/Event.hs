@@ -47,14 +47,13 @@ module Reflex.Cocos2d.Event
     -- , dragged
 
     -- * Time
-    , tickFrames
-    , dilate
-    , delay
+    , modulate
     -- * Rand
     , runRandEvent
     -- * Reflex Utilities
     , switchF
     -- * Async
+    , loadTexture
     -- , load
     -- * Utility
     -- , nodeContains
@@ -97,12 +96,11 @@ import Control.Monad
 import Control.Monad.Random
 import Control.Monad.Trans.Free
 import Control.Monad.Fix
-import Control.Monad.IO.Class
-import Control.Lens hiding (contains)
+import Control.Monad.Trans
 import Control.Monad.Ref
+import Control.Lens hiding (contains)
 
-import Foreign.Hoppy.Runtime (Decodable(..), HasContents(..), CppPtr(..))
-import Foreign.Ptr (castPtr)
+import Foreign.Hoppy.Runtime (Decodable(..), HasContents(..))
 
 import Reflex
 import Reflex.Extra
@@ -110,6 +108,7 @@ import Reflex.Host.Class
 
 import Graphics.UI.Cocos2d.Event hiding (Event)
 import Graphics.UI.Cocos2d.Director
+import Graphics.UI.Cocos2d.Texture
 
 import Reflex.Cocos2d.Class
 import Reflex.Cocos2d.Types
@@ -149,13 +148,13 @@ makeLenses ''KeyboardEvents
 -- We generally put the listener to priority > scene graph (negative numbers)
 getMouseEvents :: NodeGraph t m => m (MouseEvents t)
 getMouseEvents = do
-    runWithActions <- askRunWithActions
+    run <- view runWithActions
     ed <- liftIO $ director_getInstance >>= director_getEventDispatcher
     let handleTrigger callbackSetter tr = do
           l <- eventListenerMouse_create
           callbackSetter l $ \em -> do
             m <- decode em
-            runWithActions ([tr ==> m], return ())
+            run ([tr ==> m], return ())
           eventDispatcher_addEventListenerWithFixedPriority ed l (-1)
           return $ eventDispatcher_removeEventListener ed l
     MouseEvents <$> newEventWithTrigger (handleTrigger eventListenerMouse_onMouseDown_set)
@@ -165,13 +164,13 @@ getMouseEvents = do
 
 getTouchEvents :: NodeGraph t m => m (TouchEvents t)
 getTouchEvents = do
-    runWithActions <- askRunWithActions
+    run <- view runWithActions
     ed <- liftIO $ director_getInstance >>= director_getEventDispatcher
     let handleTrigger callbackSetter tr = do
           l <- eventListenerTouchOneByOne_create
           callbackSetter l $ \(et :: EventTouch) _ -> do
             t <- decode et
-            runWithActions ([tr ==> t], return ())
+            run ([tr ==> t], return ())
           eventDispatcher_addEventListenerWithFixedPriority ed l (-1)
           return $ eventDispatcher_removeEventListener ed l
         setOnTouchBegan l cb = do
@@ -184,14 +183,14 @@ getTouchEvents = do
 
 getMultiTouchEvents :: NodeGraph t m => m (MultiTouchEvents t)
 getMultiTouchEvents = do
-    runWithActions <- askRunWithActions
+    run <- view runWithActions
     ed <- liftIO $ director_getInstance >>= director_getEventDispatcher
     let handleTrigger callbackSetter tr = do
           l <- eventListenerTouchAllAtOnce_create
           callbackSetter l $ \ets _ -> do
             -- convert ets to a list of Touches
             ts <- toContents ets >>= mapM decode
-            runWithActions ([tr ==> ts], return ())
+            run ([tr ==> ts], return ())
           eventDispatcher_addEventListenerWithFixedPriority ed l (-1)
           return $ eventDispatcher_removeEventListener ed l
     MultiTouchEvents <$> newEventWithTrigger (handleTrigger eventListenerTouchAllAtOnce_onTouchesBegan_set)
@@ -201,11 +200,11 @@ getMultiTouchEvents = do
 
 getKeyboardEvents :: NodeGraph t m => m (KeyboardEvents t)
 getKeyboardEvents = do
-    runWithActions <- askRunWithActions
+    run <- view runWithActions
     ed <- liftIO $ director_getInstance >>= director_getEventDispatcher
     let handleTrigger callbackSetter tr = do
           l <- eventListenerKeyboard_create
-          callbackSetter l $ \kc _ -> runWithActions ([tr ==> kc], return ())
+          callbackSetter l $ \kc _ -> run ([tr ==> kc], return ())
           eventDispatcher_addEventListenerWithFixedPriority ed l (-1)
           return $ eventDispatcher_removeEventListener ed l
     KeyboardEvents <$> newEventWithTrigger (handleTrigger eventListenerKeyboard_onKeyPressed_set)
@@ -213,12 +212,12 @@ getKeyboardEvents = do
 
 getAccelerations :: NodeGraph t m => m (Event t Acceleration)
 getAccelerations = do
-    runWithActions <- askRunWithActions
+    run <- view runWithActions
     newEventWithTrigger $ \tr -> do
       ed <- director_getInstance >>= director_getEventDispatcher
       l <- eventListenerAcceleration_create $ \ea _ -> do
               a <- decode ea
-              runWithActions ([tr ==> a], return ())
+              run ([tr ==> a], return ())
       eventDispatcher_addEventListenerWithFixedPriority ed l (-1)
       return $ eventDispatcher_removeEventListener ed l
 
@@ -260,28 +259,13 @@ accumKeysDown (KeyboardEvents pressedE releasedE) = do
 --         b' <- hold (mstream, Nothing) e'
 --     return $ fmapMaybe snd e'
 
--- | Modulate a ticker
-dilate :: (Reflex t, MonadHold t m, MonadFix m, Num a, Ord a) => a -> Event t a -> m (Event t a)
-dilate limit = mapAccumMaybe_ f (0, limit)
+-- | Locally modulate the ticks in the environment
+modulate :: (Reflex t, MonadHold t m, MonadFix m, Num a, Ord a) => a -> Event t a -> m (Event t a)
+modulate limit = mapAccumMaybe_ f (0, limit)
     where
       f (acc, l) d = let sum = acc + d in
         if sum > l then (Just (0  , limit-(sum-l)) , Just sum)
                    else (Just (sum, l            ) , Nothing )
-
--- | Get the tick per frame - the time unit is in seconds
--- TODO: every time this is called the previous "ticks" is invalidated
--- we need to have a unique key for every invocation
-tickFrames :: NodeGraph t m => m (Event t Float)
-tickFrames = do
-    runWithActions <- askRunWithActions
-    newEventWithTrigger $ \tr -> liftIO $ do
-      dtor <- director_getInstance
-      sch <- director_getScheduler dtor
-      let target = castPtr $ toPtr dtor
-      scheduler_scheduleWithInterval sch
-        (\ss -> runWithActions ([tr ==> ss], return ()))
-        target 0 False "ticks"
-      return $ scheduler_unschedule sch "ticks" target
 
 -- ticks' :: NodeGraph t m => NominalDiffTime -> m (Event t NominalDiffTime)
 -- ticks' interval = do
@@ -297,26 +281,38 @@ runRandEvent rands = do
 -- | Delay an Event by the given amount of seconds
 -- TODO: every time this is called the previous "delayed" is invalidated
 -- we need to have a unique key for every invocation
-delay :: NodeGraph t m => Float -> Event t a -> m (Event t a)
-delay dt e = do
-    runWithActions <- askRunWithActions
-    (e', trigger) <- newEventWithTriggerRef
-    delayedFire <- liftIO $ do
-      dtor <- director_getInstance
-      sch <- director_getScheduler dtor
-      let target = castPtr $ toPtr dtor
-      return $ \a ->
-        scheduler_scheduleWithIntervalAndRepeat sch
-          (\_ -> readRef trigger >>= mapM_ (\t -> runWithActions ([t ==> a], return ())))
-          target 0 0 dt False "delayed"
-    onEvent_ e $ liftIO . delayedFire
-    return e'
+-- delay :: NodeGraph t m => Float -> Event t a -> m (Event t a)
+-- delay dt e = do
+--     runWithActions <- askRunWithActions
+--     (e', trigger) <- newEventWithTriggerRef
+--     delayedFire <- liftIO $ do
+--       dtor <- director_getInstance
+--       sch <- director_getScheduler dtor
+--       let target = castPtr $ toPtr dtor
+--       return $ \a ->
+--         scheduler_scheduleWithIntervalAndRepeat sch
+--           (\_ -> readRef trigger >>= mapM_ (\t -> runWithActions ([t ==> a], return ())))
+--           target 0 0 dt False "delayed"
+--     onEvent_ e $ liftIO . delayedFire
+--     return e'
 
 -- | Merge a deeply nested Event into a single Event
 switchF :: NodeGraph t m => Free (Event t) a -> m (Event t a)
 switchF f = switchF' f >>= \case
-    Pure a -> fmap (a <$) askPostBuildEvent
+    Pure a -> fmap (a <$) $ view postBuildEvent
     Free e -> return e
+
+loadTexture :: NodeGraph t m => String -> m (Event t Texture2D)
+loadTexture path = do
+    run <- view runWithActions
+    -- Since we are not sure if the user would subscribe to the resulting event, we can't just use
+    -- newEventWithTrigger
+    (e, trigger) <- newEventWithTriggerRef
+    liftIO $ do
+      tc <- director_getInstance >>= director_getTextureCache
+      textureCache_addImageAsync tc path $ \tex -> do
+        readRef trigger >>= mapM_ (\tr -> run ([tr ==> tex], return ()))
+    return e
 
 -- | Load a list of resources in an async manner
 -- returns (Event t (loaded, total), finished)
@@ -336,80 +332,6 @@ switchF f = switchF' f >>= \case
 --     askPostBuildEvent >>= runEvent_ . (A.load resources o <$)
 --     return (trigger, finished)
 
-
--------- WIDGET ----------
-
--- data WidgetTouchEvents t = WidgetTouchEvents { _widgetTouchBegan :: Event t (P2 Double)
---                                              , _widgetTouchMoved :: Event t (P2 Double)
---                                              , _widgetTouchEnded :: Event t (P2 Double)
---                                              , _widgetTouchCancelled :: Event t ()
---                                              }
--- makeClassyFor "HasWidgetTouchEvents" "widgetTouches" [ ("_widgetTouchBegan", "widgetTouchBegan")
---                                                      , ("_widgetTouchMoved", "widgetTouchMoved")
---                                                      , ("_widgetTouchEnded", "widgetTouchEnded")
---                                                      , ("_widgetTouchCancelled", "widgetTouchCancelled")
---                                                      ] ''WidgetTouchEvents
---
--- data WidgetEvents t = WidgetEvents { _weToWTouchEvents :: WidgetTouchEvents t
---                                    , _widgetClicked :: Event t ()
---                                    }
--- makeLenses ''WidgetEvents
---
--- instance HasWidgetTouchEvents (WidgetEvents t) t where
---     widgetTouches = weToWTouchEvents
---
---
--- widgetEvents :: (NodeGraph t m, IsWidget w) => w -> m (WidgetEvents t)
--- widgetEvents w = do
---     runWithActions <- askRunWithActions
---     evt <- newEventWithTrigger $ \et ->
---             setOnWidgetTouch w $ \t -> runWithActions ([et :=> Identity t], return ())
---     let beganE =  fforMaybe evt $ \case
---                     WidgetTouchBegan p -> Just p
---                     _ -> Nothing
---         movedE =  fforMaybe evt $ \case
---                     WidgetTouchMoved p -> Just p
---                     _ -> Nothing
---         endedE =  fforMaybe evt $ \case
---                     WidgetTouchEnded p -> Just p
---                     _ -> Nothing
---         cancelledE = fforMaybe evt $ \case
---                       WidgetTouchCancelled -> Just ()
---                       _ -> Nothing
---     clicks <- newEventWithTrigger $ \et ->
---       setOnWidgetClick w $ runWithActions ([et :=> Identity ()], return ())
---     return $ WidgetEvents (WidgetTouchEvents beganE movedE endedE cancelledE) clicks
---
--- pageViewEvents :: NodeGraph t m => PageView -> m (Event t PageViewEvent)
--- pageViewEvents w = do
---     runWithActions <- askRunWithActions
---     newEventWithTrigger $ \et ->
---       setOnPageViewEvent w $ \e -> runWithActions ([et :=> Identity e], return ())
---
--- listViewEvents :: NodeGraph t m => ListView -> m (Event t ListViewEvent)
--- listViewEvents w = do
---     runWithActions <- askRunWithActions
---     newEventWithTrigger $ \et ->
---       setOnListViewEvent w $ \e -> runWithActions ([et :=> Identity e], return ())
---
--- scrollViewEvents :: NodeGraph t m => ScrollView -> m (Event t ScrollViewEvent)
--- scrollViewEvents w = do
---     runWithActions <- askRunWithActions
---     newEventWithTrigger $ \et ->
---       setOnScrollViewEvent w $ \e -> runWithActions ([et :=> Identity e], return ())
---
--- sliderEvents :: NodeGraph t m => Slider -> m (Event t SliderEvent)
--- sliderEvents w = do
---     runWithActions <- askRunWithActions
---     newEventWithTrigger $ \et ->
---       setOnSliderEvent w $ \e -> runWithActions ([et :=> Identity e], return ())
---
--- textFieldEvents :: NodeGraph t m => TextField -> m (Event t TextFieldEvent)
--- textFieldEvents w = do
---     runWithActions <- askRunWithActions
---     newEventWithTrigger $ \et ->
---       setOnTextFieldEvent w $ \e -> runWithActions ([et :=> Identity e], return ())
---
 
 -------- Armature ----------
 

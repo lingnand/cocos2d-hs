@@ -28,7 +28,7 @@ executable generator
                      , Graphics.UI.Cocos2d.Generator.Interface.Widget
                      , Graphics.UI.Cocos2d.Generator.Interface.Audio
                      , Graphics.UI.Cocos2d.Generator.Interface.CocoStudio
-  build-depends:       base >=4.7 && <4.9
+  build-depends:       base >= 4.7 && < 5
                      , haskell-src >=1.0 && <1.1
                      , hoppy-generator
                      , hoppy-std
@@ -37,12 +37,12 @@ executable generator
 
 library
   hs-source-dirs:      src
-  build-depends:       base >= 4.7 && < 4.9
+  build-depends:       base >= 4.7 && < 5
                      , hoppy-runtime
                      , colour
                      , linear
                      , containers
-                     , transformers
+                     , mtl
                      , ref-tf
                      , dependent-sum
                      , diagrams-lib

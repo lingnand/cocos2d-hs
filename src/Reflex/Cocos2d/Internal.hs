@@ -15,19 +15,20 @@ module Reflex.Cocos2d.Internal
       mainScene
     ) where
 
-import Data.Dependent.Sum (DSum, (==>))
+import Data.Dependent.Sum ((==>))
 import Data.IORef
 import Control.Monad
-import Control.Monad.Trans.Class
-import Control.Monad.Trans.Reader
-import Control.Monad.Trans.State.Strict
-import Control.Monad.IO.Class
-import Control.Monad.Fix
+import Control.Monad.Trans
+import Control.Monad.Reader
+import Control.Monad.State.Strict
 import Control.Monad.Ref
 import Control.Monad.Exception
 import Control.Lens
 import Reflex
 import Reflex.Host.Class
+
+import Foreign.Ptr (castPtr)
+import Foreign.Hoppy.Runtime (Decodable(..), CppPtr(..))
 
 import Graphics.UI.Cocos2d.Node
 import Graphics.UI.Cocos2d.Scene
@@ -36,19 +37,13 @@ import Graphics.UI.Cocos2d.Director
 import Reflex.Cocos2d.Class
 
 -- mostly borrowed from Reflex.Dom.Internal
-data GraphEnv t = GraphEnv { _graphParent :: !Node
-                           , _graphPostBuildEvent :: !(Event t ())
-                           , _graphRunWithActions :: !(([DSum (EventTrigger t) Identity], IO ()) -> IO ())
-                           }
-
-makeLenses ''GraphEnv
-
 data GraphState t = GraphState { _graphVoidActions :: ![Event t (HostFrame t ())] }
 
 makeLenses ''GraphState
 
-newtype Graph t a = Graph (ReaderT (GraphEnv t) (StateT (GraphState t) (HostFrame t)) a)
+newtype Graph t a = Graph (ReaderT (NodeGraphEnv t) (StateT (GraphState t) (HostFrame t)) a)
 
+deriving instance Monad (HostFrame t) => MonadReader (NodeGraphEnv t) (Graph t)
 deriving instance Functor (HostFrame t) => Functor (Graph t)
 deriving instance Monad (HostFrame t) => Applicative (Graph t)
 deriving instance Monad (HostFrame t) => Monad (Graph t)
@@ -82,9 +77,7 @@ instance ( MonadIO (HostFrame t), Functor (HostFrame t)
          , MonadRef (HostFrame t), Ref (HostFrame t) ~ Ref IO
          , MonadException (HostFrame t), MonadAsyncException (HostFrame t)
          , ReflexHost t ) => NodeGraph t (Graph t) where
-    askParent = Graph $ view graphParent
-    askPostBuildEvent = Graph $ view graphPostBuildEvent
-    subGraph n (Graph c) = Graph $ local (graphParent .~ toNode n) c
+    subGraph n = local (currentParent .~ toNode n)
     holdGraph p child0 newChild = do
         let p' = toNode p
         vas <- Graph $ use graphVoidActions <* (graphVoidActions .= [])
@@ -93,38 +86,46 @@ instance ( MonadIO (HostFrame t), Functor (HostFrame t)
         let voidAction0 = mergeWith (flip (>>)) vas'
         (newChildBuilt, newChildBuiltTriggerRef) <- newEventWithTriggerRef
         runEvent_ =<< switchPromptly voidAction0 (snd <$> newChildBuilt)
-        runWithActions <- askRunWithActions
+        graphEnv <- ask
+        let run = graphEnv ^. runWithActions
         onEvent_ newChild $ \(Graph g) -> do
             liftIO $ node_removeAllChildren p'
             (postBuildE, postBuildTr) <- newEventWithTriggerRef
-            let firePostBuild = readRef postBuildTr >>= mapM_ (\t -> runWithActions ([t ==> ()], return ()))
-            (r, GraphState vas) <- runStateT (runReaderT g (GraphEnv p' postBuildE runWithActions)) (GraphState [])
+            let firePostBuild = readRef postBuildTr >>= mapM_ (\t -> run ([t ==> ()], return ()))
+            (r, GraphState vas)
+              <- runStateT
+                  (runReaderT g $ graphEnv & currentParent .~ p'
+                                           & postBuildEvent .~ postBuildE)
+                  (GraphState [])
             liftIO $ readRef newChildBuiltTriggerRef
-                      >>= mapM_ (\t -> runWithActions ([t ==> (r, mergeWith (flip (>>)) vas)], firePostBuild))
+                      >>= mapM_ (\t -> run ([t ==> (r, mergeWith (flip (>>)) vas)], firePostBuild))
         return (result0, fst <$> newChildBuilt)
     buildEvent newChild = do
-        p <- askParent
         (newChildBuilt, newChildBuiltTriggerRef) <- newEventWithTriggerRef
         let onNewChildBuilt :: Event t (HostFrame t ()) -> (a, [Event t (HostFrame t ())]) -> Maybe (Event t (HostFrame t ()))
             onNewChildBuilt _ (_, []) = Nothing
             onNewChildBuilt acc (_, vas) = Just $ mergeWith (>>) (acc:reverse vas)
         runEvent_ . switch =<< accumMaybe onNewChildBuilt (never :: Event t (HostFrame t ())) newChildBuilt
-        runWithActions <- askRunWithActions
+        graphEnv <- ask
+        let run = graphEnv ^. runWithActions
         onEvent_ newChild $ \(Graph g) -> do
             (postBuildE, postBuildTr) <- newEventWithTriggerRef
-            let firePostBuild = readRef postBuildTr >>= mapM_ (\t -> runWithActions ([t ==> ()], return ()))
-            (r, GraphState vas) <- runStateT (runReaderT g (GraphEnv p postBuildE runWithActions)) (GraphState [])
+            let firePostBuild = readRef postBuildTr >>= mapM_ (\t -> run ([t ==> ()], return ()))
+            (r, GraphState vas)
+              <- runStateT
+                  (runReaderT g $ graphEnv & postBuildEvent .~ postBuildE)
+                  (GraphState [])
             liftIO $ readRef newChildBuiltTriggerRef
-                      >>= mapM_ (\t -> runWithActions ([t ==> (r, vas)], firePostBuild))
+                      >>= mapM_ (\t -> run ([t ==> (r, vas)], firePostBuild))
         return $ fst <$> newChildBuilt
     buildEvent_ = void . buildEvent
     runEvent_ a = Graph $ graphVoidActions %= (a:)
     runEventMaybe e = do
-      runWithActions <- askRunWithActions
+      run <- view runWithActions
       (eResult, trigger) <- newEventWithTriggerRef
       onEvent_ e $ \o -> do
           o >>= \case
-            Just x -> liftIO $ readRef trigger >>= mapM_ (\t -> runWithActions ([t ==> x], return ()))
+            Just x -> liftIO $ readRef trigger >>= mapM_ (\t -> run ([t ==> x], return ()))
             _ -> return ()
       return eResult
     runEvent = runEventMaybe . fmap (Just <$>)
@@ -135,16 +136,17 @@ instance ( MonadIO (HostFrame t), Functor (HostFrame t)
     -- to be pushed pending and only fired when the current runWithActions
     -- finishes
     -- delay' = runEvent . fmap return
-    askRunWithActions = Graph $ view graphRunWithActions
-    askRunWithActionsAsync = Graph $ do
-      runWithActions <- view graphRunWithActions
-      sch <- liftIO $ director_getInstance >>= director_getScheduler
-      return $ scheduler_performFunctionInCocosThread sch . runWithActions
+    -- askRunWithActionsAsync = Graph $ do
+    --   runWithActions <- view graphRunWithActions
+    --   sch <- liftIO $ director_getInstance >>= director_getScheduler
+    --   return $ scheduler_performFunctionInCocosThread sch . runWithActions
 
 -- | Construct a new scene with a NodeGraph
 mainScene :: Graph Spider a -> IO ()
 mainScene (Graph g) = do
     scene <- scene_create
+    dtor <- director_getInstance
+    winSize <- decode =<< director_getWinSize dtor
     recRef <- newIORef (False, [], []) -- (running, saved_dm)
     runSpiderHost $ mdo
         let processTrigger [] [] = writeIORef recRef (False, [], [])
@@ -166,7 +168,19 @@ mainScene (Graph g) = do
                 then writeIORef recRef (running, dm++saved, aft:savedAft)
                 else processTrigger dm [aft]
         (postBuildE, postBuildTr) <- newEventWithTriggerRef
-        GraphState vas <- runHostFrame $ execStateT (runReaderT g (GraphEnv (toNode scene) postBuildE runWithActions)) (GraphState [])
+        -- tick events
+        ticks <- newEventWithTrigger $ \tr -> liftIO $ do
+            sch <- director_getScheduler dtor
+            let target = castPtr $ toPtr dtor
+            scheduler_scheduleWithInterval sch
+              (\ss -> runWithActions ([tr ==> ss], return ()))
+              target 0 False "ticks"
+            return $ scheduler_unschedule sch "ticks" target
+        GraphState vas
+          <- runHostFrame $
+              execStateT
+                (runReaderT g (NodeGraphEnv (toNode scene) winSize postBuildE ticks runWithActions))
+                (GraphState [])
         voidActionHandle <- subscribeEvent $ mergeWith (flip (>>)) vas
         liftIO $ readRef postBuildTr >>= mapM_ (\t -> runWithActions ([t ==> ()], return ()))
     director_getInstance >>= flip director_runWithScene scene

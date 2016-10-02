@@ -16,6 +16,7 @@ import Foreign.Hoppy.Generator.Std
 import Graphics.UI.Cocos2d.Generator.Interface.Node
 import Graphics.UI.Cocos2d.Generator.Interface.Scene
 import Graphics.UI.Cocos2d.Generator.Interface.Common
+import Graphics.UI.Cocos2d.Generator.Interface.Texture
 import Graphics.UI.Cocos2d.Generator.Interface.Event
 
 mod_director :: Module
@@ -71,6 +72,7 @@ c_Director =
       , mkConstMethod "getContentScaleFactor" [] floatT
       , mkConstMethod "getScheduler" [] $ ptrT $ objT c_Scheduler
       , mkConstMethod "getEventDispatcher" [] $ ptrT $ objT c_EventDispatcher
+      , mkConstMethod "getTextureCache" [] $ ptrT $ objT c_TextureCache
       -- TODO: action manager, renderer, console
       -- TODO: getCocos2dThreadId
       ]

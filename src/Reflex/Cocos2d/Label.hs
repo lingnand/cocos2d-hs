@@ -26,7 +26,8 @@ module Reflex.Cocos2d.Label
 
 import Diagrams (V2(..))
 import Control.Monad
-import Control.Monad.IO.Class
+import Control.Monad.Trans
+import Control.Lens
 
 import Foreign.Hoppy.Runtime (Decodable(..))
 import Graphics.UI.Cocos2d.Common
@@ -40,8 +41,8 @@ import Reflex.Cocos2d.Types
 label :: NodeGraph t m => [Prop Label m] -> m Label
 label props = do
     l <- liftIO label_create
-    set l props
-    askParent >>= liftIO . flip node_addChild l
+    setProps l props
+    view currentParent >>= liftIO . flip node_addChild l
     return l
 
 label_ :: NodeGraph t m => [Prop Label m] -> m ()
@@ -49,23 +50,23 @@ label_ = void . label
 
 ---- Attrs ----
 -- General Attributes
-instance (MonadIO m, LabelPtr l) => HasText l m where
+instance MonadIO m => HasText Label m where
   text = hoistA liftIO $ Attrib' (decode <=< label_getString) label_setString
   horizontalAlign = hoistA liftIO $ Attrib' label_getHorizontalAlignment label_setHorizontalAlignment
   verticalAlign = hoistA liftIO $ Attrib' label_getVerticalAlignment label_setVerticalAlignment
   textColor = hoistA liftIO $ Attrib' (decode <=< label_getTextColor) label_setTextColor
-  outline = SetOnlyAttrib set
+  outline = SetOnlyAttrib' set
     where set l (Just (Outline sColor sSize)) = liftIO $ label_enableOutlineWithSize l sColor sSize
           set l _ = liftIO $ label_disableLabelEffect l LabelEffect_Outline
-  shadow = SetOnlyAttrib set
+  shadow = SetOnlyAttrib' set
     where set l (Just (Shadow shColor shOffset shBlur)) = liftIO $ label_enableShadowWithOffset l shColor shOffset shBlur
           set l _ = liftIO $ label_disableLabelEffect l LabelEffect_Shadow
-  glow = SetOnlyAttrib set
+  glow = SetOnlyAttrib' set
     where set l (Just (Glow glColor)) = liftIO $ label_enableGlow l glColor
           set l _ = liftIO $ label_disableLabelEffect l LabelEffect_Glow
 
 lineBreakWithoutSpace :: (MonadIO m, LabelPtr l) => SetOnlyAttrib l m Bool
-lineBreakWithoutSpace = SetOnlyAttrib $ \l -> liftIO . label_setLineBreakWithoutSpace l
+lineBreakWithoutSpace = SetOnlyAttrib' $ \l -> liftIO . label_setLineBreakWithoutSpace l
 
 maxLineWidth :: (MonadIO m, LabelPtr l) => Attrib l m Float
 maxLineWidth = hoistA liftIO $ Attrib' label_getMaxLineWidth label_setMaxLineWidth

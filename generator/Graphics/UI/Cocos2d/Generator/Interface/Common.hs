@@ -189,7 +189,7 @@ c_Color4B =
         , classHaskellConversionFromCppFn = do
             addImports $ hsWholeModuleImport "Control.Applicative"
             addImports $ hsImport1 "Data.Colour.SRGB" "sRGB24"
-            addImports $ hsImports "Prelude" ["return", "Maybe(..)", "(/)", "fromIntegral"]
+            addImports $ hsImports "Prelude" ["return", "(/)", "fromIntegral"]
             sayLn "\\raw -> do"
             indent $ do
               sayLn "c <- sRGB24 <$> color4B_r_get raw <*> color4B_g_get raw <*> color4B_b_get raw"

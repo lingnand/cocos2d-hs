@@ -14,7 +14,8 @@ module Reflex.Cocos2d.Audio
   where
 
 import Data.Dependent.Sum ((==>))
-import Control.Monad.IO.Class
+import Control.Monad.Trans
+import Control.Lens
 
 import Graphics.UI.Cocos2d.Audio
 
@@ -30,25 +31,25 @@ type AudioInstance = Int
 playAudio :: MonadIO m => String -> [Prop AudioInstance m] -> m AudioInstance
 playAudio filename props = do
     au <- liftIO $ audioEngine_play2d filename False 1.0
-    set au props
+    setProps au props
     return au
 
 getAudioFinishedEvent :: NodeGraph t m => AudioInstance -> m (Event t ())
 getAudioFinishedEvent id = do
-    runWithActions <- askRunWithActions
+    run <- view runWithActions
     newEventWithTrigger $ \tr -> do
-      audioEngine_setFinishCallback id $ \_ _ -> runWithActions ([tr ==> ()], return ())
+      audioEngine_setFinishCallback id $ \_ _ -> run ([tr ==> ()], return ())
       return $ pure ()
 
 preloadAudio :: NodeGraph t m => String -> m (Event t Bool)
 preloadAudio filename = do
-    runWithActions <- askRunWithActions
+    run <- view runWithActions
     newEventWithTrigger $ \tr -> do
-      audioEngine_preloadWithCallback filename $ \success -> runWithActions ([tr ==> success], return ())
+      audioEngine_preloadWithCallback filename $ \success -> run ([tr ==> success], return ())
       return $ pure ()
 
 audioState :: MonadIO m => SetOnlyAttrib AudioInstance m AudioStateCommand
-audioState = SetOnlyAttrib $ \id cmd -> liftIO $ case cmd of
+audioState = SetOnlyAttrib' $ \id cmd -> liftIO $ case cmd of
               AudioState_Play -> audioEngine_resume id
               AudioState_Pause -> audioEngine_pause id
               AudioState_Stop -> audioEngine_stop id

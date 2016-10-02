@@ -13,9 +13,10 @@ module Reflex.Cocos2d.CocoStudio
   where
 
 import Data.Typeable
-import Control.Monad.IO.Class
+import Control.Monad.Trans
 import Control.Monad.Exception
 import Control.Monad
+import Control.Lens
 
 import Foreign.Hoppy.Runtime (CppPtr(..))
 import Graphics.UI.Cocos2d.Node
@@ -42,8 +43,8 @@ loadNodeFromCS' convert filename = liftIO $ do
 addNodeFromCS' :: (NodeGraph t m, NodePtr a) => (Node -> a) -> String -> [Prop a m] -> m a
 addNodeFromCS' convert filename props = do
     a <- loadNodeFromCS' convert filename
-    set a props
-    askParent >>= liftIO . flip node_addChild a
+    setProps a props
+    view currentParent >>= liftIO . flip node_addChild a
     return a
 
 loadNodeFromCS :: MonadIO m => String -> m Node
@@ -80,5 +81,5 @@ loadNodeOfVisibleSizeFromCS filename = liftIO $ do
 addNodeOfVisibleSizeFromCS :: NodeGraph t m => String -> m Node
 addNodeOfVisibleSizeFromCS filename = do
     n <- loadNodeOfVisibleSizeFromCS filename
-    askParent >>= liftIO . flip node_addChild n
+    view currentParent >>= liftIO . flip node_addChild n
     return n
