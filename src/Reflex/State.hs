@@ -12,26 +12,26 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE RecursiveDo #-}
 module Reflex.State
-  (
-    AccStateT(AccStateT)
-  , DynStateT
-  , EventStateT
-  , UniqDynStateT
-  , BehaviorStateT
-  , watch
-  , watches
-  , focus
-  , refine
-  , runAccStateT
-  , _runAccStateT
-  , execAccStateT
-  , evalAccStateT
-  , adjust
-  , adjustMaybe
-  , composeMaybe
-  , pnon
-  , pnon'
-  ) where
+    ( AccStateT(AccStateT)
+    , DynStateT
+    , EventStateT
+    , UniqDynStateT
+    , BehaviorStateT
+    , watch
+    , watches
+    , focus
+    , refine
+    , runAccStateT
+    , _runAccStateT
+    , execAccStateT
+    , evalAccStateT
+    , adjust
+    , adjustMaybe
+    , composeMaybe
+    , pnon
+    , pnon'
+    )
+  where
 
 
 import Control.Lens

@@ -4,8 +4,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TemplateHaskell #-}
 module Reflex.Cocos2d.Widget
-    (
-      getWidgetTouchEvents
+    ( getWidgetTouchEvents
     , getWidgetClicks
     , getWidgetEvents
     , findButtonByName

@@ -8,8 +8,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TemplateHaskell #-}
 module Reflex.Cocos2d.Node
-    (
-      node
+    ( node
     , node_
     , layer
     , layer_
@@ -62,7 +61,8 @@ module Reflex.Cocos2d.Node
     , LayerPtr
     , LayerColorPtr
     , SpritePtr
-    ) where
+    )
+  where
 
 import Data.Colour
 import Control.Monad

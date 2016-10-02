@@ -11,9 +11,9 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE RecursiveDo #-}
 module Reflex.Cocos2d.Internal
-    (
-      mainScene
-    ) where
+    ( mainScene
+    )
+  where
 
 import Data.Dependent.Sum ((==>))
 import Data.IORef

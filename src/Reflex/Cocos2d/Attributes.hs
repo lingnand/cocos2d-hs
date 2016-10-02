@@ -8,33 +8,33 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 -- | Concepts largely taken from Graphics.UI.WX.Attributes
 module Reflex.Cocos2d.Attributes
-  (
-    Attrib'(..)
-  , Attrib
-  , SetOnlyAttrib'(..)
-  , SetOnlyAttrib
-  , Prop(..)
-  , get
-  , setProps
-  , hoistA
-  , dyn
-  , dyn'
-  , uDyn
-  , uDyn'
-  , evt
-  , divide
-  , divided
-  , choose
-  , chosen
-  -- attrs --
-  , HasPosition(..)
-  , HasRotation(..)
-  , HasText(..)
-  , Transform(Transform)
-  , HasPos(..)
-  , HasRot(..)
-  , transform
-  ) where
+    ( Attrib'(..)
+    , Attrib
+    , SetOnlyAttrib'(..)
+    , SetOnlyAttrib
+    , Prop(..)
+    , get
+    , setProps
+    , hoistA
+    , dyn
+    , dyn'
+    , uDyn
+    , uDyn'
+    , evt
+    , divide
+    , divided
+    , choose
+    , chosen
+    -- attrs --
+    , HasPosition(..)
+    , HasRotation(..)
+    , HasText(..)
+    , Transform(Transform)
+    , HasPos(..)
+    , HasRot(..)
+    , transform
+    )
+  where
 
 import Data.Colour
 import Data.Functor.Contravariant

@@ -1,6 +1,5 @@
 module Reflex.Cocos2d
-    (
-      module Reflex.Cocos2d.Class
+    ( module Reflex.Cocos2d.Class
     , module Reflex.Cocos2d.Node
     , module Reflex.Cocos2d.Label
     , module Reflex.Cocos2d.Internal
@@ -12,7 +11,8 @@ module Reflex.Cocos2d
     , module Reflex.Cocos2d.Attributes
     , module Reflex.Cocos2d.CocoStudio
     , module Reflex.Cocos2d.Types
-    ) where
+    )
+  where
 
 import Reflex.Cocos2d.Class
 import Reflex.Cocos2d.Node

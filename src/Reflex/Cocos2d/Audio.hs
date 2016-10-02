@@ -1,6 +1,5 @@
 module Reflex.Cocos2d.Audio
-    (
-      AudioStateCommand(..)
+    ( AudioStateCommand(..)
     , AudioInstance
     , playAudio
     , getAudioFinishedEvent

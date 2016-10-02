@@ -10,26 +10,26 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FlexibleContexts #-}
 module Reflex.Cocos2d.Class
-  (
-    NodeGraphEnv(NodeGraphEnv)
-  , currentParent
-  , windowSize
-  , postBuildEvent
-  , frameTicks
-  , runWithActions
-  , NodeGraph(..)
-  , (-<)
-  , (-|)
-  , (-<<)
-  , (<-<)
-  , postponeCurrent
-  , buildDyn
-  , buildDyn'
-  , runDyn
-  , buildF
-  , switchFT
-  , runF
-  ) where
+    ( NodeGraphEnv(NodeGraphEnv)
+    , currentParent
+    , windowSize
+    , postBuildEvent
+    , frameTicks
+    , runWithActions
+    , NodeGraph(..)
+    , (-<)
+    , (-|)
+    , (-<<)
+    , (<-<)
+    , postponeCurrent
+    , buildDyn
+    , buildDyn'
+    , runDyn
+    , buildF
+    , switchFT
+    , runF
+    )
+  where
 
 import Data.Dependent.Sum (DSum (..))
 import Data.Functor.Identity

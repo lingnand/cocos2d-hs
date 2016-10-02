@@ -1,6 +1,5 @@
 module Reflex.Cocos2d.CocoStudio
-    (
-      CSLoaderException(..)
+    ( CSLoaderException(..)
     , loadNodeFromCS
     , addNodeFromCS
     , loadSpriteFromCS

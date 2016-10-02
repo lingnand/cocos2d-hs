@@ -1,17 +1,21 @@
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE RankNTypes #-}
-module Reflex.Extra (
-    takeWhileE
-  , dropWhileE
-  , breakE
-  , waitEvent
-  , waitDynMaybe
-  , switchF'
-  , dynMaybe
-  , stack
-  , distribute
-  ) where
+module Reflex.Extra
+    ( takeWhileE
+    , dropWhileE
+    , breakE
+    , waitEvent
+    , waitEvent'
+    , waitDynMaybe
+    , waitDynMaybe'
+    , switchF'
+    , dynMaybe
+    , stack
+    , distribute
+    )
+  where
 
 import Reflex
 import Control.Monad
@@ -23,13 +27,23 @@ import Control.Applicative
 import Control.Lens
 
 -- Free stuff
+-- | Wait for the first occurrence
 waitEvent :: (Reflex t, Monad m) => Event t a -> FreeT (Event t) m a
 waitEvent = liftF
 
+-- | Wait for the first occurrence and include the future occurrences in return
+waitEvent' :: (Reflex t, Monad m) => Event t a -> FreeT (Event t) m (a, Event t a)
+waitEvent' e = (,e) <$> liftF e
+
+-- | Wait for the Dynamic to turn from Nothing to Just
 waitDynMaybe :: (Reflex t, MonadSample t m) => Dynamic t (Maybe a) -> FreeT (Event t) m a
 waitDynMaybe dyn = lift (sample $ current dyn) >>= \case
     Just a -> return a
     _ -> waitEvent $ fmapMaybe id (updated dyn)
+
+-- | Wait for the first Just value, and include the future values in return
+waitDynMaybe' :: (Reflex t, MonadSample t m) => Dynamic t (Maybe a) -> FreeT (Event t) m (a, Event t a)
+waitDynMaybe' dyn = (,fmapMaybe id $ updated dyn) <$> waitDynMaybe dyn
 
 switchF' :: (Reflex t, MonadHold t m) => Free (Event t) a -> m (FreeF (Event t) a a)
 switchF' ft = case runFree ft of

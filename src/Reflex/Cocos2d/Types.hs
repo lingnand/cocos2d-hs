@@ -1,8 +1,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TemplateHaskell #-}
 module Reflex.Cocos2d.Types
-    (
-      Mouse(Mouse)
+    ( Mouse(Mouse)
     , mouseCursorLocation
     , mouseScroll
     , mouseButton

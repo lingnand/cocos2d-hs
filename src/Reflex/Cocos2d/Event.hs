@@ -9,9 +9,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE GADTs #-}
 module Reflex.Cocos2d.Event
-    (
-    -- * UI events
-      MouseEvents(MouseEvents)
+    ( MouseEvents(MouseEvents)
     , mouseDown
     , mouseUp
     , mouseMoved
@@ -86,7 +84,8 @@ module Reflex.Cocos2d.Event
     -- , TextFieldEvent(..)
     -- , loadCCS
     -- , loadCCS'
-    ) where
+    )
+  where
 
 -- import Diagrams.BoundingBox
 import Data.Tuple (swap)

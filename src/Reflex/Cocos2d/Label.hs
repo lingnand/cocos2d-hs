@@ -4,8 +4,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE LambdaCase #-}
 module Reflex.Cocos2d.Label
-    (
-      label
+    ( label
     , label_
     -- attrs --
     , lineBreakWithoutSpace
@@ -22,7 +21,8 @@ module Reflex.Cocos2d.Label
     , LabelPtr
     , TextHAlignment(..)
     , TextVAlignment(..)
-    ) where
+    )
+  where
 
 import Diagrams (V2(..))
 import Control.Monad
