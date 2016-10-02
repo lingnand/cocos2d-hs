@@ -302,7 +302,8 @@ switchF f = switchF' f >>= \case
     Pure a -> fmap (a <$) $ view postBuildEvent
     Free e -> return e
 
-loadTexture :: NodeGraph t m => String -> m (Event t Texture2D)
+-- | NOTE: we can't return the texture because it's an autoreleased object
+loadTexture :: NodeGraph t m => String -> m (Event t ())
 loadTexture path = do
     run <- view runWithActions
     -- Since we are not sure if the user would subscribe to the resulting event, we can't just use
@@ -310,8 +311,8 @@ loadTexture path = do
     (e, trigger) <- newEventWithTriggerRef
     liftIO $ do
       tc <- director_getInstance >>= director_getTextureCache
-      textureCache_addImageAsync tc path $ \tex -> do
-        readRef trigger >>= mapM_ (\tr -> run ([tr ==> tex], return ()))
+      textureCache_addImageAsync tc path $ \_ -> do
+        readRef trigger >>= mapM_ (\tr -> run ([tr ==> ()], return ()))
     return e
 
 -- | Load a list of resources in an async manner

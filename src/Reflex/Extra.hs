@@ -5,7 +5,10 @@ module Reflex.Extra (
     takeWhileE
   , dropWhileE
   , breakE
+  , waitEvent
+  , waitDynMaybe
   , switchF'
+  , dynMaybe
   , stack
   , distribute
   ) where
@@ -13,10 +16,20 @@ module Reflex.Extra (
 import Reflex
 import Control.Monad
 import Control.Monad.Fix
+import Control.Monad.Trans
 import Control.Monad.Trans.Free
 import Data.Maybe
 import Control.Applicative
 import Control.Lens
+
+-- Free stuff
+waitEvent :: (Reflex t, Monad m) => Event t a -> FreeT (Event t) m a
+waitEvent = liftF
+
+waitDynMaybe :: (Reflex t, MonadSample t m) => Dynamic t (Maybe a) -> FreeT (Event t) m a
+waitDynMaybe dyn = lift (sample $ current dyn) >>= \case
+    Just a -> return a
+    _ -> waitEvent $ fmapMaybe id (updated dyn)
 
 switchF' :: (Reflex t, MonadHold t m) => Free (Event t) a -> m (FreeF (Event t) a a)
 switchF' ft = case runFree ft of
@@ -50,6 +63,11 @@ breakE f e = do
     bef <- switch <$> hold e' (never <$ gateE')
     aft <- switchPromptly never (e <$ gateE')
     return (bef, aft)
+
+-- | Convert an Event into a Dynamic of Maybe
+dynMaybe :: (Reflex t, MonadHold t m)
+         => Event t a -> m (Dynamic t (Maybe a))
+dynMaybe e = holdDyn Nothing $ Just <$> e
 
 -- | Simple stack that responds to Events
 stack :: (Reflex t, MonadHold t m, MonadFix m)
