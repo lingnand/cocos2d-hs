@@ -44,12 +44,6 @@ module Reflex.Cocos2d.Event
     -- , dragEnded
     -- , dragged
 
-    -- * Time
-    , modulate
-    -- * Rand
-    , runRandEvent
-    -- * Reflex Utilities
-    , switchF
     -- * Async
     , loadTexture
     -- , load
@@ -88,12 +82,9 @@ module Reflex.Cocos2d.Event
   where
 
 -- import Diagrams.BoundingBox
-import Data.Tuple (swap)
 import Data.Dependent.Sum ((==>))
 import qualified Data.Set as S
 import Control.Monad
-import Control.Monad.Random
-import Control.Monad.Trans.Free
 import Control.Monad.Fix
 import Control.Monad.Trans
 import Control.Monad.Ref
@@ -102,7 +93,6 @@ import Control.Lens hiding (contains)
 import Foreign.Hoppy.Runtime (Decodable(..), HasContents(..))
 
 import Reflex
-import Reflex.Extra
 import Reflex.Host.Class
 
 import Graphics.UI.Cocos2d.Event hiding (Event)
@@ -258,24 +248,11 @@ accumKeysDown (KeyboardEvents pressedE releasedE) = do
 --         b' <- hold (mstream, Nothing) e'
 --     return $ fmapMaybe snd e'
 
--- | Locally modulate the ticks in the environment
-modulate :: (Reflex t, MonadHold t m, MonadFix m, Num a, Ord a) => a -> Event t a -> m (Event t a)
-modulate limit = mapAccumMaybe_ f (0, limit)
-    where
-      f (acc, l) d = let sum = acc + d in
-        if sum > l then (Just (0  , limit-(sum-l)) , Just sum)
-                   else (Just (sum, l            ) , Nothing )
-
 -- ticks' :: NodeGraph t m => NominalDiffTime -> m (Event t NominalDiffTime)
 -- ticks' interval = do
 --     runWithActions <- askRunWithActions
 --     newEventWithTrigger $ \et ->
 --         scheduleUpdate' interval True $ \d -> runWithActions [et :=> Identity d]
-
-runRandEvent :: NodeGraph t m => Event t (Rand StdGen a) -> m (Event t a)
-runRandEvent rands = do
-    g <- liftIO newStdGen
-    mapAccum_ (\g comp -> swap $ runRand comp g) g rands
 
 -- | Delay an Event by the given amount of seconds
 -- TODO: every time this is called the previous "delayed" is invalidated
@@ -294,12 +271,6 @@ runRandEvent rands = do
 --           target 0 0 dt False "delayed"
 --     onEvent_ e $ liftIO . delayedFire
 --     return e'
-
--- | Merge a deeply nested Event into a single Event
-switchF :: NodeGraph t m => Free (Event t) a -> m (Event t a)
-switchF f = switchF' f >>= \case
-    Pure a -> fmap (a <$) $ view postBuildEvent
-    Free e -> return e
 
 -- | NOTE: we can't return the texture because it's an autoreleased object
 loadTexture :: NodeGraph t m => String -> m (Event t ())

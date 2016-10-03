@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE RankNTypes #-}
@@ -25,12 +26,23 @@ module Reflex.Cocos2d.Class
     , buildDyn
     , buildDyn'
     , runDyn
-    , buildF
-    , switchFT
-    , runF
+    -- * Free
+    , switchFree
+    , switchFreeT
+    , runGreedyFreeT
+    , buildGreedyFreeT
+    , waitEvent
+    , waitEvent'
+    , waitDynMaybe
+    , waitDynMaybe'
+    -- * Time
+    , modulate
+    -- * Rand
+    , runRandEvent
     )
   where
 
+import Data.Tuple (swap)
 import Data.Dependent.Sum (DSum (..))
 import Data.Functor.Identity
 import Diagrams (V2)
@@ -42,6 +54,7 @@ import Control.Monad.Trans.Free
 import Control.Monad.State.Strict
 import Control.Monad.Reader
 import Control.Monad.Exception
+import Control.Monad.Random
 import Control.Lens
 import Reflex
 import Reflex.State
@@ -124,7 +137,7 @@ infixr 2 -<<
     (_, evt) <- holdGraph n (return ()) =<< postponeCurrent child
     return (n, evt)
 
--- | Free
+-- | Greedy Free
 infixr 2 <-<
 (<-<) :: (NodeGraph t m, NodePtr n) => m n -> FreeT (Event t) m a -> m (n, Event t a)
 (<-<) node ft = mdo
@@ -158,35 +171,66 @@ buildDyn' d = do
 runDyn :: NodeGraph t m => Dynamic t (HostFrame t a) -> m (Event t a)
 runDyn = runEvent <=< postponeCurrent
 
-buildF :: NodeGraph t m => FreeT (Event t) m a -> m (Event t a)
-buildF ft = runFreeT ft >>= \case
+switchFreeT' :: (Reflex t, MonadHold t m)
+          => (forall x. m' x -> m x)
+          -> (forall x. m' x -> PushM t x)
+          -> FreeT (Event t) m' a -> m (FreeF (Event t) a a)
+switchFreeT' hoistM hoistPush ft = hoistM (runFreeT ft) >>= \case
+    Pure a -> return $ Pure a
+    Free e -> Free <$> switchPromptly never flattened
+      where flattened = flip pushAlways e $ switchFreeT' hoistPush hoistPush >=> \case
+                            Pure a -> return $ a <$ e
+                            Free ie -> return ie
+
+-- | Merge a deeply nested Event into a single Event
+switchFree :: NodeGraph t m => Free (Event t) a -> m (Event t a)
+switchFree f = do
+    let hoist (Identity x) = return x
+    switchFreeT' hoist hoist f >>= \case
+      Pure a -> fmap (a <$) $ view postBuildEvent
+      Free e -> return e
+
+switchFreeT :: NodeGraph t m => FreeT (Event t) (PushM t) a -> m (Event t a)
+switchFreeT f = do
+    e <- view postBuildEvent
+    let e' = flip pushAlways e $ \_ -> switchFreeT' id id f >>= \case
+          Pure a -> return $ a <$ e
+          Free e -> return e
+    switchPromptly never e'
+
+-- | Depth visit the nested events in the FreeT
+runGreedyFreeT :: NodeGraph t m => FreeT (Event t) (HostFrame t) a -> m (Event t a)
+runGreedyFreeT ft = do
+    pe <- view postBuildEvent
+    rec newFs <- switchPromptly (ft <$ pe) $ fmapMaybe previewFree e'
+        e' <- runEvent $ runFreeT <$> newFs
+    return $ fmapMaybe previewPure e'
+
+buildGreedyFreeT :: NodeGraph t m => FreeT (Event t) m a -> m (Event t a)
+buildGreedyFreeT ft = runFreeT ft >>= \case
     Pure v -> fmap (v <$) $ view postBuildEvent
     Free startE -> mdo
       newFs <- switchPromptly startE $ fmapMaybe previewFree e'
       e' <- buildEvent $ runFreeT <$> newFs
       return $ fmapMaybe previewPure e'
 
-switchFT :: NodeGraph t m => FreeT (Event t) m a -> m (Event t a)
-switchFT ft = switchFT' ft >>= \case
-    Pure a -> fmap (a <$) $ view postBuildEvent
-    Free e -> return e
+-- | Wait for the first occurrence
+waitEvent :: (Reflex t, Monad m) => Event t a -> FreeT (Event t) m a
+waitEvent = liftF
 
-switchFT' :: NodeGraph t m => FreeT (Event t) m a -> m (FreeF (Event t) a a)
-switchFT' ft = runFreeT ft >>= \case
-    Pure v -> return $ Pure v
-    Free e -> do
-      e' <- buildEvent $ ffor e $ switchFT' >=> \case
-                Pure a -> return $ a <$ e
-                Free ie -> return ie
-      Free <$> switchPromptly never e'
+-- | Wait for the first occurrence and include the future occurrences in return
+waitEvent' :: (Reflex t, Monad m) => Event t a -> FreeT (Event t) m (a, Event t a)
+waitEvent' e = (,e) <$> liftF e
 
+-- | Wait for the Dynamic to turn from Nothing to Just
+waitDynMaybe :: (Reflex t, MonadSample t m) => Dynamic t (Maybe a) -> FreeT (Event t) m a
+waitDynMaybe dyn = lift (sample $ current dyn) >>= \case
+    Just a -> return a
+    _ -> waitEvent $ fmapMaybe id (updated dyn)
 
-runF :: NodeGraph t m => FreeT (Event t) (HostFrame t) a -> m (Event t a)
-runF ft = do
-    pe <- view postBuildEvent
-    rec newFs <- switchPromptly (ft <$ pe) $ fmapMaybe previewFree e'
-        e' <- runEvent $ runFreeT <$> newFs
-    return $ fmapMaybe previewPure e'
+-- | Wait for the first Just value, and include the future values in return
+waitDynMaybe' :: (Reflex t, MonadSample t m) => Dynamic t (Maybe a) -> FreeT (Event t) m (a, Event t a)
+waitDynMaybe' dyn = (,fmapMaybe id $ updated dyn) <$> waitDynMaybe dyn
 
 
 previewPure :: FreeF f a b -> Maybe a
@@ -196,6 +240,22 @@ previewPure _ = Nothing
 previewFree :: FreeF f a b -> Maybe (f b)
 previewFree (Free fb) = Just fb
 previewFree _ = Nothing
+
+
+-- | Locally modulate the ticks in the environment
+modulate :: (Reflex t, MonadHold t m, MonadFix m, Num a, Ord a) => a -> Event t a -> m (Event t a)
+modulate limit = mapAccumMaybe_ f (0, limit)
+    where
+      f (acc, l) d = let sum = acc + d in
+        if sum > l then (Just (0  , limit-(sum-l)) , Just sum)
+                   else (Just (sum, l            ) , Nothing )
+
+runRandEvent :: (MonadIO m, Reflex t, MonadHold t m, MonadFix m)
+             => Event t (Rand StdGen a) -> m (Event t a)
+runRandEvent rands = do
+    g <- liftIO newStdGen
+    mapAccum_ (\g comp -> swap $ runRand comp g) g rands
+
 
 -- implement NodeGraph instance so that we don't need to keep lifting...
 instance NodeGraph t m => NodeGraph t (AccStateT t f s m) where

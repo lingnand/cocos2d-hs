@@ -1,4 +1,4 @@
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE RecursiveDo #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE RankNTypes #-}
@@ -6,11 +6,6 @@ module Reflex.Extra
     ( takeWhileE
     , dropWhileE
     , breakE
-    , waitEvent
-    , waitEvent'
-    , waitDynMaybe
-    , waitDynMaybe'
-    , switchF'
     , dynMaybe
     , stack
     , distribute
@@ -20,39 +15,11 @@ module Reflex.Extra
 import Reflex
 import Control.Monad
 import Control.Monad.Fix
-import Control.Monad.Trans
-import Control.Monad.Trans.Free
 import Data.Maybe
 import Control.Applicative
 import Control.Lens
 
 -- Free stuff
--- | Wait for the first occurrence
-waitEvent :: (Reflex t, Monad m) => Event t a -> FreeT (Event t) m a
-waitEvent = liftF
-
--- | Wait for the first occurrence and include the future occurrences in return
-waitEvent' :: (Reflex t, Monad m) => Event t a -> FreeT (Event t) m (a, Event t a)
-waitEvent' e = (,e) <$> liftF e
-
--- | Wait for the Dynamic to turn from Nothing to Just
-waitDynMaybe :: (Reflex t, MonadSample t m) => Dynamic t (Maybe a) -> FreeT (Event t) m a
-waitDynMaybe dyn = lift (sample $ current dyn) >>= \case
-    Just a -> return a
-    _ -> waitEvent $ fmapMaybe id (updated dyn)
-
--- | Wait for the first Just value, and include the future values in return
-waitDynMaybe' :: (Reflex t, MonadSample t m) => Dynamic t (Maybe a) -> FreeT (Event t) m (a, Event t a)
-waitDynMaybe' dyn = (,fmapMaybe id $ updated dyn) <$> waitDynMaybe dyn
-
-switchF' :: (Reflex t, MonadHold t m) => Free (Event t) a -> m (FreeF (Event t) a a)
-switchF' ft = case runFree ft of
-    Pure a -> return $ Pure a
-    Free e -> Free <$> switchPromptly never flattened
-      where flattened = flip pushAlways e $ switchF' >=> \case
-                            Pure a -> return $ a <$ e
-                            Free ie -> return ie
-
 -- | Efficiently cut off a stream of events at a point
 takeWhileE :: (Reflex t, MonadHold t m, MonadFix m) => (a -> Bool) -> Event t a -> m (Event t a)
 takeWhileE f e = do

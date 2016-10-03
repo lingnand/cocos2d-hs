@@ -255,7 +255,9 @@ texture = SetOnlyAttrib' $ \sp -> liftIO . sprite_setTexture sp
 -- | Set texture by its filename
 -- NOTE: this automatically adds the texture to the texture cache if it's not already there
 textureFilename :: (MonadIO m, SpritePtr n) => SetOnlyAttrib n m String
-textureFilename = SetOnlyAttrib' $ \sp -> liftIO . sprite_setTextureWithFilename sp
+textureFilename = SetOnlyAttrib' $ \sp name -> liftIO $ case name of
+                    [] -> sprite_setTexture sp (nullptr :: Texture2D) -- reset sprite to blank
+                    _ -> sprite_setTextureWithFilename sp name
 
 flipped :: (MonadIO m, SpritePtr n) => Attrib n m (V2 Bool)
 flipped = hoistA liftIO $ Attrib' getter setter
