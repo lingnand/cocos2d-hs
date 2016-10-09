@@ -43,7 +43,7 @@ addNodeFromCS' :: (NodeGraph t m, NodePtr a) => (Node -> a) -> String -> [Prop a
 addNodeFromCS' convert filename props = do
     a <- loadNodeFromCS' convert filename
     setProps a props
-    view currentParent >>= liftIO . flip node_addChild a
+    view parent >>= liftIO . flip node_addChild a
     return a
 
 loadNodeFromCS :: MonadIO m => String -> m Node
@@ -80,5 +80,5 @@ loadNodeOfVisibleSizeFromCS filename = liftIO $ do
 addNodeOfVisibleSizeFromCS :: NodeGraph t m => String -> m Node
 addNodeOfVisibleSizeFromCS filename = do
     n <- loadNodeOfVisibleSizeFromCS filename
-    view currentParent >>= liftIO . flip node_addChild n
+    view parent >>= liftIO . flip node_addChild n
     return n

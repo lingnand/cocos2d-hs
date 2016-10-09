@@ -42,7 +42,7 @@ label :: NodeGraph t m => [Prop Label m] -> m Label
 label props = do
     l <- liftIO label_create
     setProps l props
-    view currentParent >>= liftIO . flip node_addChild l
+    view parent >>= liftIO . flip node_addChild l
     return l
 
 label_ :: NodeGraph t m => [Prop Label m] -> m ()

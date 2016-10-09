@@ -50,6 +50,8 @@ module Reflex.Cocos2d.Node
     , getChildButtonByName
     , getChildTextByName
     , getChildLayoutByName
+    -- helper --
+    , addNewChild
     -- re-export --
     , Node
     , Layer
@@ -57,7 +59,7 @@ module Reflex.Cocos2d.Node
     , Sprite
     , Texture2D
 
-    , NodePtr
+    , NodePtr(..)
     , LayerPtr
     , LayerColorPtr
     , SpritePtr
@@ -88,7 +90,7 @@ addNewChild :: (NodeGraph t m, NodePtr n) => IO n -> [Prop n m] -> m n
 addNewChild factory props = do
   n <- liftIO factory
   setProps n props
-  view currentParent >>= liftIO . flip node_addChild n
+  view parent >>= liftIO . flip node_addChild n
   return n
 
 node :: NodeGraph t m => [Prop Node m] -> m Node

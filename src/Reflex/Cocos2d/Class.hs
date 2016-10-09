@@ -12,7 +12,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 module Reflex.Cocos2d.Class
     ( NodeGraphEnv(NodeGraphEnv)
-    , currentParent
+    , parent
     , windowSize
     , postBuildEvent
     , frameTicks
@@ -62,7 +62,7 @@ import Reflex.Host.Class
 import Graphics.UI.Cocos2d.Node
 
 data NodeGraphEnv t = NodeGraphEnv
-    { _currentParent  :: !Node
+    { _parent  :: !Node
     , _windowSize     :: V2 Float
     , _postBuildEvent :: !(Event t ())
     , _frameTicks     :: !(Event t Float) -- ^ Ticks for each frame in seconds

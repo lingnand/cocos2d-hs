@@ -19,7 +19,6 @@ import Data.Maybe
 import Control.Applicative
 import Control.Lens
 
--- Free stuff
 -- | Efficiently cut off a stream of events at a point
 takeWhileE :: (Reflex t, MonadHold t m, MonadFix m) => (a -> Bool) -> Event t a -> m (Event t a)
 takeWhileE f e = do

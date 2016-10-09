@@ -77,7 +77,7 @@ instance ( MonadIO (HostFrame t), Functor (HostFrame t)
          , MonadRef (HostFrame t), Ref (HostFrame t) ~ Ref IO
          , MonadException (HostFrame t), MonadAsyncException (HostFrame t)
          , ReflexHost t ) => NodeGraph t (Graph t) where
-    subGraph n = local (currentParent .~ toNode n)
+    subGraph n = local (parent .~ toNode n)
     holdGraph p child0 newChild = do
         let p' = toNode p
         vas <- Graph $ use graphVoidActions <* (graphVoidActions .= [])
@@ -94,7 +94,7 @@ instance ( MonadIO (HostFrame t), Functor (HostFrame t)
             let firePostBuild = readRef postBuildTr >>= mapM_ (\t -> run ([t ==> ()], return ()))
             (r, GraphState vas)
               <- runStateT
-                  (runReaderT g $ graphEnv & currentParent .~ p'
+                  (runReaderT g $ graphEnv & parent .~ p'
                                            & postBuildEvent .~ postBuildE)
                   (GraphState [])
             liftIO $ readRef newChildBuiltTriggerRef

@@ -15,13 +15,33 @@ module Reflex.Cocos2d.Widget
     , HasWidgetTouchEvents(..)
     , WidgetEvents(WidgetEvents)
     , widgetClicked
+    -- creation
+    , button
+    -- attrs
+    , sizeType
+    , positionType
+    , sizePercent
+    , positionPercent
+    , titleText
+    , titleColor
+    , titleFontSize
     -- re-export --
+    , PositionType(..)
+    , SizeType(..)
     , Widget
     , WidgetPtr
+    , Button
+    , ButtonPtr
+    , Text
+    , TextPtr
+    , Layout
+    , LayoutPtr
     )
   where
 
+import Data.Colour
 import Data.Dependent.Sum ((==>))
+import Diagrams (V2(..))
 import Control.Monad
 import Control.Monad.Trans
 import Control.Lens hiding (contains)
@@ -33,6 +53,7 @@ import Graphics.UI.Cocos2d.Common
 
 import Reflex
 import Reflex.Host.Class
+import Reflex.Cocos2d.Node
 import Reflex.Cocos2d.Class
 import Reflex.Cocos2d.Attributes
 import Reflex.Cocos2d.Types
@@ -117,3 +138,31 @@ findTextByName = findWidgetByName' downToText
 
 findLayoutByName :: (MonadIO m, WidgetPtr w) => w -> String -> m (Maybe Layout)
 findLayoutByName = findWidgetByName' downToLayout
+
+-- creating new widgets
+button :: NodeGraph t m => [Prop Button m] -> m (Button, Event t ())
+button props = do
+    but <- addNewChild button_create props
+    we <- getWidgetClicks but
+    return (but, we)
+
+positionType :: (MonadIO m, WidgetPtr w) => Attrib w m PositionType
+positionType = hoistA liftIO $ Attrib' widget_getPositionType widget_setPositionType
+
+sizeType ::  (MonadIO m, WidgetPtr w) => Attrib w m SizeType
+sizeType = hoistA liftIO $  Attrib' widget_getSizeType widget_setSizeType
+
+sizePercent :: (MonadIO m, WidgetPtr w) => Attrib w m (V2 Float)
+sizePercent = hoistA liftIO $ Attrib' (decode <=< widget_getSizePercent) widget_setSizePercent
+
+positionPercent :: (MonadIO m, WidgetPtr w) => Attrib w m (V2 Float)
+positionPercent = hoistA liftIO $ Attrib' (decode <=< widget_getPositionPercent) widget_setPositionPercent
+
+titleText :: (MonadIO m, ButtonPtr b) => Attrib b m String
+titleText = hoistA liftIO $ Attrib' button_getTitleText button_setTitleText
+
+titleColor :: (MonadIO m, ButtonPtr b) => Attrib b m (Colour Float)
+titleColor = hoistA liftIO $ Attrib' button_getTitleColor button_setTitleColor
+
+titleFontSize :: (MonadIO m, ButtonPtr b) => Attrib b m Float
+titleFontSize = hoistA liftIO $ Attrib' button_getTitleFontSize button_setTitleFontSize
