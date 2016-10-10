@@ -41,19 +41,6 @@ library
                      , hoppy-runtime
                      , colour
                      , linear
-                     , containers
-                     , mtl
-                     , ref-tf
-                     , dependent-sum
-                     , diagrams-lib
-                     , reflex
-                     , lens
-                     , time
-                     , data-default
-                     , MonadRandom
-                     , contravariant
-                     , exception-transformers
-                     , free
   exposed-modules:     Graphics.UI.Cocos2d.Common
                      , Graphics.UI.Cocos2d.Texture
                      , Graphics.UI.Cocos2d.Node
@@ -66,20 +53,6 @@ library
                      , Graphics.UI.Cocos2d.Widget
                      , Graphics.UI.Cocos2d.Audio
                      , Graphics.UI.Cocos2d.CocoStudio
-                     -- reflex wrapper
-                     , Reflex.Cocos2d
-                     , Reflex.Cocos2d.Class
-                     , Reflex.Cocos2d.Types
-                     , Reflex.Cocos2d.Attributes
-                     , Reflex.Cocos2d.Node
-                     , Reflex.Cocos2d.Event
-                     , Reflex.Cocos2d.Label
-                     , Reflex.Cocos2d.Widget
-                     , Reflex.Cocos2d.Audio
-                     , Reflex.Cocos2d.CocoStudio
-                     , Reflex.Cocos2d.Internal
-                     , Reflex.Extra
-                     , Reflex.State
   other-modules:       Graphics.UI.Cocos2d.Std
   c-sources:           cbits/Common.cpp
                        cbits/Texture.cpp
