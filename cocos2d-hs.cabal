@@ -69,12 +69,11 @@ library
                        cbits/CocoStudio.cpp
                        cbits/std.cpp
   include-dirs:        cbits
-                       /Applications/Cocos/frameworks/cocos2d-x-3.9/cocos
-                       /Applications/Cocos/frameworks/cocos2d-x-3.9/cocos/editor-support
-                       /Applications/Cocos/frameworks/cocos2d-x-3.9/external
-                       /Applications/Cocos/frameworks/cocos2d-x-3.9/external/glfw3/include/mac
-  extra-lib-dirs:      /Applications/Cocos/frameworks/cocos2d-x-3.9/prebuilt/mac/
-  extra-libraries:     "cocos2d Mac" stdc++
+                       /home/lingnan/builds/cocos2d-x/cocos
+                       /home/lingnan/builds/cocos2d-x/cocos/editor-support
+                       /home/lingnan/builds/cocos2d-x/external
+  extra-lib-dirs:      /home/lingnan/builds/cocos2d-x/prebuilt/android/armeabi-v7a/
+  extra-libraries:     cocos2d stdc++
   cc-options:          -std=c++11 -stdlib=libc++
   ghc-options:         -Wall -fno-warn-orphans -fno-warn-name-shadowing
   default-language:    Haskell2010
