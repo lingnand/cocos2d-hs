@@ -74,6 +74,7 @@ library
                        cbits/external
   -- extra-lib-dirs:      /home/lingnan/builds/cocos2d-x/prebuilt/android/armeabi/
   -- extra-libraries:     cocos2dxinternal
+  extra-libraries:     stdc++
   cc-options:          -std=c++11
   ghc-options:         -Wall -fno-warn-orphans -fno-warn-name-shadowing
   default-language:    Haskell2010
