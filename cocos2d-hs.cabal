@@ -73,7 +73,7 @@ library
                        /home/lingnan/builds/cocos2d-x/cocos/editor-support
                        /home/lingnan/builds/cocos2d-x/external
   extra-lib-dirs:      /home/lingnan/builds/cocos2d-x/prebuilt/android/armeabi-v7a/
-  extra-libraries:     cocos2d stdc++
+  extra-libraries:     /home/lingnan/builds/cocos2d-x/prebuilt/android/armeabi-v7a/libcocos2d.a
   cc-options:          -std=c++11 -stdlib=libc++
   ghc-options:         -Wall -fno-warn-orphans -fno-warn-name-shadowing
   default-language:    Haskell2010
