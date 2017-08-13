@@ -80,7 +80,6 @@ module Graphics.UI.Cocos2d.Common (
   castRectToConst,
   Rect (..),
   castRectToNonconst,
-  rect_ZERO_get,
   rect_new,
   rect_newFromCoordinatesAndDimensions,
   rect_newFromOriginAndSize,
@@ -176,7 +175,6 @@ foreign import ccall "genpop__Mat4_new" mat4_new' ::  HoppyP.IO (HoppyF.Ptr Mat4
 foreign import ccall "genpop__Mat4_newFromValues" mat4_newFromValues' ::  HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO (HoppyF.Ptr Mat4)
 foreign import ccall "gendel__Mat4" delete'Mat4 :: HoppyF.Ptr Mat4Const -> HoppyP.IO ()
 foreign import ccall "&gendel__Mat4" deletePtr'Mat4 :: HoppyF.FunPtr (HoppyF.Ptr Mat4Const -> HoppyP.IO ())
-foreign import ccall "genpop__Rect_ZERO_get" rect_ZERO_get' ::  HoppyP.IO (HoppyF.Ptr Rect)
 foreign import ccall "genpop__Rect_new" rect_new' ::  HoppyP.IO (HoppyF.Ptr Rect)
 foreign import ccall "genpop__Rect_newFromCoordinatesAndDimensions" rect_newFromCoordinatesAndDimensions' ::  HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO (HoppyF.Ptr Rect)
 foreign import ccall "genpop__Rect_newFromOriginAndSize" rect_newFromOriginAndSize' ::  HoppyF.Ptr Vec2Const -> HoppyF.Ptr SizeConst -> HoppyP.IO (HoppyF.Ptr Rect)
@@ -1014,12 +1012,6 @@ instance RectConstPtr Rect where
 
 instance RectPtr Rect where
   toRect = HoppyP.id
-
-rect_ZERO_get ::  HoppyP.IO Rect
-rect_ZERO_get =
-  HoppyFHR.toGc =<<
-  HoppyP.fmap Rect
-  (rect_ZERO_get')
 
 rect_new ::  HoppyP.IO Rect
 rect_new =
