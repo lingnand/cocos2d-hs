@@ -121,10 +121,6 @@ void gendel__Rect(cocos2d::Rect const*self) {
 delete self;
 }
 
-cocos2d::Rect const*genpop__Rect_ZERO_get() {
-return new cocos2d::Rect(cocos2d::Rect::ZERO);
-}
-
 float genpop__Rect_getMinX(cocos2d::Rect*self) {
 return self->getMinX();
 }

@@ -116,7 +116,6 @@ c_Rect =
         -- center, radius
         , mkConstMethod "intersectsCircle" [refT $ constT $ objT c_Vec2, floatT] boolT
         , mkConstMethod "unionWithRect" [refT $ constT $ objT c_Rect] $ objT c_Rect
-        , mkStaticClassVariable "ZERO" $ constT $ objT c_Rect
         ]
 
 -- TODO: probably easier to write a native Hs type for this?
