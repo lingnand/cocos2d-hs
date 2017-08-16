@@ -74,7 +74,7 @@ library
                        cbits/external
   -- extra-lib-dirs:      /home/lingnan/builds/cocos2d-x/prebuilt/android/armeabi/
   -- extra-libraries:     cocos2dxinternal
-  cc-options:          -std=c++11 -I/nix/store/smijpaa33x601p2j4s8sa87z6vaay3sh-android-ndk-r10e/libexec/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/include -I/nix/store/smijpaa33x601p2j4s8sa87z6vaay3sh-android-ndk-r10e/libexec/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi/include -L/nix/store/smijpaa33x601p2j4s8sa87z6vaay3sh-android-ndk-r10e/libexec/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi -lgnustl_shared -D ANDROID=1
+  cc-options:          -std=c++11 -I/nix/store/smijpaa33x601p2j4s8sa87z6vaay3sh-android-ndk-r10e/libexec/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/include -I/nix/store/smijpaa33x601p2j4s8sa87z6vaay3sh-android-ndk-r10e/libexec/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi/include -L/nix/store/smijpaa33x601p2j4s8sa87z6vaay3sh-android-ndk-r10e/libexec/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi/thumb -lgnustl_shared -D ANDROID=1
   ghc-options:         -Wall -fno-warn-orphans -fno-warn-name-shadowing
   default-language:    Haskell2010
 
