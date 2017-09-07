@@ -28,6 +28,7 @@ cabal-version:       >=1.10
 --                      , Graphics.UI.Cocos2d.Generator.Interface.Widget
 --                      , Graphics.UI.Cocos2d.Generator.Interface.Audio
 --                      , Graphics.UI.Cocos2d.Generator.Interface.CocoStudio
+--                      , Graphics.UI.Cocos2d.Generator.Interface.Utils
 --   build-depends:       base >= 4.7 && < 5
 --                      , haskell-src >=1.0 && <1.1
 --                      , hoppy-generator
@@ -54,6 +55,7 @@ library
                      , Graphics.UI.Cocos2d.Widget
                      , Graphics.UI.Cocos2d.Audio
                      , Graphics.UI.Cocos2d.CocoStudio
+                     , Graphics.UI.Cocos2d.Utils
   other-modules:       Graphics.UI.Cocos2d.Std
   c-sources:           cbits/Common.cpp
                        cbits/Texture.cpp
@@ -67,6 +69,7 @@ library
                        cbits/Label.cpp
                        cbits/Audio.cpp
                        cbits/CocoStudio.cpp
+                       cbits/Utils.cpp
                        cbits/std.cpp
   include-dirs:        cbits
                        cbits/cocos
