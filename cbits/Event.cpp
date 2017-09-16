@@ -1,6 +1,6 @@
 ////////// GENERATED FILE, EDITS WILL BE LOST //////////
 
-#include "/Users/lingnan/Developer/projs/cocos2d-hs/.stack-work/install/x86_64-osx/lts-7.19/8.0.1/share/x86_64-osx-ghc-8.0.1/hoppy-std-0.3.0/include/hoppy/std/iterator.hpp"
+#include "hoppy/std/iterator.hpp"
 #include "Event.hpp"
 #include <2d/CCNode.h>
 #include <base/CCEvent.h>
