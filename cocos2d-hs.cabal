@@ -85,10 +85,12 @@ library
                        cbits/cocos
                        cbits/cocos/editor-support
                        cbits/external
+  if flag(target-mac)
+    include-dirs:      cbits/external/glfw3/include/mac
   cc-options:          -std=c++11
   if flag(target-android)
-    cc-options: -D ANDROID=1
-    extra-libraries:     gnustl_static
+    cc-options:        -D ANDROID=1
+    extra-libraries:   gnustl_static
   ghc-options:         -Wall -fno-warn-orphans -fno-warn-name-shadowing
   default-language:    Haskell2010
 
