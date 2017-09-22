@@ -23,6 +23,14 @@ flag target-android
   default: False
   manual: True
 
+flag no-gen
+  description: Do not build the generator
+  default: False
+
+flag no-lib
+  description: Do not build the library
+  default: False
+
 executable generator
   hs-source-dirs:      generator
   main-is:             Main.hs
@@ -39,7 +47,10 @@ executable generator
                      , Graphics.UI.Cocos2d.Generator.Interface.Audio
                      , Graphics.UI.Cocos2d.Generator.Interface.CocoStudio
                      , Graphics.UI.Cocos2d.Generator.Interface.Utils
-  build-depends:       base >= 4.7 && < 5
+  if flag(target-android) || flag(no-gen)
+    buildable:         False
+  else
+    build-depends:     base >= 4.7 && < 5
                      , haskell-src >=1.0 && <1.1
                      , hoppy-generator
                      , hoppy-std
@@ -48,7 +59,10 @@ executable generator
 
 library
   hs-source-dirs:      src
-  build-depends:       base >= 4.7 && < 5
+  if flag(no-lib)
+    buildable:         False
+  else
+    build-depends:       base >= 4.7 && < 5
                      , hoppy-runtime
                      , colour
                      , linear
