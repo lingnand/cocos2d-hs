@@ -8,6 +8,7 @@ module Graphics.UI.Cocos2d
 import Graphics.UI.Cocos2d.Audio as X
 import Graphics.UI.Cocos2d.CocoStudio as X
 import Graphics.UI.Cocos2d.Common as X
+import Graphics.UI.Cocos2d.Extra as X
 import Graphics.UI.Cocos2d.Director as X
 import Graphics.UI.Cocos2d.Event as X
 import Graphics.UI.Cocos2d.Label as X

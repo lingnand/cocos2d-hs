@@ -84,21 +84,21 @@ import qualified System.Posix.Types as HoppySPT
 
 foreign import ccall "genpop__Sprite_create" sprite_create' ::  HoppyP.IO (HoppyF.Ptr Sprite)
 foreign import ccall "genpop__Sprite_createWithFilename" sprite_createWithFilename' ::  HoppyF.Ptr M1.StdStringConst -> HoppyP.IO (HoppyF.Ptr Sprite)
-foreign import ccall "genpop__Sprite_createWithFilenameAndRect" sprite_createWithFilenameAndRect' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M2.RectConst -> HoppyP.IO (HoppyF.Ptr Sprite)
+foreign import ccall "genpop__Sprite_createWithFilenameAndRect" sprite_createWithFilenameAndRect' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M2.RawRectConst -> HoppyP.IO (HoppyF.Ptr Sprite)
 foreign import ccall "genpop__Sprite_createWithTexture" sprite_createWithTexture' ::  HoppyF.Ptr M3.Texture2D -> HoppyP.IO (HoppyF.Ptr Sprite)
-foreign import ccall "genpop__Sprite_createWithTextureAndRect" sprite_createWithTextureAndRect' ::  HoppyF.Ptr M3.Texture2D -> HoppyF.Ptr M2.RectConst -> HoppyP.IO (HoppyF.Ptr Sprite)
+foreign import ccall "genpop__Sprite_createWithTextureAndRect" sprite_createWithTextureAndRect' ::  HoppyF.Ptr M3.Texture2D -> HoppyF.Ptr M2.RawRectConst -> HoppyP.IO (HoppyF.Ptr Sprite)
 foreign import ccall "genpop__Sprite_createWithSpriteFrame" sprite_createWithSpriteFrame' ::  HoppyF.Ptr SpriteFrame -> HoppyP.IO (HoppyF.Ptr Sprite)
 foreign import ccall "genpop__Sprite_createWithSpriteFrameName" sprite_createWithSpriteFrameName' ::  HoppyF.Ptr M1.StdStringConst -> HoppyP.IO (HoppyF.Ptr Sprite)
 foreign import ccall "genpop__Sprite_setTexture" sprite_setTexture' ::  HoppyF.Ptr Sprite -> HoppyF.Ptr M3.Texture2D -> HoppyP.IO ()
 foreign import ccall "genpop__Sprite_setTextureWithFilename" sprite_setTextureWithFilename' ::  HoppyF.Ptr Sprite -> HoppyF.Ptr M1.StdStringConst -> HoppyP.IO ()
 foreign import ccall "genpop__Sprite_getTexture" sprite_getTexture' ::  HoppyF.Ptr SpriteConst -> HoppyP.IO (HoppyF.Ptr M3.Texture2D)
-foreign import ccall "genpop__Sprite_setTextureRect" sprite_setTextureRect' ::  HoppyF.Ptr Sprite -> HoppyF.Ptr M2.RectConst -> HoppyP.IO ()
-foreign import ccall "genpop__Sprite_setVertexRect" sprite_setVertexRect' ::  HoppyF.Ptr Sprite -> HoppyF.Ptr M2.RectConst -> HoppyP.IO ()
+foreign import ccall "genpop__Sprite_setTextureRect" sprite_setTextureRect' ::  HoppyF.Ptr Sprite -> HoppyF.Ptr M2.RawRectConst -> HoppyP.IO ()
+foreign import ccall "genpop__Sprite_setVertexRect" sprite_setVertexRect' ::  HoppyF.Ptr Sprite -> HoppyF.Ptr M2.RawRectConst -> HoppyP.IO ()
 foreign import ccall "genpop__Sprite_setSpriteFrame" sprite_setSpriteFrame' ::  HoppyF.Ptr Sprite -> HoppyF.Ptr SpriteFrame -> HoppyP.IO ()
 foreign import ccall "genpop__Sprite_setSpriteFrameWithName" sprite_setSpriteFrameWithName' ::  HoppyF.Ptr Sprite -> HoppyF.Ptr M1.StdStringConst -> HoppyP.IO ()
 foreign import ccall "genpop__Sprite_getSpriteFrame" sprite_getSpriteFrame' ::  HoppyF.Ptr SpriteConst -> HoppyP.IO (HoppyF.Ptr SpriteFrame)
 foreign import ccall "genpop__Sprite_setDisplayFrameWithAnimationName" sprite_setDisplayFrameWithAnimationName' ::  HoppyF.Ptr Sprite -> HoppyF.Ptr M1.StdStringConst -> HoppySPT.CSsize -> HoppyP.IO ()
-foreign import ccall "genpop__Sprite_getTextureRect" sprite_getTextureRect' ::  HoppyF.Ptr SpriteConst -> HoppyP.IO (HoppyF.Ptr M2.RectConst)
+foreign import ccall "genpop__Sprite_getTextureRect" sprite_getTextureRect' ::  HoppyF.Ptr SpriteConst -> HoppyP.IO (HoppyF.Ptr M2.RawRectConst)
 foreign import ccall "genpop__Sprite_getOffsetPosition" sprite_getOffsetPosition' ::  HoppyF.Ptr SpriteConst -> HoppyP.IO (HoppyF.Ptr M2.Vec2Const)
 foreign import ccall "genpop__Sprite_isFlippedX" sprite_isFlippedX' ::  HoppyF.Ptr SpriteConst -> HoppyP.IO HoppyFHR.CBool
 foreign import ccall "genpop__Sprite_setFlippedX" sprite_setFlippedX' ::  HoppyF.Ptr Sprite -> HoppyFHR.CBool -> HoppyP.IO ()
@@ -110,20 +110,20 @@ foreign import ccall "gencast__Sprite__Ref" castSpriteToRef :: HoppyF.Ptr Sprite
 foreign import ccall "gencast__Ref__Sprite" castRefToSprite :: HoppyF.Ptr M2.RefConst -> HoppyF.Ptr SpriteConst
 foreign import ccall "gendel__Sprite" delete'Sprite :: HoppyF.Ptr SpriteConst -> HoppyP.IO ()
 foreign import ccall "&gendel__Sprite" deletePtr'Sprite :: HoppyF.FunPtr (HoppyF.Ptr SpriteConst -> HoppyP.IO ())
-foreign import ccall "genpop__SpriteFrame_create" spriteFrame_create' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M2.RectConst -> HoppyP.IO (HoppyF.Ptr SpriteFrame)
-foreign import ccall "genpop__SpriteFrame_createWithTexture" spriteFrame_createWithTexture' ::  HoppyF.Ptr M3.Texture2D -> HoppyF.Ptr M2.RectConst -> HoppyP.IO (HoppyF.Ptr SpriteFrame)
-foreign import ccall "genpop__SpriteFrame_getRectInPixels" spriteFrame_getRectInPixels' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO (HoppyF.Ptr M2.RectConst)
-foreign import ccall "genpop__SpriteFrame_setRectInPixels" spriteFrame_setRectInPixels' ::  HoppyF.Ptr SpriteFrame -> HoppyF.Ptr M2.RectConst -> HoppyP.IO ()
+foreign import ccall "genpop__SpriteFrame_create" spriteFrame_create' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M2.RawRectConst -> HoppyP.IO (HoppyF.Ptr SpriteFrame)
+foreign import ccall "genpop__SpriteFrame_createWithTexture" spriteFrame_createWithTexture' ::  HoppyF.Ptr M3.Texture2D -> HoppyF.Ptr M2.RawRectConst -> HoppyP.IO (HoppyF.Ptr SpriteFrame)
+foreign import ccall "genpop__SpriteFrame_getRectInPixels" spriteFrame_getRectInPixels' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO (HoppyF.Ptr M2.RawRectConst)
+foreign import ccall "genpop__SpriteFrame_setRectInPixels" spriteFrame_setRectInPixels' ::  HoppyF.Ptr SpriteFrame -> HoppyF.Ptr M2.RawRectConst -> HoppyP.IO ()
 foreign import ccall "genpop__SpriteFrame_isRotated" spriteFrame_isRotated' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO HoppyFHR.CBool
 foreign import ccall "genpop__SpriteFrame_setRotated" spriteFrame_setRotated' ::  HoppyF.Ptr SpriteFrame -> HoppyFHR.CBool -> HoppyP.IO ()
-foreign import ccall "genpop__SpriteFrame_getRect" spriteFrame_getRect' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO (HoppyF.Ptr M2.RectConst)
-foreign import ccall "genpop__SpriteFrame_setRect" spriteFrame_setRect' ::  HoppyF.Ptr SpriteFrame -> HoppyF.Ptr M2.RectConst -> HoppyP.IO ()
+foreign import ccall "genpop__SpriteFrame_getRect" spriteFrame_getRect' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO (HoppyF.Ptr M2.RawRectConst)
+foreign import ccall "genpop__SpriteFrame_setRect" spriteFrame_setRect' ::  HoppyF.Ptr SpriteFrame -> HoppyF.Ptr M2.RawRectConst -> HoppyP.IO ()
 foreign import ccall "genpop__SpriteFrame_getOffsetInPixels" spriteFrame_getOffsetInPixels' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO (HoppyF.Ptr M2.Vec2Const)
 foreign import ccall "genpop__SpriteFrame_setOffsetInPixels" spriteFrame_setOffsetInPixels' ::  HoppyF.Ptr SpriteFrame -> HoppyF.Ptr M2.Vec2Const -> HoppyP.IO ()
-foreign import ccall "genpop__SpriteFrame_getOriginalSizeInPixels" spriteFrame_getOriginalSizeInPixels' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
-foreign import ccall "genpop__SpriteFrame_setOriginalSizeInPixels" spriteFrame_setOriginalSizeInPixels' ::  HoppyF.Ptr SpriteFrame -> HoppyF.Ptr M2.SizeConst -> HoppyP.IO ()
-foreign import ccall "genpop__SpriteFrame_getOriginalSize" spriteFrame_getOriginalSize' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
-foreign import ccall "genpop__SpriteFrame_setOriginalSize" spriteFrame_setOriginalSize' ::  HoppyF.Ptr SpriteFrame -> HoppyF.Ptr M2.SizeConst -> HoppyP.IO ()
+foreign import ccall "genpop__SpriteFrame_getOriginalSizeInPixels" spriteFrame_getOriginalSizeInPixels' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
+foreign import ccall "genpop__SpriteFrame_setOriginalSizeInPixels" spriteFrame_setOriginalSizeInPixels' ::  HoppyF.Ptr SpriteFrame -> HoppyF.Ptr M2.RawSizeConst -> HoppyP.IO ()
+foreign import ccall "genpop__SpriteFrame_getOriginalSize" spriteFrame_getOriginalSize' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
+foreign import ccall "genpop__SpriteFrame_setOriginalSize" spriteFrame_setOriginalSize' ::  HoppyF.Ptr SpriteFrame -> HoppyF.Ptr M2.RawSizeConst -> HoppyP.IO ()
 foreign import ccall "genpop__SpriteFrame_getTexture" spriteFrame_getTexture' ::  HoppyF.Ptr SpriteFrame -> HoppyP.IO (HoppyF.Ptr M3.Texture2D)
 foreign import ccall "genpop__SpriteFrame_setTexture" spriteFrame_setTexture' ::  HoppyF.Ptr SpriteFrame -> HoppyF.Ptr M3.Texture2D -> HoppyP.IO ()
 foreign import ccall "genpop__SpriteFrame_getOffset" spriteFrame_getOffset' ::  HoppyF.Ptr SpriteFrameConst -> HoppyP.IO (HoppyF.Ptr M2.Vec2Const)
@@ -158,10 +158,10 @@ sprite_getSpriteFrame arg'1 =
   HoppyP.fmap SpriteFrame
   (sprite_getSpriteFrame' arg'1')
 
-sprite_getTextureRect :: (SpriteValue arg'1) => arg'1 -> HoppyP.IO M2.RectConst
+sprite_getTextureRect :: (SpriteValue arg'1) => arg'1 -> HoppyP.IO M2.RawRectConst
 sprite_getTextureRect arg'1 =
   withSpritePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.RectConst
+  HoppyP.fmap M2.RawRectConst
   (sprite_getTextureRect' arg'1')
 
 sprite_getOffsetPosition :: (SpriteValue arg'1) => arg'1 -> HoppyP.IO M2.Vec2Const
@@ -197,16 +197,16 @@ sprite_setTextureWithFilename arg'1 arg'2 =
   M1.withStdStringPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (sprite_setTextureWithFilename' arg'1' arg'2')
 
-sprite_setTextureRect :: (SpritePtr arg'1, M2.RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+sprite_setTextureRect :: (SpritePtr arg'1, M2.RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
 sprite_setTextureRect arg'1 arg'2 =
   HoppyFHR.withCppPtr (toSprite arg'1) $ \arg'1' ->
-  M2.withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (sprite_setTextureRect' arg'1' arg'2')
 
-sprite_setVertexRect :: (SpritePtr arg'1, M2.RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+sprite_setVertexRect :: (SpritePtr arg'1, M2.RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
 sprite_setVertexRect arg'1 arg'2 =
   HoppyFHR.withCppPtr (toSprite arg'1) $ \arg'1' ->
-  M2.withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (sprite_setVertexRect' arg'1' arg'2')
 
 sprite_setSpriteFrame :: (SpritePtr arg'1, SpriteFramePtr arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
@@ -251,10 +251,10 @@ sprite_createWithFilename arg'1 =
   HoppyP.fmap Sprite
   (sprite_createWithFilename' arg'1')
 
-sprite_createWithFilenameAndRect :: (M1.StdStringValue arg'1, M2.RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO Sprite
+sprite_createWithFilenameAndRect :: (M1.StdStringValue arg'1, M2.RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO Sprite
 sprite_createWithFilenameAndRect arg'1 arg'2 =
   M1.withStdStringPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  M2.withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   HoppyP.fmap Sprite
   (sprite_createWithFilenameAndRect' arg'1' arg'2')
 
@@ -264,10 +264,10 @@ sprite_createWithTexture arg'1 =
   HoppyP.fmap Sprite
   (sprite_createWithTexture' arg'1')
 
-sprite_createWithTextureAndRect :: (M3.Texture2DPtr arg'1, M2.RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO Sprite
+sprite_createWithTextureAndRect :: (M3.Texture2DPtr arg'1, M2.RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO Sprite
 sprite_createWithTextureAndRect arg'1 arg'2 =
   HoppyFHR.withCppPtr (M3.toTexture2D arg'1) $ \arg'1' ->
-  M2.withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   HoppyP.fmap Sprite
   (sprite_createWithTextureAndRect' arg'1' arg'2')
 
@@ -432,10 +432,10 @@ instance SpriteFrameConstPtr a => SpriteFrameValue a where
 class (M2.RefConstPtr this) => SpriteFrameConstPtr this where
   toSpriteFrameConst :: this -> SpriteFrameConst
 
-spriteFrame_getRectInPixels :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO M2.RectConst
+spriteFrame_getRectInPixels :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO M2.RawRectConst
 spriteFrame_getRectInPixels arg'1 =
   withSpriteFramePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.RectConst
+  HoppyP.fmap M2.RawRectConst
   (spriteFrame_getRectInPixels' arg'1')
 
 spriteFrame_isRotated :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO HoppyP.Bool
@@ -444,10 +444,10 @@ spriteFrame_isRotated arg'1 =
   HoppyP.fmap (/= 0)
   (spriteFrame_isRotated' arg'1')
 
-spriteFrame_getRect :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO M2.RectConst
+spriteFrame_getRect :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO M2.RawRectConst
 spriteFrame_getRect arg'1 =
   withSpriteFramePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.RectConst
+  HoppyP.fmap M2.RawRectConst
   (spriteFrame_getRect' arg'1')
 
 spriteFrame_getOffsetInPixels :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO M2.Vec2Const
@@ -456,16 +456,16 @@ spriteFrame_getOffsetInPixels arg'1 =
   HoppyP.fmap M2.Vec2Const
   (spriteFrame_getOffsetInPixels' arg'1')
 
-spriteFrame_getOriginalSizeInPixels :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+spriteFrame_getOriginalSizeInPixels :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 spriteFrame_getOriginalSizeInPixels arg'1 =
   withSpriteFramePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (spriteFrame_getOriginalSizeInPixels' arg'1')
 
-spriteFrame_getOriginalSize :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+spriteFrame_getOriginalSize :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 spriteFrame_getOriginalSize arg'1 =
   withSpriteFramePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (spriteFrame_getOriginalSize' arg'1')
 
 spriteFrame_getOffset :: (SpriteFrameValue arg'1) => arg'1 -> HoppyP.IO M2.Vec2Const
@@ -477,10 +477,10 @@ spriteFrame_getOffset arg'1 =
 class (SpriteFrameConstPtr this, M2.RefPtr this) => SpriteFramePtr this where
   toSpriteFrame :: this -> SpriteFrame
 
-spriteFrame_setRectInPixels :: (SpriteFramePtr arg'1, M2.RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+spriteFrame_setRectInPixels :: (SpriteFramePtr arg'1, M2.RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
 spriteFrame_setRectInPixels arg'1 arg'2 =
   HoppyFHR.withCppPtr (toSpriteFrame arg'1) $ \arg'1' ->
-  M2.withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (spriteFrame_setRectInPixels' arg'1' arg'2')
 
 spriteFrame_setRotated :: (SpriteFramePtr arg'1) => arg'1 -> HoppyP.Bool -> HoppyP.IO ()
@@ -489,10 +489,10 @@ spriteFrame_setRotated arg'1 arg'2 =
   let arg'2' = if arg'2 then 1 else 0 in
   (spriteFrame_setRotated' arg'1' arg'2')
 
-spriteFrame_setRect :: (SpriteFramePtr arg'1, M2.RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+spriteFrame_setRect :: (SpriteFramePtr arg'1, M2.RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
 spriteFrame_setRect arg'1 arg'2 =
   HoppyFHR.withCppPtr (toSpriteFrame arg'1) $ \arg'1' ->
-  M2.withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (spriteFrame_setRect' arg'1' arg'2')
 
 spriteFrame_setOffsetInPixels :: (SpriteFramePtr arg'1, M2.Vec2Value arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
@@ -501,16 +501,16 @@ spriteFrame_setOffsetInPixels arg'1 arg'2 =
   M2.withVec2Ptr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (spriteFrame_setOffsetInPixels' arg'1' arg'2')
 
-spriteFrame_setOriginalSizeInPixels :: (SpriteFramePtr arg'1, M2.SizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+spriteFrame_setOriginalSizeInPixels :: (SpriteFramePtr arg'1, M2.RawSizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
 spriteFrame_setOriginalSizeInPixels arg'1 arg'2 =
   HoppyFHR.withCppPtr (toSpriteFrame arg'1) $ \arg'1' ->
-  M2.withSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (spriteFrame_setOriginalSizeInPixels' arg'1' arg'2')
 
-spriteFrame_setOriginalSize :: (SpriteFramePtr arg'1, M2.SizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+spriteFrame_setOriginalSize :: (SpriteFramePtr arg'1, M2.RawSizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
 spriteFrame_setOriginalSize arg'1 arg'2 =
   HoppyFHR.withCppPtr (toSpriteFrame arg'1) $ \arg'1' ->
-  M2.withSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (spriteFrame_setOriginalSize' arg'1' arg'2')
 
 spriteFrame_getTexture :: (SpriteFramePtr arg'1) => arg'1 -> HoppyP.IO M3.Texture2D
@@ -531,17 +531,17 @@ spriteFrame_setOffset arg'1 arg'2 =
   M2.withVec2Ptr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (spriteFrame_setOffset' arg'1' arg'2')
 
-spriteFrame_create :: (M1.StdStringValue arg'1, M2.RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO SpriteFrame
+spriteFrame_create :: (M1.StdStringValue arg'1, M2.RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO SpriteFrame
 spriteFrame_create arg'1 arg'2 =
   M1.withStdStringPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  M2.withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   HoppyP.fmap SpriteFrame
   (spriteFrame_create' arg'1' arg'2')
 
-spriteFrame_createWithTexture :: (M3.Texture2DPtr arg'1, M2.RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO SpriteFrame
+spriteFrame_createWithTexture :: (M3.Texture2DPtr arg'1, M2.RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO SpriteFrame
 spriteFrame_createWithTexture arg'1 arg'2 =
   HoppyFHR.withCppPtr (M3.toTexture2D arg'1) $ \arg'1' ->
-  M2.withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   HoppyP.fmap SpriteFrame
   (spriteFrame_createWithTexture' arg'1' arg'2')
 

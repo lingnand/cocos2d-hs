@@ -62,29 +62,47 @@ module Graphics.UI.Cocos2d.Common (
   mat4_newFromValues,
   Mat4Super (..),
   Mat4SuperConst (..),
-  RectValue (..),
-  RectConstPtr (..),
-  rect_equals,
-  rect_containsPoint,
-  rect_intersectsRect,
-  rect_intersectsCircle,
-  rect_unionWithRect,
-  RectPtr (..),
-  rect_getMinX,
-  rect_getMidX,
-  rect_getMaxX,
-  rect_getMinY,
-  rect_getMidY,
-  rect_getMaxY,
-  RectConst (..),
-  castRectToConst,
-  Rect (..),
-  castRectToNonconst,
-  rect_new,
-  rect_newFromCoordinatesAndDimensions,
-  rect_newFromOriginAndSize,
-  RectSuper (..),
-  RectSuperConst (..),
+  RawRectValue (..),
+  RawRectConstPtr (..),
+  rawRect_equals,
+  rawRect_containsPoint,
+  rawRect_intersectsRect,
+  rawRect_intersectsCircle,
+  rawRect_unionWithRect,
+  RawRectPtr (..),
+  rawRect_getMinX,
+  rawRect_getMidX,
+  rawRect_getMaxX,
+  rawRect_getMinY,
+  rawRect_getMidY,
+  rawRect_getMaxY,
+  RawRectConst (..),
+  castRawRectToConst,
+  RawRect (..),
+  castRawRectToNonconst,
+  rawRect_origin_get,
+  rawRect_origin_set,
+  rawRect_size_get,
+  rawRect_size_set,
+  rawRect_new,
+  rawRect_newFromCoordinatesAndDimensions,
+  rawRect_newFromOriginAndSize,
+  RawRectSuper (..),
+  RawRectSuperConst (..),
+  RawSizeValue (..),
+  RawSizeConstPtr (..),
+  RawSizePtr (..),
+  RawSizeConst (..),
+  castRawSizeToConst,
+  RawSize (..),
+  castRawSizeToNonconst,
+  rawSize_width_get,
+  rawSize_width_set,
+  rawSize_height_get,
+  rawSize_height_set,
+  rawSize_newFromDimensions,
+  RawSizeSuper (..),
+  RawSizeSuperConst (..),
   RefValue (..),
   RefConstPtr (..),
   RefPtr (..),
@@ -100,20 +118,6 @@ module Graphics.UI.Cocos2d.Common (
   RefSuperConst (..),
   scheduleCallback_newFunPtr,
   scheduleCallback_new,
-  SizeValue (..),
-  SizeConstPtr (..),
-  SizePtr (..),
-  SizeConst (..),
-  castSizeToConst,
-  Size (..),
-  castSizeToNonconst,
-  size_width_get,
-  size_width_set,
-  size_height_get,
-  size_height_set,
-  size_newFromDimensions,
-  SizeSuper (..),
-  SizeSuperConst (..),
   TextHAlignment (..),
   TextVAlignment (..),
   threadPerformCallback_newFunPtr,
@@ -141,6 +145,7 @@ import qualified Data.Word as HoppyDW
 import qualified Foreign as HoppyF
 import qualified Foreign.C as HoppyFC
 import qualified Foreign.Hoppy.Runtime as HoppyFHR
+import qualified Graphics.UI.Cocos2d.Extra as CE
 import Linear.V2
 import Prelude (
  ($), (*), (++), (.), (/), (/=), (=<<), (==), (>), Float, fromIntegral, otherwise, recip, return,
@@ -175,22 +180,33 @@ foreign import ccall "genpop__Mat4_new" mat4_new' ::  HoppyP.IO (HoppyF.Ptr Mat4
 foreign import ccall "genpop__Mat4_newFromValues" mat4_newFromValues' ::  HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO (HoppyF.Ptr Mat4)
 foreign import ccall "gendel__Mat4" delete'Mat4 :: HoppyF.Ptr Mat4Const -> HoppyP.IO ()
 foreign import ccall "&gendel__Mat4" deletePtr'Mat4 :: HoppyF.FunPtr (HoppyF.Ptr Mat4Const -> HoppyP.IO ())
-foreign import ccall "genpop__Rect_new" rect_new' ::  HoppyP.IO (HoppyF.Ptr Rect)
-foreign import ccall "genpop__Rect_newFromCoordinatesAndDimensions" rect_newFromCoordinatesAndDimensions' ::  HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO (HoppyF.Ptr Rect)
-foreign import ccall "genpop__Rect_newFromOriginAndSize" rect_newFromOriginAndSize' ::  HoppyF.Ptr Vec2Const -> HoppyF.Ptr SizeConst -> HoppyP.IO (HoppyF.Ptr Rect)
-foreign import ccall "genpop__Rect_getMinX" rect_getMinX' ::  HoppyF.Ptr Rect -> HoppyP.IO HoppyFC.CFloat
-foreign import ccall "genpop__Rect_getMidX" rect_getMidX' ::  HoppyF.Ptr Rect -> HoppyP.IO HoppyFC.CFloat
-foreign import ccall "genpop__Rect_getMaxX" rect_getMaxX' ::  HoppyF.Ptr Rect -> HoppyP.IO HoppyFC.CFloat
-foreign import ccall "genpop__Rect_getMinY" rect_getMinY' ::  HoppyF.Ptr Rect -> HoppyP.IO HoppyFC.CFloat
-foreign import ccall "genpop__Rect_getMidY" rect_getMidY' ::  HoppyF.Ptr Rect -> HoppyP.IO HoppyFC.CFloat
-foreign import ccall "genpop__Rect_getMaxY" rect_getMaxY' ::  HoppyF.Ptr Rect -> HoppyP.IO HoppyFC.CFloat
-foreign import ccall "genpop__Rect_equals" rect_equals' ::  HoppyF.Ptr RectConst -> HoppyF.Ptr RectConst -> HoppyP.IO HoppyFHR.CBool
-foreign import ccall "genpop__Rect_containsPoint" rect_containsPoint' ::  HoppyF.Ptr RectConst -> HoppyF.Ptr Vec2Const -> HoppyP.IO HoppyFHR.CBool
-foreign import ccall "genpop__Rect_intersectsRect" rect_intersectsRect' ::  HoppyF.Ptr RectConst -> HoppyF.Ptr RectConst -> HoppyP.IO HoppyFHR.CBool
-foreign import ccall "genpop__Rect_intersectsCircle" rect_intersectsCircle' ::  HoppyF.Ptr RectConst -> HoppyF.Ptr Vec2Const -> HoppyFC.CFloat -> HoppyP.IO HoppyFHR.CBool
-foreign import ccall "genpop__Rect_unionWithRect" rect_unionWithRect' ::  HoppyF.Ptr RectConst -> HoppyF.Ptr RectConst -> HoppyP.IO (HoppyF.Ptr Rect)
-foreign import ccall "gendel__Rect" delete'Rect :: HoppyF.Ptr RectConst -> HoppyP.IO ()
-foreign import ccall "&gendel__Rect" deletePtr'Rect :: HoppyF.FunPtr (HoppyF.Ptr RectConst -> HoppyP.IO ())
+foreign import ccall "genpop__RawRect_origin_get" rawRect_origin_get' ::  HoppyF.Ptr RawRectConst -> HoppyP.IO (HoppyF.Ptr Vec2Const)
+foreign import ccall "genpop__RawRect_origin_set" rawRect_origin_set' ::  HoppyF.Ptr RawRect -> HoppyF.Ptr Vec2Const -> HoppyP.IO ()
+foreign import ccall "genpop__RawRect_size_get" rawRect_size_get' ::  HoppyF.Ptr RawRectConst -> HoppyP.IO (HoppyF.Ptr RawSizeConst)
+foreign import ccall "genpop__RawRect_size_set" rawRect_size_set' ::  HoppyF.Ptr RawRect -> HoppyF.Ptr RawSizeConst -> HoppyP.IO ()
+foreign import ccall "genpop__RawRect_new" rawRect_new' ::  HoppyP.IO (HoppyF.Ptr RawRect)
+foreign import ccall "genpop__RawRect_newFromCoordinatesAndDimensions" rawRect_newFromCoordinatesAndDimensions' ::  HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO (HoppyF.Ptr RawRect)
+foreign import ccall "genpop__RawRect_newFromOriginAndSize" rawRect_newFromOriginAndSize' ::  HoppyF.Ptr Vec2Const -> HoppyF.Ptr RawSizeConst -> HoppyP.IO (HoppyF.Ptr RawRect)
+foreign import ccall "genpop__RawRect_getMinX" rawRect_getMinX' ::  HoppyF.Ptr RawRect -> HoppyP.IO HoppyFC.CFloat
+foreign import ccall "genpop__RawRect_getMidX" rawRect_getMidX' ::  HoppyF.Ptr RawRect -> HoppyP.IO HoppyFC.CFloat
+foreign import ccall "genpop__RawRect_getMaxX" rawRect_getMaxX' ::  HoppyF.Ptr RawRect -> HoppyP.IO HoppyFC.CFloat
+foreign import ccall "genpop__RawRect_getMinY" rawRect_getMinY' ::  HoppyF.Ptr RawRect -> HoppyP.IO HoppyFC.CFloat
+foreign import ccall "genpop__RawRect_getMidY" rawRect_getMidY' ::  HoppyF.Ptr RawRect -> HoppyP.IO HoppyFC.CFloat
+foreign import ccall "genpop__RawRect_getMaxY" rawRect_getMaxY' ::  HoppyF.Ptr RawRect -> HoppyP.IO HoppyFC.CFloat
+foreign import ccall "genpop__RawRect_equals" rawRect_equals' ::  HoppyF.Ptr RawRectConst -> HoppyF.Ptr RawRectConst -> HoppyP.IO HoppyFHR.CBool
+foreign import ccall "genpop__RawRect_containsPoint" rawRect_containsPoint' ::  HoppyF.Ptr RawRectConst -> HoppyF.Ptr Vec2Const -> HoppyP.IO HoppyFHR.CBool
+foreign import ccall "genpop__RawRect_intersectsRect" rawRect_intersectsRect' ::  HoppyF.Ptr RawRectConst -> HoppyF.Ptr RawRectConst -> HoppyP.IO HoppyFHR.CBool
+foreign import ccall "genpop__RawRect_intersectsCircle" rawRect_intersectsCircle' ::  HoppyF.Ptr RawRectConst -> HoppyF.Ptr Vec2Const -> HoppyFC.CFloat -> HoppyP.IO HoppyFHR.CBool
+foreign import ccall "genpop__RawRect_unionWithRect" rawRect_unionWithRect' ::  HoppyF.Ptr RawRectConst -> HoppyF.Ptr RawRectConst -> HoppyP.IO (HoppyF.Ptr RawRectConst)
+foreign import ccall "gendel__RawRect" delete'RawRect :: HoppyF.Ptr RawRectConst -> HoppyP.IO ()
+foreign import ccall "&gendel__RawRect" deletePtr'RawRect :: HoppyF.FunPtr (HoppyF.Ptr RawRectConst -> HoppyP.IO ())
+foreign import ccall "genpop__RawSize_width_get" rawSize_width_get' ::  HoppyF.Ptr RawSizeConst -> HoppyP.IO HoppyFC.CFloat
+foreign import ccall "genpop__RawSize_width_set" rawSize_width_set' ::  HoppyF.Ptr RawSize -> HoppyFC.CFloat -> HoppyP.IO ()
+foreign import ccall "genpop__RawSize_height_get" rawSize_height_get' ::  HoppyF.Ptr RawSizeConst -> HoppyP.IO HoppyFC.CFloat
+foreign import ccall "genpop__RawSize_height_set" rawSize_height_set' ::  HoppyF.Ptr RawSize -> HoppyFC.CFloat -> HoppyP.IO ()
+foreign import ccall "genpop__RawSize_newFromDimensions" rawSize_newFromDimensions' ::  HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO (HoppyF.Ptr RawSize)
+foreign import ccall "gendel__RawSize" delete'RawSize :: HoppyF.Ptr RawSizeConst -> HoppyP.IO ()
+foreign import ccall "&gendel__RawSize" deletePtr'RawSize :: HoppyF.FunPtr (HoppyF.Ptr RawSizeConst -> HoppyP.IO ())
 foreign import ccall "genpop__Ref_retain" ref_retain' ::  HoppyF.Ptr Ref -> HoppyP.IO ()
 foreign import ccall "genpop__Ref_release" ref_release' ::  HoppyF.Ptr Ref -> HoppyP.IO ()
 foreign import ccall "genpop__Ref_autorelease" ref_autorelease' ::  HoppyF.Ptr Ref -> HoppyP.IO (HoppyF.Ptr Ref)
@@ -199,13 +215,6 @@ foreign import ccall "gendel__Ref" delete'Ref :: HoppyF.Ptr RefConst -> HoppyP.I
 foreign import ccall "&gendel__Ref" deletePtr'Ref :: HoppyF.FunPtr (HoppyF.Ptr RefConst -> HoppyP.IO ())
 foreign import ccall "wrapper" scheduleCallback_new'newFunPtr :: (HoppyFC.CFloat -> HoppyP.IO ()) -> HoppyP.IO (HoppyF.FunPtr (HoppyFC.CFloat -> HoppyP.IO ()))
 foreign import ccall "genpop__ScheduleCallback" scheduleCallback_new'newCallback :: HoppyF.FunPtr (HoppyFC.CFloat -> HoppyP.IO ()) -> HoppyF.FunPtr (HoppyF.FunPtr (HoppyP.IO ()) -> HoppyP.IO ()) -> HoppyP.Bool -> HoppyP.IO (HoppyFHR.CCallback (HoppyFC.CFloat -> HoppyP.IO ()))
-foreign import ccall "genpop__Size_width_get" size_width_get' ::  HoppyF.Ptr SizeConst -> HoppyP.IO HoppyFC.CFloat
-foreign import ccall "genpop__Size_width_set" size_width_set' ::  HoppyF.Ptr Size -> HoppyFC.CFloat -> HoppyP.IO ()
-foreign import ccall "genpop__Size_height_get" size_height_get' ::  HoppyF.Ptr SizeConst -> HoppyP.IO HoppyFC.CFloat
-foreign import ccall "genpop__Size_height_set" size_height_set' ::  HoppyF.Ptr Size -> HoppyFC.CFloat -> HoppyP.IO ()
-foreign import ccall "genpop__Size_newFromDimensions" size_newFromDimensions' ::  HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO (HoppyF.Ptr Size)
-foreign import ccall "gendel__Size" delete'Size :: HoppyF.Ptr SizeConst -> HoppyP.IO ()
-foreign import ccall "&gendel__Size" deletePtr'Size :: HoppyF.FunPtr (HoppyF.Ptr SizeConst -> HoppyP.IO ())
 foreign import ccall "wrapper" threadPerformCallback_new'newFunPtr :: HoppyP.IO () -> HoppyP.IO (HoppyF.FunPtr (HoppyP.IO ()))
 foreign import ccall "genpop__ThreadPerformCallback" threadPerformCallback_new'newCallback :: HoppyF.FunPtr (HoppyP.IO ()) -> HoppyF.FunPtr (HoppyF.FunPtr (HoppyP.IO ()) -> HoppyP.IO ()) -> HoppyP.Bool -> HoppyP.IO (HoppyFHR.CCallback (HoppyP.IO ()))
 foreign import ccall "genpop__Vec2_x_get" vec2_x_get' ::  HoppyF.Ptr Vec2Const -> HoppyP.IO HoppyFC.CFloat
@@ -846,207 +855,411 @@ instance HoppyFHR.Assignable (HoppyF.Ptr (HoppyF.Ptr Mat4)) Mat4 where
 instance HoppyFHR.Decodable (HoppyF.Ptr (HoppyF.Ptr Mat4)) Mat4 where
   decode = HoppyP.fmap Mat4 . HoppyF.peek
 
-class RectValue a where
-  withRectPtr :: a -> (RectConst -> HoppyP.IO b) -> HoppyP.IO b
+class RawRectValue a where
+  withRawRectPtr :: a -> (RawRectConst -> HoppyP.IO b) -> HoppyP.IO b
 
 #if MIN_VERSION_base(4,8,0)
-instance {-# OVERLAPPABLE #-} RectConstPtr a => RectValue a where
+instance {-# OVERLAPPABLE #-} RawRectConstPtr a => RawRectValue a where
 #else
-instance RectConstPtr a => RectValue a where
+instance RawRectConstPtr a => RawRectValue a where
 #endif
-  withRectPtr = HoppyP.flip ($) . toRectConst
+  withRawRectPtr = HoppyP.flip ($) . toRawRectConst
 
-class (HoppyFHR.CppPtr this) => RectConstPtr this where
-  toRectConst :: this -> RectConst
+#if MIN_VERSION_base(4,8,0)
+instance {-# OVERLAPPING #-} RawRectValue (CE.Rect Float) where
+#else
+instance RawRectValue (CE.Rect Float) where
+#endif
+  withRawRectPtr = HoppyFHR.withCppObj
 
-rect_equals :: (RectValue arg'1, RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO HoppyP.Bool
-rect_equals arg'1 arg'2 =
-  withRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+class (HoppyFHR.CppPtr this) => RawRectConstPtr this where
+  toRawRectConst :: this -> RawRectConst
+
+rawRect_equals :: (RawRectValue arg'1, RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO HoppyP.Bool
+rawRect_equals arg'1 arg'2 =
+  withRawRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+  withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   HoppyP.fmap (/= 0)
-  (rect_equals' arg'1' arg'2')
+  (rawRect_equals' arg'1' arg'2')
 
-rect_containsPoint :: (RectValue arg'1, Vec2Value arg'2) => arg'1 -> arg'2 -> HoppyP.IO HoppyP.Bool
-rect_containsPoint arg'1 arg'2 =
-  withRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+rawRect_containsPoint :: (RawRectValue arg'1, Vec2Value arg'2) => arg'1 -> arg'2 -> HoppyP.IO HoppyP.Bool
+rawRect_containsPoint arg'1 arg'2 =
+  withRawRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
   withVec2Ptr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   HoppyP.fmap (/= 0)
-  (rect_containsPoint' arg'1' arg'2')
+  (rawRect_containsPoint' arg'1' arg'2')
 
-rect_intersectsRect :: (RectValue arg'1, RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO HoppyP.Bool
-rect_intersectsRect arg'1 arg'2 =
-  withRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+rawRect_intersectsRect :: (RawRectValue arg'1, RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO HoppyP.Bool
+rawRect_intersectsRect arg'1 arg'2 =
+  withRawRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+  withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   HoppyP.fmap (/= 0)
-  (rect_intersectsRect' arg'1' arg'2')
+  (rawRect_intersectsRect' arg'1' arg'2')
 
-rect_intersectsCircle :: (RectValue arg'1, Vec2Value arg'2) => arg'1 -> arg'2 -> HoppyP.Float -> HoppyP.IO HoppyP.Bool
-rect_intersectsCircle arg'1 arg'2 arg'3 =
-  withRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+rawRect_intersectsCircle :: (RawRectValue arg'1, Vec2Value arg'2) => arg'1 -> arg'2 -> HoppyP.Float -> HoppyP.IO HoppyP.Bool
+rawRect_intersectsCircle arg'1 arg'2 arg'3 =
+  withRawRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
   withVec2Ptr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   let arg'3' = HoppyP.realToFrac arg'3 in
   HoppyP.fmap (/= 0)
-  (rect_intersectsCircle' arg'1' arg'2' arg'3')
+  (rawRect_intersectsCircle' arg'1' arg'2' arg'3')
 
-rect_unionWithRect :: (RectValue arg'1, RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO Rect
-rect_unionWithRect arg'1 arg'2 =
-  withRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
-  HoppyFHR.toGc =<<
-  HoppyP.fmap Rect
-  (rect_unionWithRect' arg'1' arg'2')
+rawRect_unionWithRect :: (RawRectValue arg'1, RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO (CE.Rect Float)
+rawRect_unionWithRect arg'1 arg'2 =
+  withRawRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+  withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  (HoppyFHR.decodeAndDelete . RawRectConst) =<<
+  (rawRect_unionWithRect' arg'1' arg'2')
 
-class (RectConstPtr this) => RectPtr this where
-  toRect :: this -> Rect
+class (RawRectConstPtr this) => RawRectPtr this where
+  toRawRect :: this -> RawRect
 
-rect_getMinX :: (RectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
-rect_getMinX arg'1 =
-  HoppyFHR.withCppPtr (toRect arg'1) $ \arg'1' ->
+rawRect_getMinX :: (RawRectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
+rawRect_getMinX arg'1 =
+  HoppyFHR.withCppPtr (toRawRect arg'1) $ \arg'1' ->
   HoppyP.fmap HoppyP.realToFrac
-  (rect_getMinX' arg'1')
+  (rawRect_getMinX' arg'1')
 
-rect_getMidX :: (RectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
-rect_getMidX arg'1 =
-  HoppyFHR.withCppPtr (toRect arg'1) $ \arg'1' ->
+rawRect_getMidX :: (RawRectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
+rawRect_getMidX arg'1 =
+  HoppyFHR.withCppPtr (toRawRect arg'1) $ \arg'1' ->
   HoppyP.fmap HoppyP.realToFrac
-  (rect_getMidX' arg'1')
+  (rawRect_getMidX' arg'1')
 
-rect_getMaxX :: (RectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
-rect_getMaxX arg'1 =
-  HoppyFHR.withCppPtr (toRect arg'1) $ \arg'1' ->
+rawRect_getMaxX :: (RawRectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
+rawRect_getMaxX arg'1 =
+  HoppyFHR.withCppPtr (toRawRect arg'1) $ \arg'1' ->
   HoppyP.fmap HoppyP.realToFrac
-  (rect_getMaxX' arg'1')
+  (rawRect_getMaxX' arg'1')
 
-rect_getMinY :: (RectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
-rect_getMinY arg'1 =
-  HoppyFHR.withCppPtr (toRect arg'1) $ \arg'1' ->
+rawRect_getMinY :: (RawRectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
+rawRect_getMinY arg'1 =
+  HoppyFHR.withCppPtr (toRawRect arg'1) $ \arg'1' ->
   HoppyP.fmap HoppyP.realToFrac
-  (rect_getMinY' arg'1')
+  (rawRect_getMinY' arg'1')
 
-rect_getMidY :: (RectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
-rect_getMidY arg'1 =
-  HoppyFHR.withCppPtr (toRect arg'1) $ \arg'1' ->
+rawRect_getMidY :: (RawRectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
+rawRect_getMidY arg'1 =
+  HoppyFHR.withCppPtr (toRawRect arg'1) $ \arg'1' ->
   HoppyP.fmap HoppyP.realToFrac
-  (rect_getMidY' arg'1')
+  (rawRect_getMidY' arg'1')
 
-rect_getMaxY :: (RectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
-rect_getMaxY arg'1 =
-  HoppyFHR.withCppPtr (toRect arg'1) $ \arg'1' ->
+rawRect_getMaxY :: (RawRectPtr arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
+rawRect_getMaxY arg'1 =
+  HoppyFHR.withCppPtr (toRawRect arg'1) $ \arg'1' ->
   HoppyP.fmap HoppyP.realToFrac
-  (rect_getMaxY' arg'1')
+  (rawRect_getMaxY' arg'1')
 
-data RectConst =
-    RectConst (HoppyF.Ptr RectConst)
-  | RectConstGc (HoppyF.ForeignPtr ()) (HoppyF.Ptr RectConst)
+data RawRectConst =
+    RawRectConst (HoppyF.Ptr RawRectConst)
+  | RawRectConstGc (HoppyF.ForeignPtr ()) (HoppyF.Ptr RawRectConst)
   deriving (HoppyP.Show)
 
-instance HoppyP.Eq RectConst where
+instance HoppyP.Eq RawRectConst where
   x == y = HoppyFHR.toPtr x == HoppyFHR.toPtr y
 
-instance HoppyP.Ord RectConst where
+instance HoppyP.Ord RawRectConst where
   compare x y = HoppyP.compare (HoppyFHR.toPtr x) (HoppyFHR.toPtr y)
 
-castRectToConst :: Rect -> RectConst
-castRectToConst (Rect ptr') = RectConst $ HoppyF.castPtr ptr'
-castRectToConst (RectGc fptr' ptr') = RectConstGc fptr' $ HoppyF.castPtr ptr'
+castRawRectToConst :: RawRect -> RawRectConst
+castRawRectToConst (RawRect ptr') = RawRectConst $ HoppyF.castPtr ptr'
+castRawRectToConst (RawRectGc fptr' ptr') = RawRectConstGc fptr' $ HoppyF.castPtr ptr'
 
-instance HoppyFHR.CppPtr RectConst where
-  nullptr = RectConst HoppyF.nullPtr
+instance HoppyFHR.CppPtr RawRectConst where
+  nullptr = RawRectConst HoppyF.nullPtr
   
-  withCppPtr (RectConst ptr') f' = f' ptr'
-  withCppPtr (RectConstGc fptr' ptr') f' = HoppyF.withForeignPtr fptr' $ \_ -> f' ptr'
+  withCppPtr (RawRectConst ptr') f' = f' ptr'
+  withCppPtr (RawRectConstGc fptr' ptr') f' = HoppyF.withForeignPtr fptr' $ \_ -> f' ptr'
   
-  toPtr (RectConst ptr') = ptr'
-  toPtr (RectConstGc _ ptr') = ptr'
+  toPtr (RawRectConst ptr') = ptr'
+  toPtr (RawRectConstGc _ ptr') = ptr'
   
-  touchCppPtr (RectConst _) = HoppyP.return ()
-  touchCppPtr (RectConstGc fptr' _) = HoppyF.touchForeignPtr fptr'
+  touchCppPtr (RawRectConst _) = HoppyP.return ()
+  touchCppPtr (RawRectConstGc fptr' _) = HoppyF.touchForeignPtr fptr'
 
-instance HoppyFHR.Deletable RectConst where
-  delete (RectConst ptr') = delete'Rect ptr'
-  delete (RectConstGc _ _) = HoppyP.fail $ HoppyP.concat ["Deletable.delete: Asked to delete a GC-managed ", "RectConst", " object."]
+instance HoppyFHR.Deletable RawRectConst where
+  delete (RawRectConst ptr') = delete'RawRect ptr'
+  delete (RawRectConstGc _ _) = HoppyP.fail $ HoppyP.concat ["Deletable.delete: Asked to delete a GC-managed ", "RawRectConst", " object."]
   
-  toGc this'@(RectConst ptr') = if ptr' == HoppyF.nullPtr then HoppyP.return this' else HoppyP.fmap (HoppyP.flip RectConstGc ptr') $ HoppyF.newForeignPtr (HoppyF.castFunPtr deletePtr'Rect :: HoppyF.FunPtr (HoppyF.Ptr () -> HoppyP.IO ())) (HoppyF.castPtr ptr' :: HoppyF.Ptr ())
-  toGc this'@(RectConstGc {}) = HoppyP.return this'
+  toGc this'@(RawRectConst ptr') = if ptr' == HoppyF.nullPtr then HoppyP.return this' else HoppyP.fmap (HoppyP.flip RawRectConstGc ptr') $ HoppyF.newForeignPtr (HoppyF.castFunPtr deletePtr'RawRect :: HoppyF.FunPtr (HoppyF.Ptr () -> HoppyP.IO ())) (HoppyF.castPtr ptr' :: HoppyF.Ptr ())
+  toGc this'@(RawRectConstGc {}) = HoppyP.return this'
 
-instance RectConstPtr RectConst where
-  toRectConst = HoppyP.id
+instance RawRectConstPtr RawRectConst where
+  toRawRectConst = HoppyP.id
 
-data Rect =
-    Rect (HoppyF.Ptr Rect)
-  | RectGc (HoppyF.ForeignPtr ()) (HoppyF.Ptr Rect)
+data RawRect =
+    RawRect (HoppyF.Ptr RawRect)
+  | RawRectGc (HoppyF.ForeignPtr ()) (HoppyF.Ptr RawRect)
   deriving (HoppyP.Show)
 
-instance HoppyP.Eq Rect where
+instance HoppyP.Eq RawRect where
   x == y = HoppyFHR.toPtr x == HoppyFHR.toPtr y
 
-instance HoppyP.Ord Rect where
+instance HoppyP.Ord RawRect where
   compare x y = HoppyP.compare (HoppyFHR.toPtr x) (HoppyFHR.toPtr y)
 
-castRectToNonconst :: RectConst -> Rect
-castRectToNonconst (RectConst ptr') = Rect $ HoppyF.castPtr ptr'
-castRectToNonconst (RectConstGc fptr' ptr') = RectGc fptr' $ HoppyF.castPtr ptr'
+castRawRectToNonconst :: RawRectConst -> RawRect
+castRawRectToNonconst (RawRectConst ptr') = RawRect $ HoppyF.castPtr ptr'
+castRawRectToNonconst (RawRectConstGc fptr' ptr') = RawRectGc fptr' $ HoppyF.castPtr ptr'
 
-instance HoppyFHR.CppPtr Rect where
-  nullptr = Rect HoppyF.nullPtr
+instance HoppyFHR.CppPtr RawRect where
+  nullptr = RawRect HoppyF.nullPtr
   
-  withCppPtr (Rect ptr') f' = f' ptr'
-  withCppPtr (RectGc fptr' ptr') f' = HoppyF.withForeignPtr fptr' $ \_ -> f' ptr'
+  withCppPtr (RawRect ptr') f' = f' ptr'
+  withCppPtr (RawRectGc fptr' ptr') f' = HoppyF.withForeignPtr fptr' $ \_ -> f' ptr'
   
-  toPtr (Rect ptr') = ptr'
-  toPtr (RectGc _ ptr') = ptr'
+  toPtr (RawRect ptr') = ptr'
+  toPtr (RawRectGc _ ptr') = ptr'
   
-  touchCppPtr (Rect _) = HoppyP.return ()
-  touchCppPtr (RectGc fptr' _) = HoppyF.touchForeignPtr fptr'
+  touchCppPtr (RawRect _) = HoppyP.return ()
+  touchCppPtr (RawRectGc fptr' _) = HoppyF.touchForeignPtr fptr'
 
-instance HoppyFHR.Deletable Rect where
-  delete (Rect ptr') = delete'Rect $ (HoppyF.castPtr ptr' :: HoppyF.Ptr RectConst)
-  delete (RectGc _ _) = HoppyP.fail $ HoppyP.concat ["Deletable.delete: Asked to delete a GC-managed ", "Rect", " object."]
+instance HoppyFHR.Deletable RawRect where
+  delete (RawRect ptr') = delete'RawRect $ (HoppyF.castPtr ptr' :: HoppyF.Ptr RawRectConst)
+  delete (RawRectGc _ _) = HoppyP.fail $ HoppyP.concat ["Deletable.delete: Asked to delete a GC-managed ", "RawRect", " object."]
   
-  toGc this'@(Rect ptr') = if ptr' == HoppyF.nullPtr then HoppyP.return this' else HoppyP.fmap (HoppyP.flip RectGc ptr') $ HoppyF.newForeignPtr (HoppyF.castFunPtr deletePtr'Rect :: HoppyF.FunPtr (HoppyF.Ptr () -> HoppyP.IO ())) (HoppyF.castPtr ptr' :: HoppyF.Ptr ())
-  toGc this'@(RectGc {}) = HoppyP.return this'
+  toGc this'@(RawRect ptr') = if ptr' == HoppyF.nullPtr then HoppyP.return this' else HoppyP.fmap (HoppyP.flip RawRectGc ptr') $ HoppyF.newForeignPtr (HoppyF.castFunPtr deletePtr'RawRect :: HoppyF.FunPtr (HoppyF.Ptr () -> HoppyP.IO ())) (HoppyF.castPtr ptr' :: HoppyF.Ptr ())
+  toGc this'@(RawRectGc {}) = HoppyP.return this'
 
-instance RectConstPtr Rect where
-  toRectConst (Rect ptr') = RectConst $ (HoppyF.castPtr :: HoppyF.Ptr Rect -> HoppyF.Ptr RectConst) ptr'
-  toRectConst (RectGc fptr' ptr') = RectConstGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr Rect -> HoppyF.Ptr RectConst) ptr'
+instance RawRectConstPtr RawRect where
+  toRawRectConst (RawRect ptr') = RawRectConst $ (HoppyF.castPtr :: HoppyF.Ptr RawRect -> HoppyF.Ptr RawRectConst) ptr'
+  toRawRectConst (RawRectGc fptr' ptr') = RawRectConstGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr RawRect -> HoppyF.Ptr RawRectConst) ptr'
 
-instance RectPtr Rect where
-  toRect = HoppyP.id
+instance RawRectPtr RawRect where
+  toRawRect = HoppyP.id
 
-rect_new ::  HoppyP.IO Rect
-rect_new =
-  HoppyP.fmap Rect
-  (rect_new')
+rawRect_origin_get :: (RawRectValue arg'1) => arg'1 -> HoppyP.IO (V2 Float)
+rawRect_origin_get arg'1 =
+  withRawRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+  (HoppyFHR.decodeAndDelete . Vec2Const) =<<
+  (rawRect_origin_get' arg'1')
 
-rect_newFromCoordinatesAndDimensions ::  HoppyP.Float -> HoppyP.Float -> HoppyP.Float -> HoppyP.Float -> HoppyP.IO Rect
-rect_newFromCoordinatesAndDimensions arg'1 arg'2 arg'3 arg'4 =
+rawRect_origin_set :: (RawRectPtr arg'1, Vec2Value arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+rawRect_origin_set arg'1 arg'2 =
+  HoppyFHR.withCppPtr (toRawRect arg'1) $ \arg'1' ->
+  withVec2Ptr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  (rawRect_origin_set' arg'1' arg'2')
+
+rawRect_size_get :: (RawRectValue arg'1) => arg'1 -> HoppyP.IO (CE.Size Float)
+rawRect_size_get arg'1 =
+  withRawRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+  (HoppyFHR.decodeAndDelete . RawSizeConst) =<<
+  (rawRect_size_get' arg'1')
+
+rawRect_size_set :: (RawRectPtr arg'1, RawSizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+rawRect_size_set arg'1 arg'2 =
+  HoppyFHR.withCppPtr (toRawRect arg'1) $ \arg'1' ->
+  withRawSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  (rawRect_size_set' arg'1' arg'2')
+
+rawRect_new ::  HoppyP.IO RawRect
+rawRect_new =
+  HoppyP.fmap RawRect
+  (rawRect_new')
+
+rawRect_newFromCoordinatesAndDimensions ::  HoppyP.Float -> HoppyP.Float -> HoppyP.Float -> HoppyP.Float -> HoppyP.IO RawRect
+rawRect_newFromCoordinatesAndDimensions arg'1 arg'2 arg'3 arg'4 =
   let arg'1' = HoppyP.realToFrac arg'1 in
   let arg'2' = HoppyP.realToFrac arg'2 in
   let arg'3' = HoppyP.realToFrac arg'3 in
   let arg'4' = HoppyP.realToFrac arg'4 in
-  HoppyP.fmap Rect
-  (rect_newFromCoordinatesAndDimensions' arg'1' arg'2' arg'3' arg'4')
+  HoppyP.fmap RawRect
+  (rawRect_newFromCoordinatesAndDimensions' arg'1' arg'2' arg'3' arg'4')
 
-rect_newFromOriginAndSize :: (Vec2Value arg'1, SizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO Rect
-rect_newFromOriginAndSize arg'1 arg'2 =
+rawRect_newFromOriginAndSize :: (Vec2Value arg'1, RawSizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO RawRect
+rawRect_newFromOriginAndSize arg'1 arg'2 =
   withVec2Ptr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  withSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
-  HoppyP.fmap Rect
-  (rect_newFromOriginAndSize' arg'1' arg'2')
+  withRawSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  HoppyP.fmap RawRect
+  (rawRect_newFromOriginAndSize' arg'1' arg'2')
 
-class RectSuper a where
-  downToRect :: a -> Rect
-
-
-class RectSuperConst a where
-  downToRectConst :: a -> RectConst
+class RawRectSuper a where
+  downToRawRect :: a -> RawRect
 
 
-instance HoppyFHR.Assignable (HoppyF.Ptr (HoppyF.Ptr Rect)) Rect where
+class RawRectSuperConst a where
+  downToRawRectConst :: a -> RawRectConst
+
+
+instance HoppyFHR.Assignable (HoppyF.Ptr (HoppyF.Ptr RawRect)) RawRect where
   assign ptr' value' = HoppyF.poke ptr' $ HoppyFHR.toPtr value'
 
-instance HoppyFHR.Decodable (HoppyF.Ptr (HoppyF.Ptr Rect)) Rect where
-  decode = HoppyP.fmap Rect . HoppyF.peek
+instance HoppyFHR.Decodable (HoppyF.Ptr (HoppyF.Ptr RawRect)) RawRect where
+  decode = HoppyP.fmap RawRect . HoppyF.peek
+
+instance HoppyFHR.Encodable RawRect (CE.Rect Float) where
+  encode =
+    \(CE.Rect (V2 x y) (CE.S (V2 w h))) -> rawRect_newFromCoordinatesAndDimensions x y w h
+
+instance HoppyFHR.Encodable RawRectConst (CE.Rect Float) where
+  encode = HoppyP.fmap (toRawRectConst) . HoppyFHR.encodeAs (HoppyP.undefined :: RawRect)
+
+instance HoppyFHR.Decodable RawRect (CE.Rect Float) where
+  decode = HoppyFHR.decode . toRawRectConst
+
+instance HoppyFHR.Decodable RawRectConst (CE.Rect Float) where
+  decode =
+    \rect -> CE.Rect <$> rawRect_origin_get rect <*> rawRect_size_get rect
+
+class RawSizeValue a where
+  withRawSizePtr :: a -> (RawSizeConst -> HoppyP.IO b) -> HoppyP.IO b
+
+#if MIN_VERSION_base(4,8,0)
+instance {-# OVERLAPPABLE #-} RawSizeConstPtr a => RawSizeValue a where
+#else
+instance RawSizeConstPtr a => RawSizeValue a where
+#endif
+  withRawSizePtr = HoppyP.flip ($) . toRawSizeConst
+
+#if MIN_VERSION_base(4,8,0)
+instance {-# OVERLAPPING #-} RawSizeValue (CE.Size Float) where
+#else
+instance RawSizeValue (CE.Size Float) where
+#endif
+  withRawSizePtr = HoppyFHR.withCppObj
+
+class (HoppyFHR.CppPtr this) => RawSizeConstPtr this where
+  toRawSizeConst :: this -> RawSizeConst
+
+class (RawSizeConstPtr this) => RawSizePtr this where
+  toRawSize :: this -> RawSize
+
+data RawSizeConst =
+    RawSizeConst (HoppyF.Ptr RawSizeConst)
+  | RawSizeConstGc (HoppyF.ForeignPtr ()) (HoppyF.Ptr RawSizeConst)
+  deriving (HoppyP.Show)
+
+instance HoppyP.Eq RawSizeConst where
+  x == y = HoppyFHR.toPtr x == HoppyFHR.toPtr y
+
+instance HoppyP.Ord RawSizeConst where
+  compare x y = HoppyP.compare (HoppyFHR.toPtr x) (HoppyFHR.toPtr y)
+
+castRawSizeToConst :: RawSize -> RawSizeConst
+castRawSizeToConst (RawSize ptr') = RawSizeConst $ HoppyF.castPtr ptr'
+castRawSizeToConst (RawSizeGc fptr' ptr') = RawSizeConstGc fptr' $ HoppyF.castPtr ptr'
+
+instance HoppyFHR.CppPtr RawSizeConst where
+  nullptr = RawSizeConst HoppyF.nullPtr
+  
+  withCppPtr (RawSizeConst ptr') f' = f' ptr'
+  withCppPtr (RawSizeConstGc fptr' ptr') f' = HoppyF.withForeignPtr fptr' $ \_ -> f' ptr'
+  
+  toPtr (RawSizeConst ptr') = ptr'
+  toPtr (RawSizeConstGc _ ptr') = ptr'
+  
+  touchCppPtr (RawSizeConst _) = HoppyP.return ()
+  touchCppPtr (RawSizeConstGc fptr' _) = HoppyF.touchForeignPtr fptr'
+
+instance HoppyFHR.Deletable RawSizeConst where
+  delete (RawSizeConst ptr') = delete'RawSize ptr'
+  delete (RawSizeConstGc _ _) = HoppyP.fail $ HoppyP.concat ["Deletable.delete: Asked to delete a GC-managed ", "RawSizeConst", " object."]
+  
+  toGc this'@(RawSizeConst ptr') = if ptr' == HoppyF.nullPtr then HoppyP.return this' else HoppyP.fmap (HoppyP.flip RawSizeConstGc ptr') $ HoppyF.newForeignPtr (HoppyF.castFunPtr deletePtr'RawSize :: HoppyF.FunPtr (HoppyF.Ptr () -> HoppyP.IO ())) (HoppyF.castPtr ptr' :: HoppyF.Ptr ())
+  toGc this'@(RawSizeConstGc {}) = HoppyP.return this'
+
+instance RawSizeConstPtr RawSizeConst where
+  toRawSizeConst = HoppyP.id
+
+data RawSize =
+    RawSize (HoppyF.Ptr RawSize)
+  | RawSizeGc (HoppyF.ForeignPtr ()) (HoppyF.Ptr RawSize)
+  deriving (HoppyP.Show)
+
+instance HoppyP.Eq RawSize where
+  x == y = HoppyFHR.toPtr x == HoppyFHR.toPtr y
+
+instance HoppyP.Ord RawSize where
+  compare x y = HoppyP.compare (HoppyFHR.toPtr x) (HoppyFHR.toPtr y)
+
+castRawSizeToNonconst :: RawSizeConst -> RawSize
+castRawSizeToNonconst (RawSizeConst ptr') = RawSize $ HoppyF.castPtr ptr'
+castRawSizeToNonconst (RawSizeConstGc fptr' ptr') = RawSizeGc fptr' $ HoppyF.castPtr ptr'
+
+instance HoppyFHR.CppPtr RawSize where
+  nullptr = RawSize HoppyF.nullPtr
+  
+  withCppPtr (RawSize ptr') f' = f' ptr'
+  withCppPtr (RawSizeGc fptr' ptr') f' = HoppyF.withForeignPtr fptr' $ \_ -> f' ptr'
+  
+  toPtr (RawSize ptr') = ptr'
+  toPtr (RawSizeGc _ ptr') = ptr'
+  
+  touchCppPtr (RawSize _) = HoppyP.return ()
+  touchCppPtr (RawSizeGc fptr' _) = HoppyF.touchForeignPtr fptr'
+
+instance HoppyFHR.Deletable RawSize where
+  delete (RawSize ptr') = delete'RawSize $ (HoppyF.castPtr ptr' :: HoppyF.Ptr RawSizeConst)
+  delete (RawSizeGc _ _) = HoppyP.fail $ HoppyP.concat ["Deletable.delete: Asked to delete a GC-managed ", "RawSize", " object."]
+  
+  toGc this'@(RawSize ptr') = if ptr' == HoppyF.nullPtr then HoppyP.return this' else HoppyP.fmap (HoppyP.flip RawSizeGc ptr') $ HoppyF.newForeignPtr (HoppyF.castFunPtr deletePtr'RawSize :: HoppyF.FunPtr (HoppyF.Ptr () -> HoppyP.IO ())) (HoppyF.castPtr ptr' :: HoppyF.Ptr ())
+  toGc this'@(RawSizeGc {}) = HoppyP.return this'
+
+instance RawSizeConstPtr RawSize where
+  toRawSizeConst (RawSize ptr') = RawSizeConst $ (HoppyF.castPtr :: HoppyF.Ptr RawSize -> HoppyF.Ptr RawSizeConst) ptr'
+  toRawSizeConst (RawSizeGc fptr' ptr') = RawSizeConstGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr RawSize -> HoppyF.Ptr RawSizeConst) ptr'
+
+instance RawSizePtr RawSize where
+  toRawSize = HoppyP.id
+
+rawSize_width_get :: (RawSizeValue arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
+rawSize_width_get arg'1 =
+  withRawSizePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+  HoppyP.fmap HoppyP.realToFrac
+  (rawSize_width_get' arg'1')
+
+rawSize_width_set :: (RawSizePtr arg'1) => arg'1 -> HoppyP.Float -> HoppyP.IO ()
+rawSize_width_set arg'1 arg'2 =
+  HoppyFHR.withCppPtr (toRawSize arg'1) $ \arg'1' ->
+  let arg'2' = HoppyP.realToFrac arg'2 in
+  (rawSize_width_set' arg'1' arg'2')
+
+rawSize_height_get :: (RawSizeValue arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
+rawSize_height_get arg'1 =
+  withRawSizePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+  HoppyP.fmap HoppyP.realToFrac
+  (rawSize_height_get' arg'1')
+
+rawSize_height_set :: (RawSizePtr arg'1) => arg'1 -> HoppyP.Float -> HoppyP.IO ()
+rawSize_height_set arg'1 arg'2 =
+  HoppyFHR.withCppPtr (toRawSize arg'1) $ \arg'1' ->
+  let arg'2' = HoppyP.realToFrac arg'2 in
+  (rawSize_height_set' arg'1' arg'2')
+
+rawSize_newFromDimensions ::  HoppyP.Float -> HoppyP.Float -> HoppyP.IO RawSize
+rawSize_newFromDimensions arg'1 arg'2 =
+  let arg'1' = HoppyP.realToFrac arg'1 in
+  let arg'2' = HoppyP.realToFrac arg'2 in
+  HoppyP.fmap RawSize
+  (rawSize_newFromDimensions' arg'1' arg'2')
+
+class RawSizeSuper a where
+  downToRawSize :: a -> RawSize
+
+
+class RawSizeSuperConst a where
+  downToRawSizeConst :: a -> RawSizeConst
+
+
+instance HoppyFHR.Assignable (HoppyF.Ptr (HoppyF.Ptr RawSize)) RawSize where
+  assign ptr' value' = HoppyF.poke ptr' $ HoppyFHR.toPtr value'
+
+instance HoppyFHR.Decodable (HoppyF.Ptr (HoppyF.Ptr RawSize)) RawSize where
+  decode = HoppyP.fmap RawSize . HoppyF.peek
+
+instance HoppyFHR.Encodable RawSize (CE.Size Float) where
+  encode =
+    \(CE.S (V2 x y)) -> rawSize_newFromDimensions x y
+
+instance HoppyFHR.Encodable RawSizeConst (CE.Size Float) where
+  encode = HoppyP.fmap (toRawSizeConst) . HoppyFHR.encodeAs (HoppyP.undefined :: RawSize)
+
+instance HoppyFHR.Decodable RawSize (CE.Size Float) where
+  decode = HoppyFHR.decode . toRawSizeConst
+
+instance HoppyFHR.Decodable RawSizeConst (CE.Size Float) where
+  decode =
+    \sz -> (CE.S .) . V2 <$> rawSize_width_get sz <*> rawSize_height_get sz
 
 class RefValue a where
   withRefPtr :: a -> (RefConst -> HoppyP.IO b) -> HoppyP.IO b
@@ -1186,166 +1399,6 @@ scheduleCallback_new :: (HoppyP.Float -> HoppyP.IO ()) -> HoppyP.IO (HoppyFHR.CC
 scheduleCallback_new f'hs = do
   f'p <- scheduleCallback_newFunPtr f'hs
   scheduleCallback_new'newCallback f'p HoppyFHR.freeHaskellFunPtrFunPtr HoppyP.False
-
-class SizeValue a where
-  withSizePtr :: a -> (SizeConst -> HoppyP.IO b) -> HoppyP.IO b
-
-#if MIN_VERSION_base(4,8,0)
-instance {-# OVERLAPPABLE #-} SizeConstPtr a => SizeValue a where
-#else
-instance SizeConstPtr a => SizeValue a where
-#endif
-  withSizePtr = HoppyP.flip ($) . toSizeConst
-
-#if MIN_VERSION_base(4,8,0)
-instance {-# OVERLAPPING #-} SizeValue (V2 Float) where
-#else
-instance SizeValue (V2 Float) where
-#endif
-  withSizePtr = HoppyFHR.withCppObj
-
-class (HoppyFHR.CppPtr this) => SizeConstPtr this where
-  toSizeConst :: this -> SizeConst
-
-class (SizeConstPtr this) => SizePtr this where
-  toSize :: this -> Size
-
-data SizeConst =
-    SizeConst (HoppyF.Ptr SizeConst)
-  | SizeConstGc (HoppyF.ForeignPtr ()) (HoppyF.Ptr SizeConst)
-  deriving (HoppyP.Show)
-
-instance HoppyP.Eq SizeConst where
-  x == y = HoppyFHR.toPtr x == HoppyFHR.toPtr y
-
-instance HoppyP.Ord SizeConst where
-  compare x y = HoppyP.compare (HoppyFHR.toPtr x) (HoppyFHR.toPtr y)
-
-castSizeToConst :: Size -> SizeConst
-castSizeToConst (Size ptr') = SizeConst $ HoppyF.castPtr ptr'
-castSizeToConst (SizeGc fptr' ptr') = SizeConstGc fptr' $ HoppyF.castPtr ptr'
-
-instance HoppyFHR.CppPtr SizeConst where
-  nullptr = SizeConst HoppyF.nullPtr
-  
-  withCppPtr (SizeConst ptr') f' = f' ptr'
-  withCppPtr (SizeConstGc fptr' ptr') f' = HoppyF.withForeignPtr fptr' $ \_ -> f' ptr'
-  
-  toPtr (SizeConst ptr') = ptr'
-  toPtr (SizeConstGc _ ptr') = ptr'
-  
-  touchCppPtr (SizeConst _) = HoppyP.return ()
-  touchCppPtr (SizeConstGc fptr' _) = HoppyF.touchForeignPtr fptr'
-
-instance HoppyFHR.Deletable SizeConst where
-  delete (SizeConst ptr') = delete'Size ptr'
-  delete (SizeConstGc _ _) = HoppyP.fail $ HoppyP.concat ["Deletable.delete: Asked to delete a GC-managed ", "SizeConst", " object."]
-  
-  toGc this'@(SizeConst ptr') = if ptr' == HoppyF.nullPtr then HoppyP.return this' else HoppyP.fmap (HoppyP.flip SizeConstGc ptr') $ HoppyF.newForeignPtr (HoppyF.castFunPtr deletePtr'Size :: HoppyF.FunPtr (HoppyF.Ptr () -> HoppyP.IO ())) (HoppyF.castPtr ptr' :: HoppyF.Ptr ())
-  toGc this'@(SizeConstGc {}) = HoppyP.return this'
-
-instance SizeConstPtr SizeConst where
-  toSizeConst = HoppyP.id
-
-data Size =
-    Size (HoppyF.Ptr Size)
-  | SizeGc (HoppyF.ForeignPtr ()) (HoppyF.Ptr Size)
-  deriving (HoppyP.Show)
-
-instance HoppyP.Eq Size where
-  x == y = HoppyFHR.toPtr x == HoppyFHR.toPtr y
-
-instance HoppyP.Ord Size where
-  compare x y = HoppyP.compare (HoppyFHR.toPtr x) (HoppyFHR.toPtr y)
-
-castSizeToNonconst :: SizeConst -> Size
-castSizeToNonconst (SizeConst ptr') = Size $ HoppyF.castPtr ptr'
-castSizeToNonconst (SizeConstGc fptr' ptr') = SizeGc fptr' $ HoppyF.castPtr ptr'
-
-instance HoppyFHR.CppPtr Size where
-  nullptr = Size HoppyF.nullPtr
-  
-  withCppPtr (Size ptr') f' = f' ptr'
-  withCppPtr (SizeGc fptr' ptr') f' = HoppyF.withForeignPtr fptr' $ \_ -> f' ptr'
-  
-  toPtr (Size ptr') = ptr'
-  toPtr (SizeGc _ ptr') = ptr'
-  
-  touchCppPtr (Size _) = HoppyP.return ()
-  touchCppPtr (SizeGc fptr' _) = HoppyF.touchForeignPtr fptr'
-
-instance HoppyFHR.Deletable Size where
-  delete (Size ptr') = delete'Size $ (HoppyF.castPtr ptr' :: HoppyF.Ptr SizeConst)
-  delete (SizeGc _ _) = HoppyP.fail $ HoppyP.concat ["Deletable.delete: Asked to delete a GC-managed ", "Size", " object."]
-  
-  toGc this'@(Size ptr') = if ptr' == HoppyF.nullPtr then HoppyP.return this' else HoppyP.fmap (HoppyP.flip SizeGc ptr') $ HoppyF.newForeignPtr (HoppyF.castFunPtr deletePtr'Size :: HoppyF.FunPtr (HoppyF.Ptr () -> HoppyP.IO ())) (HoppyF.castPtr ptr' :: HoppyF.Ptr ())
-  toGc this'@(SizeGc {}) = HoppyP.return this'
-
-instance SizeConstPtr Size where
-  toSizeConst (Size ptr') = SizeConst $ (HoppyF.castPtr :: HoppyF.Ptr Size -> HoppyF.Ptr SizeConst) ptr'
-  toSizeConst (SizeGc fptr' ptr') = SizeConstGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr Size -> HoppyF.Ptr SizeConst) ptr'
-
-instance SizePtr Size where
-  toSize = HoppyP.id
-
-size_width_get :: (SizeValue arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
-size_width_get arg'1 =
-  withSizePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap HoppyP.realToFrac
-  (size_width_get' arg'1')
-
-size_width_set :: (SizePtr arg'1) => arg'1 -> HoppyP.Float -> HoppyP.IO ()
-size_width_set arg'1 arg'2 =
-  HoppyFHR.withCppPtr (toSize arg'1) $ \arg'1' ->
-  let arg'2' = HoppyP.realToFrac arg'2 in
-  (size_width_set' arg'1' arg'2')
-
-size_height_get :: (SizeValue arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
-size_height_get arg'1 =
-  withSizePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap HoppyP.realToFrac
-  (size_height_get' arg'1')
-
-size_height_set :: (SizePtr arg'1) => arg'1 -> HoppyP.Float -> HoppyP.IO ()
-size_height_set arg'1 arg'2 =
-  HoppyFHR.withCppPtr (toSize arg'1) $ \arg'1' ->
-  let arg'2' = HoppyP.realToFrac arg'2 in
-  (size_height_set' arg'1' arg'2')
-
-size_newFromDimensions ::  HoppyP.Float -> HoppyP.Float -> HoppyP.IO Size
-size_newFromDimensions arg'1 arg'2 =
-  let arg'1' = HoppyP.realToFrac arg'1 in
-  let arg'2' = HoppyP.realToFrac arg'2 in
-  HoppyP.fmap Size
-  (size_newFromDimensions' arg'1' arg'2')
-
-class SizeSuper a where
-  downToSize :: a -> Size
-
-
-class SizeSuperConst a where
-  downToSizeConst :: a -> SizeConst
-
-
-instance HoppyFHR.Assignable (HoppyF.Ptr (HoppyF.Ptr Size)) Size where
-  assign ptr' value' = HoppyF.poke ptr' $ HoppyFHR.toPtr value'
-
-instance HoppyFHR.Decodable (HoppyF.Ptr (HoppyF.Ptr Size)) Size where
-  decode = HoppyP.fmap Size . HoppyF.peek
-
-instance HoppyFHR.Encodable Size (V2 Float) where
-  encode =
-    \(V2 x y) -> size_newFromDimensions x y
-
-instance HoppyFHR.Encodable SizeConst (V2 Float) where
-  encode = HoppyP.fmap (toSizeConst) . HoppyFHR.encodeAs (HoppyP.undefined :: Size)
-
-instance HoppyFHR.Decodable Size (V2 Float) where
-  decode = HoppyFHR.decode . toSizeConst
-
-instance HoppyFHR.Decodable SizeConst (V2 Float) where
-  decode =
-    \sz -> V2 <$> size_width_get sz <*> size_height_get sz
 
 data TextHAlignment =
   TextHAlignment_Left

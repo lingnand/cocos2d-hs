@@ -140,6 +140,7 @@ import qualified Foreign as HoppyF
 import qualified Foreign.C as HoppyFC
 import qualified Foreign.Hoppy.Runtime as HoppyFHR
 import qualified Graphics.UI.Cocos2d.Common as M2
+import qualified Graphics.UI.Cocos2d.Extra as CE
 import qualified Graphics.UI.Cocos2d.Std as M1
 import Linear.V2
 import Prelude (($), (.), (/=), (=<<), (==), (>>=), Float)
@@ -177,8 +178,8 @@ foreign import ccall "genpop__Node_setSkewY" node_setSkewY' ::  HoppyF.Ptr Node 
 foreign import ccall "genpop__Node_getAnchorPoint" node_getAnchorPoint' ::  HoppyF.Ptr NodeConst -> HoppyP.IO (HoppyF.Ptr M2.Vec2Const)
 foreign import ccall "genpop__Node_setAnchorPoint" node_setAnchorPoint' ::  HoppyF.Ptr Node -> HoppyF.Ptr M2.Vec2Const -> HoppyP.IO ()
 foreign import ccall "genpop__Node_getAnchorPointInPoints" node_getAnchorPointInPoints' ::  HoppyF.Ptr NodeConst -> HoppyP.IO (HoppyF.Ptr M2.Vec2Const)
-foreign import ccall "genpop__Node_getContentSize" node_getContentSize' ::  HoppyF.Ptr NodeConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
-foreign import ccall "genpop__Node_setContentSize" node_setContentSize' ::  HoppyF.Ptr Node -> HoppyF.Ptr M2.SizeConst -> HoppyP.IO ()
+foreign import ccall "genpop__Node_getContentSize" node_getContentSize' ::  HoppyF.Ptr NodeConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
+foreign import ccall "genpop__Node_setContentSize" node_setContentSize' ::  HoppyF.Ptr Node -> HoppyF.Ptr M2.RawSizeConst -> HoppyP.IO ()
 foreign import ccall "genpop__Node_isVisible" node_isVisible' ::  HoppyF.Ptr NodeConst -> HoppyP.IO HoppyFHR.CBool
 foreign import ccall "genpop__Node_setVisible" node_setVisible' ::  HoppyF.Ptr Node -> HoppyFHR.CBool -> HoppyP.IO ()
 foreign import ccall "genpop__Node_getRotation" node_getRotation' ::  HoppyF.Ptr NodeConst -> HoppyP.IO HoppyFC.CFloat
@@ -222,7 +223,7 @@ foreign import ccall "genpop__Node_getUserObject" node_getUserObject' ::  HoppyF
 foreign import ccall "genpop__Node_setUserObject" node_setUserObject' ::  HoppyF.Ptr Node -> HoppyF.Ptr M2.Ref -> HoppyP.IO ()
 foreign import ccall "genpop__Node_isRunning" node_isRunning' ::  HoppyF.Ptr NodeConst -> HoppyP.IO HoppyFHR.CBool
 foreign import ccall "genpop__Node_cleanup" node_cleanup' ::  HoppyF.Ptr Node -> HoppyP.IO ()
-foreign import ccall "genpop__Node_getBoundingBox" node_getBoundingBox' ::  HoppyF.Ptr Node -> HoppyP.IO (HoppyF.Ptr M2.Rect)
+foreign import ccall "genpop__Node_getBoundingBox" node_getBoundingBox' ::  HoppyF.Ptr Node -> HoppyP.IO (HoppyF.Ptr M2.RawRectConst)
 foreign import ccall "genpop__Node_stopAllActions" node_stopAllActions' ::  HoppyF.Ptr Node -> HoppyP.IO ()
 foreign import ccall "genpop__Node_isScheduled" node_isScheduled' ::  HoppyF.Ptr Node -> HoppyF.Ptr M1.StdStringConst -> HoppyP.IO HoppyFHR.CBool
 foreign import ccall "genpop__Node_scheduleOnce" node_scheduleOnce' ::  HoppyF.Ptr Node -> HoppyFHR.CCallback (HoppyFC.CFloat -> HoppyP.IO ()) -> HoppyFC.CFloat -> HoppyF.Ptr M1.StdStringConst -> HoppyP.IO ()
@@ -370,10 +371,10 @@ node_getAnchorPointInPoints arg'1 =
   HoppyP.fmap M2.Vec2Const
   (node_getAnchorPointInPoints' arg'1')
 
-node_getContentSize :: (NodeValue arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+node_getContentSize :: (NodeValue arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 node_getContentSize arg'1 =
   withNodePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (node_getContentSize' arg'1')
 
 node_isVisible :: (NodeValue arg'1) => arg'1 -> HoppyP.IO HoppyP.Bool
@@ -692,10 +693,10 @@ node_setAnchorPoint arg'1 arg'2 =
   M2.withVec2Ptr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (node_setAnchorPoint' arg'1' arg'2')
 
-node_setContentSize :: (NodePtr arg'1, M2.SizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+node_setContentSize :: (NodePtr arg'1, M2.RawSizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
 node_setContentSize arg'1 arg'2 =
   HoppyFHR.withCppPtr (toNode arg'1) $ \arg'1' ->
-  M2.withSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (node_setContentSize' arg'1' arg'2')
 
 node_setVisible :: (NodePtr arg'1) => arg'1 -> HoppyP.Bool -> HoppyP.IO ()
@@ -876,11 +877,10 @@ node_cleanup arg'1 =
   HoppyFHR.withCppPtr (toNode arg'1) $ \arg'1' ->
   (node_cleanup' arg'1')
 
-node_getBoundingBox :: (NodePtr arg'1) => arg'1 -> HoppyP.IO M2.Rect
+node_getBoundingBox :: (NodePtr arg'1) => arg'1 -> HoppyP.IO (CE.Rect Float)
 node_getBoundingBox arg'1 =
   HoppyFHR.withCppPtr (toNode arg'1) $ \arg'1' ->
-  HoppyFHR.toGc =<<
-  HoppyP.fmap M2.Rect
+  (HoppyFHR.decodeAndDelete . M2.RawRectConst) =<<
   (node_getBoundingBox' arg'1')
 
 node_stopAllActions :: (NodePtr arg'1) => arg'1 -> HoppyP.IO ()

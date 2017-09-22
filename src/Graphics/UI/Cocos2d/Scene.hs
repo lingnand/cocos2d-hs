@@ -31,7 +31,7 @@ import Prelude (($), (.), (==))
 import qualified Prelude as HoppyP
 
 foreign import ccall "genpop__Scene_create" scene_create' ::  HoppyP.IO (HoppyF.Ptr Scene)
-foreign import ccall "genpop__Scene_createWithSize" scene_createWithSize' ::  HoppyF.Ptr M2.SizeConst -> HoppyP.IO (HoppyF.Ptr Scene)
+foreign import ccall "genpop__Scene_createWithSize" scene_createWithSize' ::  HoppyF.Ptr M2.RawSizeConst -> HoppyP.IO (HoppyF.Ptr Scene)
 foreign import ccall "gencast__Scene__Node" castSceneToNode :: HoppyF.Ptr SceneConst -> HoppyF.Ptr M5.NodeConst
 foreign import ccall "gencast__Node__Scene" castNodeToScene :: HoppyF.Ptr M5.NodeConst -> HoppyF.Ptr SceneConst
 foreign import ccall "gencast__Scene__Ref" castSceneToRef :: HoppyF.Ptr SceneConst -> HoppyF.Ptr M2.RefConst
@@ -60,9 +60,9 @@ scene_create =
   HoppyP.fmap Scene
   (scene_create')
 
-scene_createWithSize :: (M2.SizeValue arg'1) => arg'1 -> HoppyP.IO Scene
+scene_createWithSize :: (M2.RawSizeValue arg'1) => arg'1 -> HoppyP.IO Scene
 scene_createWithSize arg'1 =
-  M2.withSizePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+  M2.withRawSizePtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
   HoppyP.fmap Scene
   (scene_createWithSize' arg'1')
 

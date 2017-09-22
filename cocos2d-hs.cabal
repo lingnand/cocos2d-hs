@@ -52,8 +52,11 @@ library
                      , hoppy-runtime
                      , colour
                      , linear
+                     , diagrams-lib
+                     , lens
   exposed-modules:     Graphics.UI.Cocos2d
                      , Graphics.UI.Cocos2d.Common
+                     , Graphics.UI.Cocos2d.Extra
                      , Graphics.UI.Cocos2d.Texture
                      , Graphics.UI.Cocos2d.Node
                      , Graphics.UI.Cocos2d.Layer

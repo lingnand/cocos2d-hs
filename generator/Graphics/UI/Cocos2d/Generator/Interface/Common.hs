@@ -20,11 +20,7 @@ module Graphics.UI.Cocos2d.Generator.Interface.Common
 import Foreign.Hoppy.Generator.Spec
 import Foreign.Hoppy.Generator.Types
 import Foreign.Hoppy.Generator.Language.Haskell
-import Language.Haskell.Syntax
-        ( HsName(HsIdent)
-        , HsQName(UnQual)
-        , HsType(HsTyCon, HsTyApp)
-        )
+import qualified Language.Haskell.Syntax as HS
 
 mod_common :: Module
 mod_common =
@@ -63,7 +59,7 @@ c_Vec2 =
         { classHaskellConversionType = do
             addImports $ hsWholeModuleImport "Linear.V2"
             addImports $ hsImport1 "Prelude" "Float"
-            return $ HsTyApp (HsTyCon $ UnQual $ HsIdent "V2") (HsTyCon $ UnQual $ HsIdent "Float")
+            return $ HS.HsTyApp (HS.HsTyCon $ HS.UnQual $ HS.HsIdent "V2") (HS.HsTyCon $ HS.UnQual $ HS.HsIdent "Float")
         , classHaskellConversionToCppFn = sayLn "\\(V2 x y) -> vec2_newFromCoordinates x y"
         , classHaskellConversionFromCppFn = do
             addImports $ hsWholeModuleImport "Control.Applicative"
@@ -81,26 +77,37 @@ c_Size =
     classSetHaskellConversion
       ClassHaskellConversion
         { classHaskellConversionType = do
+            addImports $ hsQualifiedImport "Graphics.UI.Cocos2d.Extra" "CE"
             addImports $ hsWholeModuleImport "Linear.V2"
             addImports $ hsImport1 "Prelude" "Float"
-            return $ HsTyApp (HsTyCon $ UnQual $ HsIdent "V2") (HsTyCon $ UnQual $ HsIdent "Float")
-        , classHaskellConversionToCppFn = sayLn "\\(V2 x y) -> size_newFromDimensions x y"
+            return $ HS.HsTyApp (HS.HsTyCon $ HS.Qual (HS.Module "CE") (HS.HsIdent "Size")) (HS.HsTyCon $ HS.UnQual $ HS.HsIdent "Float")
+        , classHaskellConversionToCppFn = sayLn "\\(CE.S (V2 x y)) -> rawSize_newFromDimensions x y"
         , classHaskellConversionFromCppFn = do
             addImports $ hsWholeModuleImport "Control.Applicative"
-            sayLn "\\sz -> V2 <$> size_width_get sz <*> size_height_get sz"
+            sayLn "\\sz -> (CE.S .) . V2 <$> rawSize_width_get sz <*> rawSize_height_get sz"
         } $
-    makeClass (ident1 "cocos2d" "Size") Nothing []
+    makeClass (ident1 "cocos2d" "Size") (Just $ toExtName "RawSize") []
       [ mkCtor "newFromDimensions" [floatT, floatT]
       , mkClassVariable "width" floatT
       , mkClassVariable "height" floatT
       ]
 
--- TODO: conversion to diagrams Path?
 c_Rect :: Class
 c_Rect =
   addReqIncludes [includeStd "math/CCGeometry.h"] $
-    classSetConversionToGc $
-      makeClass (ident1 "cocos2d" "Rect") Nothing []
+    classSetHaskellConversion
+      ClassHaskellConversion
+        { classHaskellConversionType = do
+            addImports $ hsQualifiedImport "Graphics.UI.Cocos2d.Extra" "CE"
+            addImports $ hsWholeModuleImport "Linear.V2"
+            addImports $ hsImport1 "Prelude" "Float"
+            return $ HS.HsTyApp (HS.HsTyCon $ HS.Qual (HS.Module "CE") (HS.HsIdent "Rect")) (HS.HsTyCon $ HS.UnQual $ HS.HsIdent "Float")
+        , classHaskellConversionToCppFn = sayLn "\\(CE.Rect (V2 x y) (CE.S (V2 w h))) -> rawRect_newFromCoordinatesAndDimensions x y w h"
+        , classHaskellConversionFromCppFn = do
+            addImports $ hsWholeModuleImport "Control.Applicative"
+            sayLn "\\rect -> CE.Rect <$> rawRect_origin_get rect <*> rawRect_size_get rect"
+        } $
+      makeClass (ident1 "cocos2d" "Rect") (Just $ toExtName "RawRect") []
         [ mkCtor "new" []
         , mkCtor "newFromCoordinatesAndDimensions" [floatT, floatT, floatT, floatT]
         , mkCtor "newFromOriginAndSize" [refT $ constT $ objT c_Vec2, refT $ constT $ objT c_Size]
@@ -116,6 +123,8 @@ c_Rect =
         -- center, radius
         , mkConstMethod "intersectsCircle" [refT $ constT $ objT c_Vec2, floatT] boolT
         , mkConstMethod "unionWithRect" [refT $ constT $ objT c_Rect] $ objT c_Rect
+        , mkClassVariable "origin" $ objT c_Vec2
+        , mkClassVariable "size" $ objT c_Size
         ]
 
 -- TODO: probably easier to write a native Hs type for this?
@@ -147,7 +156,7 @@ c_Color3B =
         { classHaskellConversionType = do
             addImports $ hsWholeModuleImport "Data.Colour"
             addImports $ hsImport1 "Prelude" "Float"
-            return $ HsTyApp (HsTyCon $ UnQual $ HsIdent "Colour") (HsTyCon $ UnQual $ HsIdent "Float")
+            return $ HS.HsTyApp (HS.HsTyCon $ HS.UnQual $ HS.HsIdent "Colour") (HS.HsTyCon $ HS.UnQual $ HS.HsIdent "Float")
         , classHaskellConversionToCppFn = do
             addImports $ hsWholeModuleImport "Data.Colour.SRGB"
             sayLn "\\c -> let RGB r g b = toSRGB24 c in color3B_newFromRGB r g b"
@@ -171,7 +180,7 @@ c_Color4B =
         { classHaskellConversionType = do
             addImports $ hsWholeModuleImport "Data.Colour"
             addImports $ hsImport1 "Prelude" "Float"
-            return $ HsTyApp (HsTyCon $ UnQual $ HsIdent "AlphaColour") (HsTyCon $ UnQual $ HsIdent "Float")
+            return $ HS.HsTyApp (HS.HsTyCon $ HS.UnQual $ HS.HsIdent "AlphaColour") (HS.HsTyCon $ HS.UnQual $ HS.HsIdent "Float")
         , classHaskellConversionToCppFn = do
             addImports $ hsWholeModuleImport "Data.Colour.SRGB"
             addImports $ hsImports "Prelude" ["(>)", "recip", "otherwise", "round", "(*)"]

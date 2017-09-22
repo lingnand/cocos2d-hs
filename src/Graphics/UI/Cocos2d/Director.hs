@@ -146,6 +146,7 @@ import qualified Foreign.C as HoppyFC
 import qualified Foreign.Hoppy.Runtime as HoppyFHR
 import qualified Graphics.UI.Cocos2d.Common as M2
 import qualified Graphics.UI.Cocos2d.Event as M9
+import qualified Graphics.UI.Cocos2d.Extra as CE
 import qualified Graphics.UI.Cocos2d.Node as M5
 import qualified Graphics.UI.Cocos2d.Scene as M7
 import qualified Graphics.UI.Cocos2d.Std as M1
@@ -164,9 +165,9 @@ foreign import ccall "genpop__Director_getSecondsPerFrame" director_getSecondsPe
 foreign import ccall "genpop__Director_getOpenGLView" director_getOpenGLView' ::  HoppyF.Ptr Director -> HoppyP.IO (HoppyF.Ptr GLView)
 foreign import ccall "genpop__Director_isPaused" director_isPaused' ::  HoppyF.Ptr Director -> HoppyP.IO HoppyFHR.CBool
 foreign import ccall "genpop__Director_getTotalFrames" director_getTotalFrames' ::  HoppyF.Ptr Director -> HoppyP.IO HoppyFC.CUInt
-foreign import ccall "genpop__Director_getWinSize" director_getWinSize' ::  HoppyF.Ptr DirectorConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
-foreign import ccall "genpop__Director_getWinSizeInPixels" director_getWinSizeInPixels' ::  HoppyF.Ptr DirectorConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
-foreign import ccall "genpop__Director_getVisibleSize" director_getVisibleSize' ::  HoppyF.Ptr DirectorConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
+foreign import ccall "genpop__Director_getWinSize" director_getWinSize' ::  HoppyF.Ptr DirectorConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
+foreign import ccall "genpop__Director_getWinSizeInPixels" director_getWinSizeInPixels' ::  HoppyF.Ptr DirectorConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
+foreign import ccall "genpop__Director_getVisibleSize" director_getVisibleSize' ::  HoppyF.Ptr DirectorConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
 foreign import ccall "genpop__Director_getVisibleOrigin" director_getVisibleOrigin' ::  HoppyF.Ptr DirectorConst -> HoppyP.IO (HoppyF.Ptr M2.Vec2Const)
 foreign import ccall "genpop__Director_convertToGL" director_convertToGL' ::  HoppyF.Ptr Director -> HoppyF.Ptr M2.Vec2Const -> HoppyP.IO (HoppyF.Ptr M2.Vec2Const)
 foreign import ccall "genpop__Director_convertToUI" director_convertToUI' ::  HoppyF.Ptr Director -> HoppyF.Ptr M2.Vec2Const -> HoppyP.IO (HoppyF.Ptr M2.Vec2Const)
@@ -215,7 +216,7 @@ foreign import ccall "gencast__EventDispatcher__Ref" castEventDispatcherToRef ::
 foreign import ccall "gencast__Ref__EventDispatcher" castRefToEventDispatcher :: HoppyF.Ptr M2.RefConst -> HoppyF.Ptr EventDispatcherConst
 foreign import ccall "gendel__EventDispatcher" delete'EventDispatcher :: HoppyF.Ptr EventDispatcherConst -> HoppyP.IO ()
 foreign import ccall "&gendel__EventDispatcher" deletePtr'EventDispatcher :: HoppyF.FunPtr (HoppyF.Ptr EventDispatcherConst -> HoppyP.IO ())
-foreign import ccall "genpop__GLView_getFrameSize" gLView_getFrameSize' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
+foreign import ccall "genpop__GLView_getFrameSize" gLView_getFrameSize' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
 foreign import ccall "genpop__GLView_setFrameSize" gLView_setFrameSize' ::  HoppyF.Ptr GLView -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO ()
 foreign import ccall "genpop__GLView_getFrameZoomFactor" gLView_getFrameZoomFactor' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO HoppyFC.CFloat
 foreign import ccall "genpop__GLView_setFrameZoomFactor" gLView_setFrameZoomFactor' ::  HoppyF.Ptr GLView -> HoppyFC.CFloat -> HoppyP.IO ()
@@ -224,18 +225,18 @@ foreign import ccall "genpop__GLView_getRetinaFactor" gLView_getRetinaFactor' ::
 foreign import ccall "genpop__GLView_setContentScaleFactor" gLView_setContentScaleFactor' ::  HoppyF.Ptr GLView -> HoppyFC.CFloat -> HoppyP.IO HoppyFHR.CBool
 foreign import ccall "genpop__GLView_getContentScaleFactor" gLView_getContentScaleFactor' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO HoppyFC.CFloat
 foreign import ccall "genpop__GLView_isRetinaDisplay" gLView_isRetinaDisplay' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO HoppyFHR.CBool
-foreign import ccall "genpop__GLView_getVisibleSize" gLView_getVisibleSize' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
+foreign import ccall "genpop__GLView_getVisibleSize" gLView_getVisibleSize' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
 foreign import ccall "genpop__GLView_getVisibleOrigin" gLView_getVisibleOrigin' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.Vec2Const)
-foreign import ccall "genpop__GLView_getVisibleRect" gLView_getVisibleRect' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.Rect)
-foreign import ccall "genpop__GLView_getDesignResolutionSize" gLView_getDesignResolutionSize' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
+foreign import ccall "genpop__GLView_getVisibleRect" gLView_getVisibleRect' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.RawRect)
+foreign import ccall "genpop__GLView_getDesignResolutionSize" gLView_getDesignResolutionSize' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
 foreign import ccall "genpop__GLView_setDesignResolutionSize" gLView_setDesignResolutionSize' ::  HoppyF.Ptr GLView -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CInt -> HoppyP.IO ()
 foreign import ccall "genpop__GLView_setViewPortInPoints" gLView_setViewPortInPoints' ::  HoppyF.Ptr GLView -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO ()
 foreign import ccall "genpop__GLView_setScissorInPoints" gLView_setScissorInPoints' ::  HoppyF.Ptr GLView -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO ()
 foreign import ccall "genpop__GLView_isScissorEnabled" gLView_isScissorEnabled' ::  HoppyF.Ptr GLView -> HoppyP.IO HoppyFHR.CBool
-foreign import ccall "genpop__GLView_getScissorRect" gLView_getScissorRect' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.Rect)
+foreign import ccall "genpop__GLView_getScissorRect" gLView_getScissorRect' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.RawRect)
 foreign import ccall "genpop__GLView_setViewName" gLView_setViewName' ::  HoppyF.Ptr GLView -> HoppyF.Ptr M1.StdStringConst -> HoppyP.IO ()
 foreign import ccall "genpop__GLView_getViewName" gLView_getViewName' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M1.StdStringConst)
-foreign import ccall "genpop__GLView_getViewPortRect" gLView_getViewPortRect' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.RectConst)
+foreign import ccall "genpop__GLView_getViewPortRect" gLView_getViewPortRect' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO (HoppyF.Ptr M2.RawRectConst)
 foreign import ccall "genpop__GLView_getScaleX" gLView_getScaleX' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO HoppyFC.CFloat
 foreign import ccall "genpop__GLView_getScaleY" gLView_getScaleY' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO HoppyFC.CFloat
 foreign import ccall "genpop__GLView_getResolutionPolicy" gLView_getResolutionPolicy' ::  HoppyF.Ptr GLViewConst -> HoppyP.IO HoppyFC.CInt
@@ -272,22 +273,22 @@ instance DirectorConstPtr a => DirectorValue a where
 class (M2.RefConstPtr this) => DirectorConstPtr this where
   toDirectorConst :: this -> DirectorConst
 
-director_getWinSize :: (DirectorValue arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+director_getWinSize :: (DirectorValue arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 director_getWinSize arg'1 =
   withDirectorPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (director_getWinSize' arg'1')
 
-director_getWinSizeInPixels :: (DirectorValue arg'1) => arg'1 -> HoppyP.IO (V2 Float)
+director_getWinSizeInPixels :: (DirectorValue arg'1) => arg'1 -> HoppyP.IO (CE.Size Float)
 director_getWinSizeInPixels arg'1 =
   withDirectorPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  (HoppyFHR.decodeAndDelete . M2.SizeConst) =<<
+  (HoppyFHR.decodeAndDelete . M2.RawSizeConst) =<<
   (director_getWinSizeInPixels' arg'1')
 
-director_getVisibleSize :: (DirectorValue arg'1) => arg'1 -> HoppyP.IO (V2 Float)
+director_getVisibleSize :: (DirectorValue arg'1) => arg'1 -> HoppyP.IO (CE.Size Float)
 director_getVisibleSize arg'1 =
   withDirectorPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  (HoppyFHR.decodeAndDelete . M2.SizeConst) =<<
+  (HoppyFHR.decodeAndDelete . M2.RawSizeConst) =<<
   (director_getVisibleSize' arg'1')
 
 director_getVisibleOrigin :: (DirectorValue arg'1) => arg'1 -> HoppyP.IO (V2 Float)
@@ -848,10 +849,10 @@ instance GLViewConstPtr a => GLViewValue a where
 class (M2.RefConstPtr this) => GLViewConstPtr this where
   toGLViewConst :: this -> GLViewConst
 
-gLView_getFrameSize :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+gLView_getFrameSize :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 gLView_getFrameSize arg'1 =
   withGLViewPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (gLView_getFrameSize' arg'1')
 
 gLView_getFrameZoomFactor :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO HoppyP.Float
@@ -878,10 +879,10 @@ gLView_isRetinaDisplay arg'1 =
   HoppyP.fmap (/= 0)
   (gLView_isRetinaDisplay' arg'1')
 
-gLView_getVisibleSize :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO (V2 Float)
+gLView_getVisibleSize :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO (CE.Size Float)
 gLView_getVisibleSize arg'1 =
   withGLViewPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  (HoppyFHR.decodeAndDelete . M2.SizeConst) =<<
+  (HoppyFHR.decodeAndDelete . M2.RawSizeConst) =<<
   (gLView_getVisibleSize' arg'1')
 
 gLView_getVisibleOrigin :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO (V2 Float)
@@ -890,24 +891,24 @@ gLView_getVisibleOrigin arg'1 =
   (HoppyFHR.decodeAndDelete . M2.Vec2Const) =<<
   (gLView_getVisibleOrigin' arg'1')
 
-gLView_getVisibleRect :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M2.Rect
+gLView_getVisibleRect :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M2.RawRect
 gLView_getVisibleRect arg'1 =
   withGLViewPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
   HoppyFHR.toGc =<<
-  HoppyP.fmap M2.Rect
+  HoppyP.fmap M2.RawRect
   (gLView_getVisibleRect' arg'1')
 
-gLView_getDesignResolutionSize :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+gLView_getDesignResolutionSize :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 gLView_getDesignResolutionSize arg'1 =
   withGLViewPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (gLView_getDesignResolutionSize' arg'1')
 
-gLView_getScissorRect :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M2.Rect
+gLView_getScissorRect :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M2.RawRect
 gLView_getScissorRect arg'1 =
   withGLViewPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
   HoppyFHR.toGc =<<
-  HoppyP.fmap M2.Rect
+  HoppyP.fmap M2.RawRect
   (gLView_getScissorRect' arg'1')
 
 gLView_getViewName :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M1.StdStringConst
@@ -916,10 +917,10 @@ gLView_getViewName arg'1 =
   HoppyP.fmap M1.StdStringConst
   (gLView_getViewName' arg'1')
 
-gLView_getViewPortRect :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M2.RectConst
+gLView_getViewPortRect :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO M2.RawRectConst
 gLView_getViewPortRect arg'1 =
   withGLViewPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.RectConst
+  HoppyP.fmap M2.RawRectConst
   (gLView_getViewPortRect' arg'1')
 
 gLView_getScaleX :: (GLViewValue arg'1) => arg'1 -> HoppyP.IO HoppyP.Float

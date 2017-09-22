@@ -103,71 +103,113 @@ void gendel__Mat4(cocos2d::Mat4 const*self) {
 delete self;
 }
 
-cocos2d::Rect*genpop__Rect_new() {
+cocos2d::Rect*genpop__RawRect_new() {
 return new cocos2d::Rect();
 }
 
-cocos2d::Rect*genpop__Rect_newFromCoordinatesAndDimensions(float arg1, float arg2, float arg3, float arg4) {
+cocos2d::Rect*genpop__RawRect_newFromCoordinatesAndDimensions(float arg1, float arg2, float arg3, float arg4) {
 return new cocos2d::Rect(arg1, arg2, arg3, arg4);
 }
 
-cocos2d::Rect*genpop__Rect_newFromOriginAndSize(cocos2d::Vec2 const*arg1_, cocos2d::Size const*arg2_) {
+cocos2d::Rect*genpop__RawRect_newFromOriginAndSize(cocos2d::Vec2 const*arg1_, cocos2d::Size const*arg2_) {
 cocos2d::Vec2 const&arg1 = *arg1_;
 cocos2d::Size const&arg2 = *arg2_;
 return new cocos2d::Rect(arg1, arg2);
 }
 
-void gendel__Rect(cocos2d::Rect const*self) {
+void gendel__RawRect(cocos2d::Rect const*self) {
 delete self;
 }
 
-float genpop__Rect_getMinX(cocos2d::Rect*self) {
+cocos2d::Vec2 const*genpop__RawRect_origin_get(cocos2d::Rect const*self) {
+return new cocos2d::Vec2(self->origin);
+}
+
+void genpop__RawRect_origin_set(cocos2d::Rect*self, cocos2d::Vec2 const*arg1_) {
+cocos2d::Vec2 const&arg1 = *arg1_;
+self->origin = arg1;
+}
+
+cocos2d::Size const*genpop__RawRect_size_get(cocos2d::Rect const*self) {
+return new cocos2d::Size(self->size);
+}
+
+void genpop__RawRect_size_set(cocos2d::Rect*self, cocos2d::Size const*arg1_) {
+cocos2d::Size const&arg1 = *arg1_;
+self->size = arg1;
+}
+
+float genpop__RawRect_getMinX(cocos2d::Rect*self) {
 return self->getMinX();
 }
 
-float genpop__Rect_getMidX(cocos2d::Rect*self) {
+float genpop__RawRect_getMidX(cocos2d::Rect*self) {
 return self->getMidX();
 }
 
-float genpop__Rect_getMaxX(cocos2d::Rect*self) {
+float genpop__RawRect_getMaxX(cocos2d::Rect*self) {
 return self->getMaxX();
 }
 
-float genpop__Rect_getMinY(cocos2d::Rect*self) {
+float genpop__RawRect_getMinY(cocos2d::Rect*self) {
 return self->getMinY();
 }
 
-float genpop__Rect_getMidY(cocos2d::Rect*self) {
+float genpop__RawRect_getMidY(cocos2d::Rect*self) {
 return self->getMidY();
 }
 
-float genpop__Rect_getMaxY(cocos2d::Rect*self) {
+float genpop__RawRect_getMaxY(cocos2d::Rect*self) {
 return self->getMaxY();
 }
 
-bool genpop__Rect_equals(cocos2d::Rect*self, cocos2d::Rect const*arg1_) {
+bool genpop__RawRect_equals(cocos2d::Rect*self, cocos2d::Rect const*arg1_) {
 cocos2d::Rect const&arg1 = *arg1_;
 return self->equals(arg1);
 }
 
-bool genpop__Rect_containsPoint(cocos2d::Rect*self, cocos2d::Vec2 const*arg1_) {
+bool genpop__RawRect_containsPoint(cocos2d::Rect*self, cocos2d::Vec2 const*arg1_) {
 cocos2d::Vec2 const&arg1 = *arg1_;
 return self->containsPoint(arg1);
 }
 
-bool genpop__Rect_intersectsRect(cocos2d::Rect*self, cocos2d::Rect const*arg1_) {
+bool genpop__RawRect_intersectsRect(cocos2d::Rect*self, cocos2d::Rect const*arg1_) {
 cocos2d::Rect const&arg1 = *arg1_;
 return self->intersectsRect(arg1);
 }
 
-bool genpop__Rect_intersectsCircle(cocos2d::Rect*self, cocos2d::Vec2 const*arg1_, float arg2) {
+bool genpop__RawRect_intersectsCircle(cocos2d::Rect*self, cocos2d::Vec2 const*arg1_, float arg2) {
 cocos2d::Vec2 const&arg1 = *arg1_;
 return self->intersectsCircle(arg1, arg2);
 }
 
-cocos2d::Rect const*genpop__Rect_unionWithRect(cocos2d::Rect*self, cocos2d::Rect const*arg1_) {
+cocos2d::Rect const*genpop__RawRect_unionWithRect(cocos2d::Rect*self, cocos2d::Rect const*arg1_) {
 cocos2d::Rect const&arg1 = *arg1_;
 return new cocos2d::Rect(self->unionWithRect(arg1));
+}
+
+cocos2d::Size*genpop__RawSize_newFromDimensions(float arg1, float arg2) {
+return new cocos2d::Size(arg1, arg2);
+}
+
+void gendel__RawSize(cocos2d::Size const*self) {
+delete self;
+}
+
+float genpop__RawSize_width_get(cocos2d::Size const*self) {
+return self->width;
+}
+
+void genpop__RawSize_width_set(cocos2d::Size*self, float arg1) {
+self->width = arg1;
+}
+
+float genpop__RawSize_height_get(cocos2d::Size const*self) {
+return self->height;
+}
+
+void genpop__RawSize_height_set(cocos2d::Size*self, float arg1) {
+self->height = arg1;
 }
 
 void gendel__Ref(cocos2d::Ref const*self) {
@@ -212,30 +254,6 @@ void ScheduleCallback::operator()(float arg1) {
 
 ScheduleCallback_impl*genpop__ScheduleCallback(void(*f)(float), void(*release)(void(*)()), bool releaseRelease) {
 return new ScheduleCallback_impl(f, release, releaseRelease);
-}
-
-cocos2d::Size*genpop__Size_newFromDimensions(float arg1, float arg2) {
-return new cocos2d::Size(arg1, arg2);
-}
-
-void gendel__Size(cocos2d::Size const*self) {
-delete self;
-}
-
-float genpop__Size_width_get(cocos2d::Size const*self) {
-return self->width;
-}
-
-void genpop__Size_width_set(cocos2d::Size*self, float arg1) {
-self->width = arg1;
-}
-
-float genpop__Size_height_get(cocos2d::Size const*self) {
-return self->height;
-}
-
-void genpop__Size_height_set(cocos2d::Size*self, float arg1) {
-self->height = arg1;
 }
 
 ThreadPerformCallback_impl::ThreadPerformCallback_impl(void(*f)(), void (*release)(void(*)()), bool releaseRelease) :

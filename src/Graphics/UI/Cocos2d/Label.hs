@@ -173,11 +173,11 @@ foreign import ccall "gendel__FontAtlas" delete'FontAtlas :: HoppyF.Ptr FontAtla
 foreign import ccall "&gendel__FontAtlas" deletePtr'FontAtlas :: HoppyF.FunPtr (HoppyF.Ptr FontAtlasConst -> HoppyP.IO ())
 foreign import ccall "genpop__Label_create" label_create' ::  HoppyP.IO (HoppyF.Ptr Label)
 foreign import ccall "genpop__Label_createWithSystemFont" label_createWithSystemFont' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CFloat -> HoppyP.IO (HoppyF.Ptr Label)
-foreign import ccall "genpop__Label_createWithSystemFontByDimensions" label_createWithSystemFontByDimensions' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CFloat -> HoppyF.Ptr M2.SizeConst -> HoppyP.IO (HoppyF.Ptr Label)
-foreign import ccall "genpop__Label_createWithSystemFontByDimensionsAndAlignments" label_createWithSystemFontByDimensionsAndAlignments' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CFloat -> HoppyF.Ptr M2.SizeConst -> HoppyFC.CInt -> HoppyFC.CInt -> HoppyP.IO (HoppyF.Ptr Label)
+foreign import ccall "genpop__Label_createWithSystemFontByDimensions" label_createWithSystemFontByDimensions' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CFloat -> HoppyF.Ptr M2.RawSizeConst -> HoppyP.IO (HoppyF.Ptr Label)
+foreign import ccall "genpop__Label_createWithSystemFontByDimensionsAndAlignments" label_createWithSystemFontByDimensionsAndAlignments' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CFloat -> HoppyF.Ptr M2.RawSizeConst -> HoppyFC.CInt -> HoppyFC.CInt -> HoppyP.IO (HoppyF.Ptr Label)
 foreign import ccall "genpop__Label_createWithTTF" label_createWithTTF' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CFloat -> HoppyP.IO (HoppyF.Ptr Label)
-foreign import ccall "genpop__Label_createWithTTFByDimensions" label_createWithTTFByDimensions' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CFloat -> HoppyF.Ptr M2.SizeConst -> HoppyP.IO (HoppyF.Ptr Label)
-foreign import ccall "genpop__Label_createWithTTFByDimensionsAndAlignments" label_createWithTTFByDimensionsAndAlignments' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CFloat -> HoppyF.Ptr M2.SizeConst -> HoppyFC.CInt -> HoppyFC.CInt -> HoppyP.IO (HoppyF.Ptr Label)
+foreign import ccall "genpop__Label_createWithTTFByDimensions" label_createWithTTFByDimensions' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CFloat -> HoppyF.Ptr M2.RawSizeConst -> HoppyP.IO (HoppyF.Ptr Label)
+foreign import ccall "genpop__Label_createWithTTFByDimensionsAndAlignments" label_createWithTTFByDimensionsAndAlignments' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CFloat -> HoppyF.Ptr M2.RawSizeConst -> HoppyFC.CInt -> HoppyFC.CInt -> HoppyP.IO (HoppyF.Ptr Label)
 foreign import ccall "genpop__Label_createWithTTFConfig" label_createWithTTFConfig' ::  HoppyF.Ptr TTFConfigConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CInt -> HoppyFC.CInt -> HoppyP.IO (HoppyF.Ptr Label)
 foreign import ccall "genpop__Label_createWithBMFont" label_createWithBMFont' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CInt -> HoppyFC.CInt -> HoppyF.Ptr M2.Vec2Const -> HoppyP.IO (HoppyF.Ptr Label)
 foreign import ccall "genpop__Label_createWithCharMap" label_createWithCharMap' ::  HoppyF.Ptr M1.StdStringConst -> HoppyFC.CInt -> HoppyFC.CInt -> HoppyFC.CInt -> HoppyP.IO (HoppyF.Ptr Label)
@@ -202,7 +202,7 @@ foreign import ccall "genpop__Label_getStringLength" label_getStringLength' ::  
 foreign import ccall "genpop__Label_setTextColor" label_setTextColor' ::  HoppyF.Ptr Label -> HoppyF.Ptr M2.Color4BConst -> HoppyP.IO ()
 foreign import ccall "genpop__Label_getTextColor" label_getTextColor' ::  HoppyF.Ptr LabelConst -> HoppyP.IO (HoppyF.Ptr M2.Color4BConst)
 foreign import ccall "genpop__Label_enableShadow" label_enableShadow' ::  HoppyF.Ptr Label -> HoppyF.Ptr M2.Color4BConst -> HoppyP.IO ()
-foreign import ccall "genpop__Label_enableShadowWithOffset" label_enableShadowWithOffset' ::  HoppyF.Ptr Label -> HoppyF.Ptr M2.Color4BConst -> HoppyF.Ptr M2.SizeConst -> HoppyFC.CInt -> HoppyP.IO ()
+foreign import ccall "genpop__Label_enableShadowWithOffset" label_enableShadowWithOffset' ::  HoppyF.Ptr Label -> HoppyF.Ptr M2.Color4BConst -> HoppyF.Ptr M2.RawSizeConst -> HoppyFC.CInt -> HoppyP.IO ()
 foreign import ccall "genpop__Label_enableOutline" label_enableOutline' ::  HoppyF.Ptr Label -> HoppyF.Ptr M2.Color4BConst -> HoppyP.IO ()
 foreign import ccall "genpop__Label_enableOutlineWithSize" label_enableOutlineWithSize' ::  HoppyF.Ptr Label -> HoppyF.Ptr M2.Color4BConst -> HoppyFC.CInt -> HoppyP.IO ()
 foreign import ccall "genpop__Label_enableGlow" label_enableGlow' ::  HoppyF.Ptr Label -> HoppyF.Ptr M2.Color4BConst -> HoppyP.IO ()
@@ -220,7 +220,7 @@ foreign import ccall "genpop__Label_getWidth" label_getWidth' ::  HoppyF.Ptr Lab
 foreign import ccall "genpop__Label_setWidth" label_setWidth' ::  HoppyF.Ptr Label -> HoppyFC.CFloat -> HoppyP.IO ()
 foreign import ccall "genpop__Label_getHeight" label_getHeight' ::  HoppyF.Ptr LabelConst -> HoppyP.IO HoppyFC.CFloat
 foreign import ccall "genpop__Label_setHeight" label_setHeight' ::  HoppyF.Ptr Label -> HoppyFC.CFloat -> HoppyP.IO ()
-foreign import ccall "genpop__Label_getDimensions" label_getDimensions' ::  HoppyF.Ptr LabelConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
+foreign import ccall "genpop__Label_getDimensions" label_getDimensions' ::  HoppyF.Ptr LabelConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
 foreign import ccall "genpop__Label_setDimensions" label_setDimensions' ::  HoppyF.Ptr Label -> HoppyFC.CFloat -> HoppyFC.CFloat -> HoppyP.IO ()
 foreign import ccall "genpop__Label_updateContent" label_updateContent' ::  HoppyF.Ptr Label -> HoppyP.IO ()
 foreign import ccall "genpop__Label_getLetter" label_getLetter' ::  HoppyF.Ptr Label -> HoppyFC.CInt -> HoppyP.IO (HoppyF.Ptr M8.Sprite)
@@ -674,10 +674,10 @@ label_getHeight arg'1 =
   HoppyP.fmap HoppyP.realToFrac
   (label_getHeight' arg'1')
 
-label_getDimensions :: (LabelValue arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+label_getDimensions :: (LabelValue arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 label_getDimensions arg'1 =
   withLabelPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (label_getDimensions' arg'1')
 
 label_isClipMarginEnabled :: (LabelValue arg'1) => arg'1 -> HoppyP.IO HoppyP.Bool
@@ -792,11 +792,11 @@ label_enableShadow arg'1 arg'2 =
   M2.withColor4BPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (label_enableShadow' arg'1' arg'2')
 
-label_enableShadowWithOffset :: (LabelPtr arg'1, M2.Color4BValue arg'2, M2.SizeValue arg'3) => arg'1 -> arg'2 -> arg'3 -> HoppyP.Int -> HoppyP.IO ()
+label_enableShadowWithOffset :: (LabelPtr arg'1, M2.Color4BValue arg'2, M2.RawSizeValue arg'3) => arg'1 -> arg'2 -> arg'3 -> HoppyP.Int -> HoppyP.IO ()
 label_enableShadowWithOffset arg'1 arg'2 arg'3 arg'4 =
   HoppyFHR.withCppPtr (toLabel arg'1) $ \arg'1' ->
   M2.withColor4BPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
-  M2.withSizePtr arg'3 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'3' ->
+  M2.withRawSizePtr arg'3 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'3' ->
   let arg'4' = HoppyFHR.coerceIntegral arg'4 in
   (label_enableShadowWithOffset' arg'1' arg'2' arg'3' arg'4')
 
@@ -941,21 +941,21 @@ label_createWithSystemFont arg'1 arg'2 arg'3 =
   HoppyP.fmap Label
   (label_createWithSystemFont' arg'1' arg'2' arg'3')
 
-label_createWithSystemFontByDimensions :: (M1.StdStringValue arg'1, M1.StdStringValue arg'2, M2.SizeValue arg'4) => arg'1 -> arg'2 -> HoppyP.Float -> arg'4 -> HoppyP.IO Label
+label_createWithSystemFontByDimensions :: (M1.StdStringValue arg'1, M1.StdStringValue arg'2, M2.RawSizeValue arg'4) => arg'1 -> arg'2 -> HoppyP.Float -> arg'4 -> HoppyP.IO Label
 label_createWithSystemFontByDimensions arg'1 arg'2 arg'3 arg'4 =
   M1.withStdStringPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
   M1.withStdStringPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   let arg'3' = HoppyP.realToFrac arg'3 in
-  M2.withSizePtr arg'4 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'4' ->
+  M2.withRawSizePtr arg'4 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'4' ->
   HoppyP.fmap Label
   (label_createWithSystemFontByDimensions' arg'1' arg'2' arg'3' arg'4')
 
-label_createWithSystemFontByDimensionsAndAlignments :: (M1.StdStringValue arg'1, M1.StdStringValue arg'2, M2.SizeValue arg'4) => arg'1 -> arg'2 -> HoppyP.Float -> arg'4 -> M2.TextHAlignment -> M2.TextVAlignment -> HoppyP.IO Label
+label_createWithSystemFontByDimensionsAndAlignments :: (M1.StdStringValue arg'1, M1.StdStringValue arg'2, M2.RawSizeValue arg'4) => arg'1 -> arg'2 -> HoppyP.Float -> arg'4 -> M2.TextHAlignment -> M2.TextVAlignment -> HoppyP.IO Label
 label_createWithSystemFontByDimensionsAndAlignments arg'1 arg'2 arg'3 arg'4 arg'5 arg'6 =
   M1.withStdStringPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
   M1.withStdStringPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   let arg'3' = HoppyP.realToFrac arg'3 in
-  M2.withSizePtr arg'4 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'4' ->
+  M2.withRawSizePtr arg'4 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'4' ->
   let arg'5' = HoppyFHR.coerceIntegral $ HoppyP.fromEnum arg'5 in
   let arg'6' = HoppyFHR.coerceIntegral $ HoppyP.fromEnum arg'6 in
   HoppyP.fmap Label
@@ -969,21 +969,21 @@ label_createWithTTF arg'1 arg'2 arg'3 =
   HoppyP.fmap Label
   (label_createWithTTF' arg'1' arg'2' arg'3')
 
-label_createWithTTFByDimensions :: (M1.StdStringValue arg'1, M1.StdStringValue arg'2, M2.SizeValue arg'4) => arg'1 -> arg'2 -> HoppyP.Float -> arg'4 -> HoppyP.IO Label
+label_createWithTTFByDimensions :: (M1.StdStringValue arg'1, M1.StdStringValue arg'2, M2.RawSizeValue arg'4) => arg'1 -> arg'2 -> HoppyP.Float -> arg'4 -> HoppyP.IO Label
 label_createWithTTFByDimensions arg'1 arg'2 arg'3 arg'4 =
   M1.withStdStringPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
   M1.withStdStringPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   let arg'3' = HoppyP.realToFrac arg'3 in
-  M2.withSizePtr arg'4 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'4' ->
+  M2.withRawSizePtr arg'4 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'4' ->
   HoppyP.fmap Label
   (label_createWithTTFByDimensions' arg'1' arg'2' arg'3' arg'4')
 
-label_createWithTTFByDimensionsAndAlignments :: (M1.StdStringValue arg'1, M1.StdStringValue arg'2, M2.SizeValue arg'4) => arg'1 -> arg'2 -> HoppyP.Float -> arg'4 -> M2.TextHAlignment -> M2.TextVAlignment -> HoppyP.IO Label
+label_createWithTTFByDimensionsAndAlignments :: (M1.StdStringValue arg'1, M1.StdStringValue arg'2, M2.RawSizeValue arg'4) => arg'1 -> arg'2 -> HoppyP.Float -> arg'4 -> M2.TextHAlignment -> M2.TextVAlignment -> HoppyP.IO Label
 label_createWithTTFByDimensionsAndAlignments arg'1 arg'2 arg'3 arg'4 arg'5 arg'6 =
   M1.withStdStringPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
   M1.withStdStringPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   let arg'3' = HoppyP.realToFrac arg'3 in
-  M2.withSizePtr arg'4 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'4' ->
+  M2.withRawSizePtr arg'4 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'4' ->
   let arg'5' = HoppyFHR.coerceIntegral $ HoppyP.fromEnum arg'5 in
   let arg'6' = HoppyFHR.coerceIntegral $ HoppyP.fromEnum arg'6 in
   HoppyP.fmap Label

@@ -279,6 +279,7 @@ import qualified Foreign as HoppyF
 import qualified Foreign.C as HoppyFC
 import qualified Foreign.Hoppy.Runtime as HoppyFHR
 import qualified Graphics.UI.Cocos2d.Common as M2
+import qualified Graphics.UI.Cocos2d.Extra as CE
 import qualified Graphics.UI.Cocos2d.Node as M5
 import qualified Graphics.UI.Cocos2d.Std as M1
 import Linear.V2
@@ -289,7 +290,7 @@ import qualified System.Posix.Types as HoppySPT
 foreign import ccall "genpop__Button_create" button_create' ::  HoppyP.IO (HoppyF.Ptr Button)
 foreign import ccall "genpop__Button_createWithImages" button_createWithImages' ::  HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CInt -> HoppyP.IO (HoppyF.Ptr Button)
 foreign import ccall "genpop__Button_loadTextures" button_loadTextures' ::  HoppyF.Ptr Button -> HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CInt -> HoppyP.IO ()
-foreign import ccall "genpop__Button_setCapInsets" button_setCapInsets' ::  HoppyF.Ptr Button -> HoppyF.Ptr M2.RectConst -> HoppyP.IO ()
+foreign import ccall "genpop__Button_setCapInsets" button_setCapInsets' ::  HoppyF.Ptr Button -> HoppyF.Ptr M2.RawRectConst -> HoppyP.IO ()
 foreign import ccall "genpop__Button_isScale9Enabled" button_isScale9Enabled' ::  HoppyF.Ptr ButtonConst -> HoppyP.IO HoppyFHR.CBool
 foreign import ccall "genpop__Button_setScale9Enabled" button_setScale9Enabled' ::  HoppyF.Ptr Button -> HoppyFHR.CBool -> HoppyP.IO ()
 foreign import ccall "genpop__Button_setPressedActionEnabled" button_setPressedActionEnabled' ::  HoppyF.Ptr Button -> HoppyFHR.CBool -> HoppyP.IO ()
@@ -317,8 +318,8 @@ foreign import ccall "gendel__Button" delete'Button :: HoppyF.Ptr ButtonConst ->
 foreign import ccall "&gendel__Button" deletePtr'Button :: HoppyF.FunPtr (HoppyF.Ptr ButtonConst -> HoppyP.IO ())
 foreign import ccall "genpop__Layout_create" layout_create' ::  HoppyP.IO (HoppyF.Ptr Layout)
 foreign import ccall "genpop__Layout_setBackGroundImage" layout_setBackGroundImage' ::  HoppyF.Ptr Layout -> HoppyF.Ptr M1.StdStringConst -> HoppyFC.CInt -> HoppyP.IO ()
-foreign import ccall "genpop__Layout_setBackGroundImageCapInsets" layout_setBackGroundImageCapInsets' ::  HoppyF.Ptr Layout -> HoppyF.Ptr M2.RectConst -> HoppyP.IO ()
-foreign import ccall "genpop__Layout_getBackGroundImageCapInsets" layout_getBackGroundImageCapInsets' ::  HoppyF.Ptr LayoutConst -> HoppyP.IO (HoppyF.Ptr M2.RectConst)
+foreign import ccall "genpop__Layout_setBackGroundImageCapInsets" layout_setBackGroundImageCapInsets' ::  HoppyF.Ptr Layout -> HoppyF.Ptr M2.RawRectConst -> HoppyP.IO ()
+foreign import ccall "genpop__Layout_getBackGroundImageCapInsets" layout_getBackGroundImageCapInsets' ::  HoppyF.Ptr LayoutConst -> HoppyP.IO (HoppyF.Ptr M2.RawRectConst)
 foreign import ccall "genpop__Layout_setBackGroundColorType" layout_setBackGroundColorType' ::  HoppyF.Ptr Layout -> HoppyFC.CInt -> HoppyP.IO ()
 foreign import ccall "genpop__Layout_getBackGroundColorType" layout_getBackGroundColorType' ::  HoppyF.Ptr LayoutConst -> HoppyP.IO HoppyFC.CInt
 foreign import ccall "genpop__Layout_setBackGroundImageScale9Enabled" layout_setBackGroundImageScale9Enabled' ::  HoppyF.Ptr Layout -> HoppyFHR.CBool -> HoppyP.IO ()
@@ -337,7 +338,7 @@ foreign import ccall "genpop__Layout_setBackGroundImageOpacity" layout_setBackGr
 foreign import ccall "genpop__Layout_getBackGroundImageColor" layout_getBackGroundImageColor' ::  HoppyF.Ptr LayoutConst -> HoppyP.IO (HoppyF.Ptr M2.Color3BConst)
 foreign import ccall "genpop__Layout_getBackGroundImageOpacity" layout_getBackGroundImageOpacity' ::  HoppyF.Ptr LayoutConst -> HoppyP.IO HoppyDW.Word8
 foreign import ccall "genpop__Layout_removeBackGroundImage" layout_removeBackGroundImage' ::  HoppyF.Ptr Layout -> HoppyP.IO ()
-foreign import ccall "genpop__Layout_getBackGroundImageTextureSize" layout_getBackGroundImageTextureSize' ::  HoppyF.Ptr LayoutConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
+foreign import ccall "genpop__Layout_getBackGroundImageTextureSize" layout_getBackGroundImageTextureSize' ::  HoppyF.Ptr LayoutConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
 foreign import ccall "genpop__Layout_setClippingEnabled" layout_setClippingEnabled' ::  HoppyF.Ptr Layout -> HoppyFHR.CBool -> HoppyP.IO ()
 foreign import ccall "genpop__Layout_setClippingType" layout_setClippingType' ::  HoppyF.Ptr Layout -> HoppyFC.CInt -> HoppyP.IO ()
 foreign import ccall "genpop__Layout_getClippingType" layout_getClippingType' ::  HoppyF.Ptr LayoutConst -> HoppyP.IO HoppyFC.CInt
@@ -391,8 +392,8 @@ foreign import ccall "genpop__Text_getFontName" text_getFontName' ::  HoppyF.Ptr
 foreign import ccall "genpop__Text_getType" text_getType' ::  HoppyF.Ptr TextConst -> HoppyP.IO HoppyFC.CInt
 foreign import ccall "genpop__Text_setTouchScaleChangeEnabled" text_setTouchScaleChangeEnabled' ::  HoppyF.Ptr Text -> HoppyFHR.CBool -> HoppyP.IO ()
 foreign import ccall "genpop__Text_isTouchScaleChangeEnabled" text_isTouchScaleChangeEnabled' ::  HoppyF.Ptr TextConst -> HoppyP.IO HoppyFHR.CBool
-foreign import ccall "genpop__Text_setTextAreaSize" text_setTextAreaSize' ::  HoppyF.Ptr Text -> HoppyF.Ptr M2.SizeConst -> HoppyP.IO ()
-foreign import ccall "genpop__Text_getTextAreaSize" text_getTextAreaSize' ::  HoppyF.Ptr TextConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
+foreign import ccall "genpop__Text_setTextAreaSize" text_setTextAreaSize' ::  HoppyF.Ptr Text -> HoppyF.Ptr M2.RawSizeConst -> HoppyP.IO ()
+foreign import ccall "genpop__Text_getTextAreaSize" text_getTextAreaSize' ::  HoppyF.Ptr TextConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
 foreign import ccall "genpop__Text_setTextHorizontalAlignment" text_setTextHorizontalAlignment' ::  HoppyF.Ptr Text -> HoppyFC.CInt -> HoppyP.IO ()
 foreign import ccall "genpop__Text_getTextHorizontalAlignment" text_getTextHorizontalAlignment' ::  HoppyF.Ptr TextConst -> HoppyP.IO HoppyFC.CInt
 foreign import ccall "genpop__Text_setTextVerticalAlignment" text_setTextVerticalAlignment' ::  HoppyF.Ptr Text -> HoppyFC.CInt -> HoppyP.IO ()
@@ -400,7 +401,7 @@ foreign import ccall "genpop__Text_getTextVerticalAlignment" text_getTextVertica
 foreign import ccall "genpop__Text_setTextColor" text_setTextColor' ::  HoppyF.Ptr Text -> HoppyF.Ptr M2.Color4BConst -> HoppyP.IO ()
 foreign import ccall "genpop__Text_getTextColor" text_getTextColor' ::  HoppyF.Ptr TextConst -> HoppyP.IO (HoppyF.Ptr M2.Color4BConst)
 foreign import ccall "genpop__Text_enableShadow" text_enableShadow' ::  HoppyF.Ptr Text -> HoppyF.Ptr M2.Color4BConst -> HoppyP.IO ()
-foreign import ccall "genpop__Text_enableShadowWithOffset" text_enableShadowWithOffset' ::  HoppyF.Ptr Text -> HoppyF.Ptr M2.Color4BConst -> HoppyF.Ptr M2.SizeConst -> HoppyFC.CInt -> HoppyP.IO ()
+foreign import ccall "genpop__Text_enableShadowWithOffset" text_enableShadowWithOffset' ::  HoppyF.Ptr Text -> HoppyF.Ptr M2.Color4BConst -> HoppyF.Ptr M2.RawSizeConst -> HoppyFC.CInt -> HoppyP.IO ()
 foreign import ccall "genpop__Text_enableOutline" text_enableOutline' ::  HoppyF.Ptr Text -> HoppyF.Ptr M2.Color4BConst -> HoppyP.IO ()
 foreign import ccall "genpop__Text_enableOutlineWithSize" text_enableOutlineWithSize' ::  HoppyF.Ptr Text -> HoppyF.Ptr M2.Color4BConst -> HoppyFC.CInt -> HoppyP.IO ()
 foreign import ccall "genpop__Text_enableGlow" text_enableGlow' ::  HoppyF.Ptr Text -> HoppyF.Ptr M2.Color4BConst -> HoppyP.IO ()
@@ -421,8 +422,8 @@ foreign import ccall "genpop__UiHelper_seekWidgetByName" uiHelper_seekWidgetByNa
 foreign import ccall "genpop__UiHelper_seekActionWidgetByActionTag" uiHelper_seekActionWidgetByActionTag' ::  HoppyF.Ptr Widget -> HoppyFC.CInt -> HoppyP.IO (HoppyF.Ptr Widget)
 foreign import ccall "genpop__UiHelper_doLayout" uiHelper_doLayout' ::  HoppyF.Ptr M5.Node -> HoppyP.IO ()
 foreign import ccall "genpop__UiHelper_changeLayoutSystemActiveState" uiHelper_changeLayoutSystemActiveState' ::  HoppyFHR.CBool -> HoppyP.IO ()
-foreign import ccall "genpop__UiHelper_restrictCapInsetRect" uiHelper_restrictCapInsetRect' ::  HoppyF.Ptr M2.RectConst -> HoppyF.Ptr M2.SizeConst -> HoppyP.IO (HoppyF.Ptr M2.Rect)
-foreign import ccall "genpop__UiHelper_convertBoundingBoxToScreen" uiHelper_convertBoundingBoxToScreen' ::  HoppyF.Ptr M5.Node -> HoppyP.IO (HoppyF.Ptr M2.Rect)
+foreign import ccall "genpop__UiHelper_restrictCapInsetRect" uiHelper_restrictCapInsetRect' ::  HoppyF.Ptr M2.RawRectConst -> HoppyF.Ptr M2.RawSizeConst -> HoppyP.IO (HoppyF.Ptr M2.RawRectConst)
+foreign import ccall "genpop__UiHelper_convertBoundingBoxToScreen" uiHelper_convertBoundingBoxToScreen' ::  HoppyF.Ptr M5.Node -> HoppyP.IO (HoppyF.Ptr M2.RawRectConst)
 foreign import ccall "gendel__UiHelper" delete'UiHelper :: HoppyF.Ptr UiHelperConst -> HoppyP.IO ()
 foreign import ccall "&gendel__UiHelper" deletePtr'UiHelper :: HoppyF.FunPtr (HoppyF.Ptr UiHelperConst -> HoppyP.IO ())
 foreign import ccall "genpop__Widget_create" widget_create' ::  HoppyP.IO (HoppyF.Ptr Widget)
@@ -457,8 +458,8 @@ foreign import ccall "genpop__Widget_getTouchEndPosition" widget_getTouchEndPosi
 foreign import ccall "genpop__Widget_setSizePercent" widget_setSizePercent' ::  HoppyF.Ptr Widget -> HoppyF.Ptr M2.Vec2Const -> HoppyP.IO ()
 foreign import ccall "genpop__Widget_setSizeType" widget_setSizeType' ::  HoppyF.Ptr Widget -> HoppyFC.CInt -> HoppyP.IO ()
 foreign import ccall "genpop__Widget_getSizeType" widget_getSizeType' ::  HoppyF.Ptr WidgetConst -> HoppyP.IO HoppyFC.CInt
-foreign import ccall "genpop__Widget_getCustomSize" widget_getCustomSize' ::  HoppyF.Ptr WidgetConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
-foreign import ccall "genpop__Widget_getLayoutSize" widget_getLayoutSize' ::  HoppyF.Ptr Widget -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
+foreign import ccall "genpop__Widget_getCustomSize" widget_getCustomSize' ::  HoppyF.Ptr WidgetConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
+foreign import ccall "genpop__Widget_getLayoutSize" widget_getLayoutSize' ::  HoppyF.Ptr Widget -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
 foreign import ccall "genpop__Widget_getSizePercent" widget_getSizePercent' ::  HoppyF.Ptr Widget -> HoppyP.IO (HoppyF.Ptr M2.Vec2Const)
 foreign import ccall "genpop__Widget_isIgnoreContentAdaptWithSize" widget_isIgnoreContentAdaptWithSize' ::  HoppyF.Ptr WidgetConst -> HoppyP.IO HoppyFHR.CBool
 foreign import ccall "genpop__Widget_ignoreContentAdaptWithSize" widget_ignoreContentAdaptWithSize' ::  HoppyF.Ptr Widget -> HoppyFHR.CBool -> HoppyP.IO ()
@@ -593,10 +594,10 @@ button_loadTextures arg'1 arg'2 arg'3 arg'4 arg'5 =
   let arg'5' = HoppyFHR.coerceIntegral $ HoppyP.fromEnum arg'5 in
   (button_loadTextures' arg'1' arg'2' arg'3' arg'4' arg'5')
 
-button_setCapInsets :: (ButtonPtr arg'1, M2.RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+button_setCapInsets :: (ButtonPtr arg'1, M2.RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
 button_setCapInsets arg'1 arg'2 =
   HoppyFHR.withCppPtr (toButton arg'1) $ \arg'1' ->
-  M2.withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (button_setCapInsets' arg'1' arg'2')
 
 button_setScale9Enabled :: (ButtonPtr arg'1) => arg'1 -> HoppyP.Bool -> HoppyP.IO ()
@@ -893,10 +894,10 @@ instance LayoutConstPtr a => LayoutValue a where
 class (WidgetConstPtr this) => LayoutConstPtr this where
   toLayoutConst :: this -> LayoutConst
 
-layout_getBackGroundImageCapInsets :: (LayoutValue arg'1) => arg'1 -> HoppyP.IO M2.RectConst
+layout_getBackGroundImageCapInsets :: (LayoutValue arg'1) => arg'1 -> HoppyP.IO M2.RawRectConst
 layout_getBackGroundImageCapInsets arg'1 =
   withLayoutPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.RectConst
+  HoppyP.fmap M2.RawRectConst
   (layout_getBackGroundImageCapInsets' arg'1')
 
 layout_getBackGroundColorType :: (LayoutValue arg'1) => arg'1 -> HoppyP.IO BackGroundColorType
@@ -951,10 +952,10 @@ layout_getBackGroundImageOpacity arg'1 =
   withLayoutPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
   (layout_getBackGroundImageOpacity' arg'1')
 
-layout_getBackGroundImageTextureSize :: (LayoutValue arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+layout_getBackGroundImageTextureSize :: (LayoutValue arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 layout_getBackGroundImageTextureSize arg'1 =
   withLayoutPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (layout_getBackGroundImageTextureSize' arg'1')
 
 layout_getClippingType :: (LayoutValue arg'1) => arg'1 -> HoppyP.IO ClippingType
@@ -997,10 +998,10 @@ layout_setBackGroundImage arg'1 arg'2 arg'3 =
   let arg'3' = HoppyFHR.coerceIntegral $ HoppyP.fromEnum arg'3 in
   (layout_setBackGroundImage' arg'1' arg'2' arg'3')
 
-layout_setBackGroundImageCapInsets :: (LayoutPtr arg'1, M2.RectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+layout_setBackGroundImageCapInsets :: (LayoutPtr arg'1, M2.RawRectValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
 layout_setBackGroundImageCapInsets arg'1 arg'2 =
   HoppyFHR.withCppPtr (toLayout arg'1) $ \arg'1' ->
-  M2.withRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawRectPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (layout_setBackGroundImageCapInsets' arg'1' arg'2')
 
 layout_setBackGroundColorType :: (LayoutPtr arg'1) => arg'1 -> BackGroundColorType -> HoppyP.IO ()
@@ -1609,10 +1610,10 @@ text_isTouchScaleChangeEnabled arg'1 =
   HoppyP.fmap (/= 0)
   (text_isTouchScaleChangeEnabled' arg'1')
 
-text_getTextAreaSize :: (TextValue arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+text_getTextAreaSize :: (TextValue arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 text_getTextAreaSize arg'1 =
   withTextPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (text_getTextAreaSize' arg'1')
 
 text_getTextHorizontalAlignment :: (TextValue arg'1) => arg'1 -> HoppyP.IO M2.TextHAlignment
@@ -1660,10 +1661,10 @@ text_setTouchScaleChangeEnabled arg'1 arg'2 =
   let arg'2' = if arg'2 then 1 else 0 in
   (text_setTouchScaleChangeEnabled' arg'1' arg'2')
 
-text_setTextAreaSize :: (TextPtr arg'1, M2.SizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
+text_setTextAreaSize :: (TextPtr arg'1, M2.RawSizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO ()
 text_setTextAreaSize arg'1 arg'2 =
   HoppyFHR.withCppPtr (toText arg'1) $ \arg'1' ->
-  M2.withSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  M2.withRawSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (text_setTextAreaSize' arg'1' arg'2')
 
 text_setTextHorizontalAlignment :: (TextPtr arg'1) => arg'1 -> M2.TextHAlignment -> HoppyP.IO ()
@@ -1690,11 +1691,11 @@ text_enableShadow arg'1 arg'2 =
   M2.withColor4BPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
   (text_enableShadow' arg'1' arg'2')
 
-text_enableShadowWithOffset :: (TextPtr arg'1, M2.Color4BValue arg'2, M2.SizeValue arg'3) => arg'1 -> arg'2 -> arg'3 -> HoppyP.Int -> HoppyP.IO ()
+text_enableShadowWithOffset :: (TextPtr arg'1, M2.Color4BValue arg'2, M2.RawSizeValue arg'3) => arg'1 -> arg'2 -> arg'3 -> HoppyP.Int -> HoppyP.IO ()
 text_enableShadowWithOffset arg'1 arg'2 arg'3 arg'4 =
   HoppyFHR.withCppPtr (toText arg'1) $ \arg'1' ->
   M2.withColor4BPtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
-  M2.withSizePtr arg'3 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'3' ->
+  M2.withRawSizePtr arg'3 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'3' ->
   let arg'4' = HoppyFHR.coerceIntegral arg'4 in
   (text_enableShadowWithOffset' arg'1' arg'2' arg'3' arg'4')
 
@@ -2013,19 +2014,17 @@ uiHelper_changeLayoutSystemActiveState arg'1 =
   let arg'1' = if arg'1 then 1 else 0 in
   (uiHelper_changeLayoutSystemActiveState' arg'1')
 
-uiHelper_restrictCapInsetRect :: (M2.RectValue arg'1, M2.SizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO M2.Rect
+uiHelper_restrictCapInsetRect :: (M2.RawRectValue arg'1, M2.RawSizeValue arg'2) => arg'1 -> arg'2 -> HoppyP.IO (CE.Rect Float)
 uiHelper_restrictCapInsetRect arg'1 arg'2 =
-  M2.withRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  M2.withSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
-  HoppyFHR.toGc =<<
-  HoppyP.fmap M2.Rect
+  M2.withRawRectPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
+  M2.withRawSizePtr arg'2 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'2' ->
+  (HoppyFHR.decodeAndDelete . M2.RawRectConst) =<<
   (uiHelper_restrictCapInsetRect' arg'1' arg'2')
 
-uiHelper_convertBoundingBoxToScreen :: (M5.NodePtr arg'1) => arg'1 -> HoppyP.IO M2.Rect
+uiHelper_convertBoundingBoxToScreen :: (M5.NodePtr arg'1) => arg'1 -> HoppyP.IO (CE.Rect Float)
 uiHelper_convertBoundingBoxToScreen arg'1 =
   HoppyFHR.withCppPtr (M5.toNode arg'1) $ \arg'1' ->
-  HoppyFHR.toGc =<<
-  HoppyP.fmap M2.Rect
+  (HoppyFHR.decodeAndDelete . M2.RawRectConst) =<<
   (uiHelper_convertBoundingBoxToScreen' arg'1')
 
 data UiHelperConst =
@@ -2223,10 +2222,10 @@ widget_getSizeType arg'1 =
   HoppyP.fmap (HoppyP.toEnum . HoppyFHR.coerceIntegral)
   (widget_getSizeType' arg'1')
 
-widget_getCustomSize :: (WidgetValue arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+widget_getCustomSize :: (WidgetValue arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 widget_getCustomSize arg'1 =
   withWidgetPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (widget_getCustomSize' arg'1')
 
 widget_isIgnoreContentAdaptWithSize :: (WidgetValue arg'1) => arg'1 -> HoppyP.IO HoppyP.Bool
@@ -2395,10 +2394,10 @@ widget_setSizeType arg'1 arg'2 =
   let arg'2' = HoppyFHR.coerceIntegral $ HoppyP.fromEnum arg'2 in
   (widget_setSizeType' arg'1' arg'2')
 
-widget_getLayoutSize :: (WidgetPtr arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+widget_getLayoutSize :: (WidgetPtr arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 widget_getLayoutSize arg'1 =
   HoppyFHR.withCppPtr (toWidget arg'1) $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (widget_getLayoutSize' arg'1')
 
 widget_getSizePercent :: (WidgetPtr arg'1) => arg'1 -> HoppyP.IO M2.Vec2Const

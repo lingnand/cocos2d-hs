@@ -49,15 +49,16 @@ import qualified Foreign as HoppyF
 import qualified Foreign.C as HoppyFC
 import qualified Foreign.Hoppy.Runtime as HoppyFHR
 import qualified Graphics.UI.Cocos2d.Common as M2
+import qualified Graphics.UI.Cocos2d.Extra as CE
 import qualified Graphics.UI.Cocos2d.Std as M1
 import Linear.V2
 import Prelude (($), (.), (/=), (=<<), (==), (>>=), Float)
 import qualified Prelude as HoppyP
 
-foreign import ccall "genpop__Texture2D_getContentSizeInPixels" texture2D_getContentSizeInPixels' ::  HoppyF.Ptr Texture2D -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
+foreign import ccall "genpop__Texture2D_getContentSizeInPixels" texture2D_getContentSizeInPixels' ::  HoppyF.Ptr Texture2D -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
 foreign import ccall "genpop__Texture2D_getPixelsWide" texture2D_getPixelsWide' ::  HoppyF.Ptr Texture2DConst -> HoppyP.IO HoppyFC.CInt
 foreign import ccall "genpop__Texture2D_getPixelsHigh" texture2D_getPixelsHigh' ::  HoppyF.Ptr Texture2DConst -> HoppyP.IO HoppyFC.CInt
-foreign import ccall "genpop__Texture2D_getContentSize" texture2D_getContentSize' ::  HoppyF.Ptr Texture2DConst -> HoppyP.IO (HoppyF.Ptr M2.SizeConst)
+foreign import ccall "genpop__Texture2D_getContentSize" texture2D_getContentSize' ::  HoppyF.Ptr Texture2DConst -> HoppyP.IO (HoppyF.Ptr M2.RawSizeConst)
 foreign import ccall "gencast__Texture2D__Ref" castTexture2DToRef :: HoppyF.Ptr Texture2DConst -> HoppyF.Ptr M2.RefConst
 foreign import ccall "gencast__Ref__Texture2D" castRefToTexture2D :: HoppyF.Ptr M2.RefConst -> HoppyF.Ptr Texture2DConst
 foreign import ccall "gendel__Texture2D" delete'Texture2D :: HoppyF.Ptr Texture2DConst -> HoppyP.IO ()
@@ -103,19 +104,19 @@ texture2D_getPixelsHigh arg'1 =
   HoppyP.fmap HoppyFHR.coerceIntegral
   (texture2D_getPixelsHigh' arg'1')
 
-texture2D_getContentSize :: (Texture2DValue arg'1) => arg'1 -> HoppyP.IO (V2 Float)
+texture2D_getContentSize :: (Texture2DValue arg'1) => arg'1 -> HoppyP.IO (CE.Size Float)
 texture2D_getContentSize arg'1 =
   withTexture2DPtr arg'1 $ HoppyP.flip HoppyFHR.withCppPtr $ \arg'1' ->
-  (HoppyFHR.decodeAndDelete . M2.SizeConst) =<<
+  (HoppyFHR.decodeAndDelete . M2.RawSizeConst) =<<
   (texture2D_getContentSize' arg'1')
 
 class (Texture2DConstPtr this, M2.RefPtr this) => Texture2DPtr this where
   toTexture2D :: this -> Texture2D
 
-texture2D_getContentSizeInPixels :: (Texture2DPtr arg'1) => arg'1 -> HoppyP.IO M2.SizeConst
+texture2D_getContentSizeInPixels :: (Texture2DPtr arg'1) => arg'1 -> HoppyP.IO M2.RawSizeConst
 texture2D_getContentSizeInPixels arg'1 =
   HoppyFHR.withCppPtr (toTexture2D arg'1) $ \arg'1' ->
-  HoppyP.fmap M2.SizeConst
+  HoppyP.fmap M2.RawSizeConst
   (texture2D_getContentSizeInPixels' arg'1')
 
 data Texture2DConst =
