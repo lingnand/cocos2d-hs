@@ -544,10 +544,10 @@ c_EventListenerTouchOneByOne =
       [ mkStaticMethod "create" [] $ ptrT $ objT c_EventListenerTouchOneByOne
       , mkConstMethod "isSwallowTouches" [] boolT
       , mkMethod "setSwallowTouches" [boolT] voidT
-      , makeClassVariable "onTouchBegan" Nothing (callbackT cb_EventTouchBeganCallback) Nonstatic False
-      , makeClassVariable "onTouchMoved" Nothing (callbackT cb_EventTouchCallback) Nonstatic False
-      , makeClassVariable "onTouchEnded" Nothing (callbackT cb_EventTouchCallback) Nonstatic False
-      , makeClassVariable "onTouchCancelled" Nothing (callbackT cb_EventTouchCallback) Nonstatic False
+      , makeClassVariable "onTouchBegan" Nothing (ptrT $ fnT [ptrT $ objT c_EventTouch, ptrT $ objT c_Event] boolT) Nonstatic False
+      , makeClassVariable "onTouchMoved" Nothing (ptrT $ fnT [ptrT $ objT c_EventTouch, ptrT $ objT c_Event] voidT) Nonstatic False
+      , makeClassVariable "onTouchEnded" Nothing (ptrT $ fnT [ptrT $ objT c_EventTouch, ptrT $ objT c_Event] voidT) Nonstatic False
+      , makeClassVariable "onTouchCancelled" Nothing (ptrT $ fnT [ptrT $ objT c_EventTouch, ptrT $ objT c_Event] voidT) Nonstatic False
       ]
 
 vectorEventTouch :: V.Contents

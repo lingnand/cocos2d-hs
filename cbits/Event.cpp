@@ -459,23 +459,19 @@ void gendel__EventListenerTouchOneByOne(cocos2d::EventListenerTouchOneByOne cons
 delete self;
 }
 
-void genpop__EventListenerTouchOneByOne_onTouchBegan_set(cocos2d::EventListenerTouchOneByOne*self, EventTouchBeganCallback_impl*arg1_) {
-EventTouchBeganCallback arg1(arg1_);
+void genpop__EventListenerTouchOneByOne_onTouchBegan_set(cocos2d::EventListenerTouchOneByOne*self, bool(*arg1)(cocos2d::Touch*, cocos2d::Event*)) {
 self->onTouchBegan = arg1;
 }
 
-void genpop__EventListenerTouchOneByOne_onTouchMoved_set(cocos2d::EventListenerTouchOneByOne*self, EventTouchCallback_impl*arg1_) {
-EventTouchCallback arg1(arg1_);
+void genpop__EventListenerTouchOneByOne_onTouchMoved_set(cocos2d::EventListenerTouchOneByOne*self, void(*arg1)(cocos2d::Touch*, cocos2d::Event*)) {
 self->onTouchMoved = arg1;
 }
 
-void genpop__EventListenerTouchOneByOne_onTouchEnded_set(cocos2d::EventListenerTouchOneByOne*self, EventTouchCallback_impl*arg1_) {
-EventTouchCallback arg1(arg1_);
+void genpop__EventListenerTouchOneByOne_onTouchEnded_set(cocos2d::EventListenerTouchOneByOne*self, void(*arg1)(cocos2d::Touch*, cocos2d::Event*)) {
 self->onTouchEnded = arg1;
 }
 
-void genpop__EventListenerTouchOneByOne_onTouchCancelled_set(cocos2d::EventListenerTouchOneByOne*self, EventTouchCallback_impl*arg1_) {
-EventTouchCallback arg1(arg1_);
+void genpop__EventListenerTouchOneByOne_onTouchCancelled_set(cocos2d::EventListenerTouchOneByOne*self, void(*arg1)(cocos2d::Touch*, cocos2d::Event*)) {
 self->onTouchCancelled = arg1;
 }
 

@@ -448,10 +448,10 @@ foreign import ccall "gencast__EventListenerTouchAllAtOnce__Ref" castEventListen
 foreign import ccall "gencast__Ref__EventListenerTouchAllAtOnce" castRefToEventListenerTouchAllAtOnce :: HoppyF.Ptr M2.RefConst -> HoppyF.Ptr EventListenerTouchAllAtOnceConst
 foreign import ccall "gendel__EventListenerTouchAllAtOnce" delete'EventListenerTouchAllAtOnce :: HoppyF.Ptr EventListenerTouchAllAtOnceConst -> HoppyP.IO ()
 foreign import ccall "&gendel__EventListenerTouchAllAtOnce" deletePtr'EventListenerTouchAllAtOnce :: HoppyF.FunPtr (HoppyF.Ptr EventListenerTouchAllAtOnceConst -> HoppyP.IO ())
-foreign import ccall "genpop__EventListenerTouchOneByOne_onTouchBegan_set" eventListenerTouchOneByOne_onTouchBegan_set' ::  HoppyF.Ptr EventListenerTouchOneByOne -> HoppyFHR.CCallback (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO HoppyFHR.CBool) -> HoppyP.IO ()
-foreign import ccall "genpop__EventListenerTouchOneByOne_onTouchMoved_set" eventListenerTouchOneByOne_onTouchMoved_set' ::  HoppyF.Ptr EventListenerTouchOneByOne -> HoppyFHR.CCallback (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO ()) -> HoppyP.IO ()
-foreign import ccall "genpop__EventListenerTouchOneByOne_onTouchEnded_set" eventListenerTouchOneByOne_onTouchEnded_set' ::  HoppyF.Ptr EventListenerTouchOneByOne -> HoppyFHR.CCallback (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO ()) -> HoppyP.IO ()
-foreign import ccall "genpop__EventListenerTouchOneByOne_onTouchCancelled_set" eventListenerTouchOneByOne_onTouchCancelled_set' ::  HoppyF.Ptr EventListenerTouchOneByOne -> HoppyFHR.CCallback (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO ()) -> HoppyP.IO ()
+foreign import ccall "genpop__EventListenerTouchOneByOne_onTouchBegan_set" eventListenerTouchOneByOne_onTouchBegan_set' ::  HoppyF.Ptr EventListenerTouchOneByOne -> HoppyF.FunPtr (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO HoppyFHR.CBool) -> HoppyP.IO ()
+foreign import ccall "genpop__EventListenerTouchOneByOne_onTouchMoved_set" eventListenerTouchOneByOne_onTouchMoved_set' ::  HoppyF.Ptr EventListenerTouchOneByOne -> HoppyF.FunPtr (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO ()) -> HoppyP.IO ()
+foreign import ccall "genpop__EventListenerTouchOneByOne_onTouchEnded_set" eventListenerTouchOneByOne_onTouchEnded_set' ::  HoppyF.Ptr EventListenerTouchOneByOne -> HoppyF.FunPtr (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO ()) -> HoppyP.IO ()
+foreign import ccall "genpop__EventListenerTouchOneByOne_onTouchCancelled_set" eventListenerTouchOneByOne_onTouchCancelled_set' ::  HoppyF.Ptr EventListenerTouchOneByOne -> HoppyF.FunPtr (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO ()) -> HoppyP.IO ()
 foreign import ccall "genpop__EventListenerTouchOneByOne_create" eventListenerTouchOneByOne_create' ::  HoppyP.IO (HoppyF.Ptr EventListenerTouchOneByOne)
 foreign import ccall "genpop__EventListenerTouchOneByOne_isSwallowTouches" eventListenerTouchOneByOne_isSwallowTouches' ::  HoppyF.Ptr EventListenerTouchOneByOneConst -> HoppyP.IO HoppyFHR.CBool
 foreign import ccall "genpop__EventListenerTouchOneByOne_setSwallowTouches" eventListenerTouchOneByOne_setSwallowTouches' ::  HoppyF.Ptr EventListenerTouchOneByOne -> HoppyFHR.CBool -> HoppyP.IO ()
@@ -2409,28 +2409,28 @@ instance M2.RefPtr EventListenerTouchOneByOne where
   toRef (EventListenerTouchOneByOne ptr') = M2.Ref $ (HoppyF.castPtr :: HoppyF.Ptr M2.RefConst -> HoppyF.Ptr M2.Ref) $ castEventListenerTouchOneByOneToRef $ (HoppyF.castPtr :: HoppyF.Ptr EventListenerTouchOneByOne -> HoppyF.Ptr EventListenerTouchOneByOneConst) ptr'
   toRef (EventListenerTouchOneByOneGc fptr' ptr') = M2.RefGc fptr' $ (HoppyF.castPtr :: HoppyF.Ptr M2.RefConst -> HoppyF.Ptr M2.Ref) $ castEventListenerTouchOneByOneToRef $ (HoppyF.castPtr :: HoppyF.Ptr EventListenerTouchOneByOne -> HoppyF.Ptr EventListenerTouchOneByOneConst) ptr'
 
-eventListenerTouchOneByOne_onTouchBegan_set :: (EventListenerTouchOneByOnePtr arg'1) => arg'1 -> (EventTouch -> Event -> HoppyP.IO HoppyP.Bool) -> HoppyP.IO ()
+eventListenerTouchOneByOne_onTouchBegan_set :: (EventListenerTouchOneByOnePtr arg'1) => arg'1 -> HoppyF.FunPtr (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO HoppyFHR.CBool) -> HoppyP.IO ()
 eventListenerTouchOneByOne_onTouchBegan_set arg'1 arg'2 =
   HoppyFHR.withCppPtr (toEventListenerTouchOneByOne arg'1) $ \arg'1' ->
-  eventTouchBeganCallback_new arg'2 >>= \arg'2' ->
+  let arg'2' = arg'2 in
   (eventListenerTouchOneByOne_onTouchBegan_set' arg'1' arg'2')
 
-eventListenerTouchOneByOne_onTouchMoved_set :: (EventListenerTouchOneByOnePtr arg'1) => arg'1 -> (EventTouch -> Event -> HoppyP.IO ()) -> HoppyP.IO ()
+eventListenerTouchOneByOne_onTouchMoved_set :: (EventListenerTouchOneByOnePtr arg'1) => arg'1 -> HoppyF.FunPtr (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO ()) -> HoppyP.IO ()
 eventListenerTouchOneByOne_onTouchMoved_set arg'1 arg'2 =
   HoppyFHR.withCppPtr (toEventListenerTouchOneByOne arg'1) $ \arg'1' ->
-  eventTouchCallback_new arg'2 >>= \arg'2' ->
+  let arg'2' = arg'2 in
   (eventListenerTouchOneByOne_onTouchMoved_set' arg'1' arg'2')
 
-eventListenerTouchOneByOne_onTouchEnded_set :: (EventListenerTouchOneByOnePtr arg'1) => arg'1 -> (EventTouch -> Event -> HoppyP.IO ()) -> HoppyP.IO ()
+eventListenerTouchOneByOne_onTouchEnded_set :: (EventListenerTouchOneByOnePtr arg'1) => arg'1 -> HoppyF.FunPtr (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO ()) -> HoppyP.IO ()
 eventListenerTouchOneByOne_onTouchEnded_set arg'1 arg'2 =
   HoppyFHR.withCppPtr (toEventListenerTouchOneByOne arg'1) $ \arg'1' ->
-  eventTouchCallback_new arg'2 >>= \arg'2' ->
+  let arg'2' = arg'2 in
   (eventListenerTouchOneByOne_onTouchEnded_set' arg'1' arg'2')
 
-eventListenerTouchOneByOne_onTouchCancelled_set :: (EventListenerTouchOneByOnePtr arg'1) => arg'1 -> (EventTouch -> Event -> HoppyP.IO ()) -> HoppyP.IO ()
+eventListenerTouchOneByOne_onTouchCancelled_set :: (EventListenerTouchOneByOnePtr arg'1) => arg'1 -> HoppyF.FunPtr (HoppyF.Ptr EventTouch -> HoppyF.Ptr Event -> HoppyP.IO ()) -> HoppyP.IO ()
 eventListenerTouchOneByOne_onTouchCancelled_set arg'1 arg'2 =
   HoppyFHR.withCppPtr (toEventListenerTouchOneByOne arg'1) $ \arg'1' ->
-  eventTouchCallback_new arg'2 >>= \arg'2' ->
+  let arg'2' = arg'2 in
   (eventListenerTouchOneByOne_onTouchCancelled_set' arg'1' arg'2')
 
 class EventListenerTouchOneByOneSuper a where
