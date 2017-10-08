@@ -48,7 +48,10 @@ packages:
 extra-deps: []
 
 # Override default flag values for local packages and extra-deps
-flags: {}
+flags:
+    cocos2d-hs:
+        target-mac: true
+        no-gen: true
 
 # Extra package databases containing global packages
 extra-package-dbs: []
